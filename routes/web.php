@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Broadcast;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,3 +17,13 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::post('/broadcast', function () {
+    Broadcast::on('global')
+        ->as('Message')
+        ->with([
+            'body' => str()->random(10)
+        ])
+        ->sendNow();
+});
+
