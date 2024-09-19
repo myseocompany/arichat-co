@@ -14,26 +14,16 @@
                                 <!-- switcher start -->
                                 <div>
                                     <button id="theme-toggle" type="button" class="text-gray-500 text-sm p-2.5">
-
-
                                         <svg id="theme-toggle-dark-icon" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
                                         </svg>
-
-
                                         <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2m0 14v2m8.66-8.66h-2M4.34 12H2m15.66 4.34l-1.42 1.42M6.76 6.76l-1.42-1.42m12.02 12.02l-1.42-1.42M6.76 17.24l-1.42 1.42M12 8a4 4 0 100 8 4 4 0 000-8z" />
                                         </svg>
-
-
-
-
-
                                     </button>
                                 </div>
                                 <!-- switcher end -->
                             </div>
-
                             <!-- user section start -->
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
                                 <div class="w-full space-y-10">
@@ -43,26 +33,6 @@
                                             <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
                                             <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
                                         </div>
-
-                                        <div class="flex flex-col flex-1">
-                                            <div class="flex justify-between items-center">
-                                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
-                                                <div class="text-gray-700 dark:text-gray-600 text-xs">17:31</div>
-                                            </div>
-                                            <div class="text-gray-400 text-sm dark:text-gray-600">
-                                                Como estás?
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- END USER -->
-
-                                    <!-- USER -->
-                                    <div class="cursor-pointer flex px-10">
-                                        <div class="mr-4 relative w-12">
-                                            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
-                                            <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
-                                        </div>
-
                                         <div class="flex flex-col flex-1">
                                             <div class="flex justify-between items-center">
                                                 <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
@@ -80,7 +50,6 @@
                                             <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
                                             <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
                                         </div>
-
                                         <div class="flex flex-col flex-1">
                                             <div class="flex justify-between items-center">
                                                 <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
@@ -92,34 +61,78 @@
                                         </div>
                                     </div>
                                     <!-- END USER -->
-
-
+                                    <!-- USER -->
+                                    <div class="cursor-pointer flex px-10">
+                                        <div class="mr-4 relative w-12">
+                                            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
+                                            <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
+                                        </div>
+                                        <div class="flex flex-col flex-1">
+                                            <div class="flex justify-between items-center">
+                                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
+                                                <div class="text-gray-700 dark:text-gray-600 text-xs">17:31</div>
+                                            </div>
+                                            <div class="text-gray-400 text-sm dark:text-gray-600">
+                                                Como estás?
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- END USER -->
                                 </div>
                             </div>
-
-
-                            <!-- USER SECTION END -->
-
+                            <!-- user section end -->
                         </div>
                     </aside>
                     <!-- Left side bar end -->
-                </div>
-                <!-- user section start -->
-                <div
-                    class="
-                        flex-1
-                        overflow-y-scroll
-                        scrollbar-width
-                        scrollbar-thumb-color
-                        dark:scrollbar-thumb-color-dark
-                    ">
-                    <div class="w-full space-y-10">
 
-                    </div>
+
+                    <!-- right section -->
+                    <section class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex hidden">
+                        <div id="allmessages" class="flex-1 overflow-y-scroll p-5 scrollbar-thumb-color dark:scrollbar-thumb-color-dark scrollbar-widht space-y-5">
+                            <!-- LEFT MESSAGE START-->
+                            <div class="flex justify-start">
+                                <div class="w-14 mr-5">
+                                    <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
+                                </div>
+                                <div class="flex flex-col space-y-5 text-left">
+                                    <span class="bg-gray-100 text-gray-900 p-5 text-base rounded-r-lg rounded-b-lg inline flex max-w-xl dark:text-white dark:bg-gray-800  ">How are you ?</span>
+                                </div>
+                            </div>
+                            <!-- LEFT MESSAGE END-->
+
+                            <!-- right MESSAGE -->
+                            <div class="flex justify-end">
+                                <div class="space-y-5 text-right">
+                                    <div class="bg-indigo-800 text-white p-5 text-base rounded-l-lg rounded-b-lg inline-block max-w-xl">
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus officiis dolorum laborum quia doloribus consectetur animi, nemo iste doloremque placeat praesentium dolor veritatis explicabo dignissimos cupiditate fugiat quas, ducimus, veniam iusto expedita minus ipsa magni alias. Ullam eligendi magnam amet officiis accusamus dignissimos maxime iusto odit eveniet perferendis repellat laudantium rerum reprehenderit, ipsum vero nobis sunt quis. Earum commodi ab non deleniti culpa, illum consectetur, dicta fugiat repellendus aliquam atque!
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- right MESSAGE END-->
+                        </div>
+                        <!-- ALL MESSAGES -->
+                        <div class="flex-none p-5">
+                            <div class="">
+                                <div class="relative flex">
+                                    <span class="absolute inset-y-0 flex items-center">
+                                        <button class="inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none " type="button">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
+                                            </svg>
+                                        </button>
+                                    </span>
+
+                                    <input type="text" class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-12 bg-gray-100 dark:bg-gray-800 rounded-full py-3 pr-5">
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </section>
+                    <!-- right section end -->
                 </div>
-                <!-- user section end -->
+
             </div>
-
         </div>
         <!-- Script-->
         <style>
@@ -153,11 +166,9 @@
                 document.documentElement.classList.remove("dark")
             }
         </script>
-
         <script>
             var themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
             var themeToggleLightIcon = document.getElementById("theme-toggle-light-icon");
-
             // Cambiar los íconos según la configuración previa
             if (
                 localStorage.getItem("color-theme") === "dark" ||
@@ -168,11 +179,8 @@
             } else {
                 themeToggleDarkIcon.classList.remove("hidden");
             }
-
             var themeToggleBtn = document.getElementById("theme-toggle");
-
             themeToggleBtn.addEventListener("click", function() {
-
                 // Alternar los íconos dentro del botón
                 themeToggleDarkIcon.classList.toggle("hidden");
                 themeToggleLightIcon.classList.toggle("hidden");
@@ -197,9 +205,6 @@
                 }
             });
         </script>
-
-
-
         <h1>Inbox</h1>
         <ul>
             @foreach ($messages as $message)
