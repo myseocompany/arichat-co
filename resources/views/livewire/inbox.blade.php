@@ -1,7 +1,7 @@
 <div>
     <!--
         https://www.youtube.com/watch?v=ivKl89Pzq98&t=39s
-        --->
+        -->
     <div class="bg-gray-100 dark:bg-gray-800">
         <div class="flex flex-1 overflow-hidden h-screen max-screen-2xl m-auto">
             <div class="p-12 lg:p-20 w-full">
@@ -43,8 +43,28 @@
 
         </div>
         <!-- Script-->
+<style>
+    .scrollbar-width::-webkit-scrollbar {
+    width: 0.25rem;
+    height: 0.25rem;
+}
 
+.scrollbar-thumb-color::-webkit-scrollbar-thumb{
+    --bg-opacity: 1;
+    background-color: #edf2f7;
+    background-color: rgba(237, 242, 247, var(--bg-opacity));
+    border-radius: 0.25rem;
+}
+
+.dark .dark\:scrollbal-thumb-color-dark::-webkit-scrollbar-thumb{
+    --bg-opacity: 1;
+    background-color: #1f2937;
+    background-color: rgba(31, 41, 55, var(--bg-opacity));
+    border-radius: 0.25rem;
+}
+</style>
         <script>
+            
             if (
                 localStorage["color-theme"] === "dark" ||
                 (!("color-theme" in localStorage) &&
@@ -74,10 +94,11 @@
             var themeToggleBtn = document.getElementById("theme-toggle");
 
             themeToggleBtn.addEventListener("click", function() {
+                
                 // Alternar los íconos dentro del botón
                 themeToggleDarkIcon.classList.toggle("hidden");
                 themeToggleLightIcon.classList.toggle("hidden");
-
+                console.log(document.documentElement.classList);
                 // Si está configurado en el almacenamiento local
                 if (localStorage.getItem("color-theme")) {
                     if (localStorage.getItem("color-theme") === "light") {
