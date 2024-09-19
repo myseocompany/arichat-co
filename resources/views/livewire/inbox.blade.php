@@ -34,11 +34,90 @@
                                 <!-- switcher end -->
                             </div>
 
+                            <!-- user section start -->
+                            <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
+                                <div class="w-full space-y-10">
+                                     <!-- USER -->
+                                    <div class="cursor-pointer flex px-10">
+                                        <div class="mr-4 relative w-12">
+                                            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
+                                            <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
+                                        </div>
+                                    
+                                        <div class="flex flex-col flex-1">
+                                            <div class="flex justify-between items-center">
+                                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
+                                                <div class="text-gray-700 dark:text-gray-600 text-xs">17:31</div>
+                                            </div>
+                                            <div class="text-gray-400 text-sm dark:text-gray-600">
+                                                Como estás?
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <!-- END USER -->
+                                                                         <!-- USER -->
+                                                                         <div class="cursor-pointer flex px-10">
+                                                                            <div class="mr-4 relative w-12">
+                                                                                <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
+                                                                                <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
+                                                                            </div>
+                                                                        
+                                                                            <div class="flex flex-col flex-1">
+                                                                                <div class="flex justify-between items-center">
+                                                                                    <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
+                                                                                    <div class="text-gray-700 dark:text-gray-600 text-xs">17:31</div>
+                                                                                </div>
+                                                                                <div class="text-gray-400 text-sm dark:text-gray-600">
+                                                                                    Como estás?
+                                                                                </div>
+                                                                            </div>
+                                                                        </div> 
+                                                                        <!-- END USER -->
+                                                                                                             <!-- USER -->
+                                    <div class="cursor-pointer flex px-10">
+                                        <div class="mr-4 relative w-12">
+                                            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
+                                            <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
+                                        </div>
+                                    
+                                        <div class="flex flex-col flex-1">
+                                            <div class="flex justify-between items-center">
+                                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
+                                                <div class="text-gray-700 dark:text-gray-600 text-xs">17:31</div>
+                                            </div>
+                                            <div class="text-gray-400 text-sm dark:text-gray-600">
+                                                Como estás?
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <!-- END USER -->
+
+
+                                </div>
+                            </div>
+
+                           
+                            <!-- USER SECTION END -->
+                        
                         </div>
                     </aside>
                     <!-- Left side bar end -->
                 </div>
-
+                <!-- user section start -->
+                <div
+                    class="
+                        flex-1
+                        overflow-y-scroll
+                        scrollbar-width
+                        scrollbar-thumb-color
+                        dark:scrollbar-thumb-color-dark
+                    "
+                    >
+                    <div class="w-full space-y-10">
+                        
+                    </div>
+                </div>
+                <!-- user section end -->
             </div>
 
         </div>
