@@ -15,16 +15,16 @@
                                 <div>
                                     <button id="theme-toggle" type="button" class="text-gray-500 text-sm p-2.5">
 
-                                        
+
                                         <svg id="theme-toggle-dark-icon" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-                                          </svg>
-                                          
+                                        </svg>
+
 
                                         <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2m0 14v2m8.66-8.66h-2M4.34 12H2m15.66 4.34l-1.42 1.42M6.76 6.76l-1.42-1.42m12.02 12.02l-1.42-1.42M6.76 17.24l-1.42 1.42M12 8a4 4 0 100 8 4 4 0 000-8z" />
-                                          </svg>
-                                          
+                                        </svg>
+
 
 
 
@@ -37,13 +37,13 @@
                             <!-- user section start -->
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
                                 <div class="w-full space-y-10">
-                                     <!-- USER -->
+                                    <!-- USER -->
                                     <div class="cursor-pointer flex px-10">
                                         <div class="mr-4 relative w-12">
                                             <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
                                             <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
                                         </div>
-                                    
+
                                         <div class="flex flex-col flex-1">
                                             <div class="flex justify-between items-center">
                                                 <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
@@ -53,33 +53,16 @@
                                                 Como estás?
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>
                                     <!-- END USER -->
-                                                                         <!-- USER -->
-                                                                         <div class="cursor-pointer flex px-10">
-                                                                            <div class="mr-4 relative w-12">
-                                                                                <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
-                                                                                <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
-                                                                            </div>
-                                                                        
-                                                                            <div class="flex flex-col flex-1">
-                                                                                <div class="flex justify-between items-center">
-                                                                                    <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
-                                                                                    <div class="text-gray-700 dark:text-gray-600 text-xs">17:31</div>
-                                                                                </div>
-                                                                                <div class="text-gray-400 text-sm dark:text-gray-600">
-                                                                                    Como estás?
-                                                                                </div>
-                                                                            </div>
-                                                                        </div> 
-                                                                        <!-- END USER -->
-                                                                                                             <!-- USER -->
+
+                                    <!-- USER -->
                                     <div class="cursor-pointer flex px-10">
                                         <div class="mr-4 relative w-12">
                                             <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
                                             <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
                                         </div>
-                                    
+
                                         <div class="flex flex-col flex-1">
                                             <div class="flex justify-between items-center">
                                                 <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
@@ -89,16 +72,34 @@
                                                 Como estás?
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>
+                                    <!-- END USER -->
+                                    <!-- USER -->
+                                    <div class="cursor-pointer flex px-10">
+                                        <div class="mr-4 relative w-12">
+                                            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
+                                            <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
+                                        </div>
+
+                                        <div class="flex flex-col flex-1">
+                                            <div class="flex justify-between items-center">
+                                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
+                                                <div class="text-gray-700 dark:text-gray-600 text-xs">17:31</div>
+                                            </div>
+                                            <div class="text-gray-400 text-sm dark:text-gray-600">
+                                                Como estás?
+                                            </div>
+                                        </div>
+                                    </div>
                                     <!-- END USER -->
 
 
                                 </div>
                             </div>
 
-                           
+
                             <!-- USER SECTION END -->
-                        
+
                         </div>
                     </aside>
                     <!-- Left side bar end -->
@@ -111,10 +112,9 @@
                         scrollbar-width
                         scrollbar-thumb-color
                         dark:scrollbar-thumb-color-dark
-                    "
-                    >
+                    ">
                     <div class="w-full space-y-10">
-                        
+
                     </div>
                 </div>
                 <!-- user section end -->
@@ -122,28 +122,27 @@
 
         </div>
         <!-- Script-->
-<style>
-    .scrollbar-width::-webkit-scrollbar {
-    width: 0.25rem;
-    height: 0.25rem;
-}
+        <style>
+            .scrollbar-width::-webkit-scrollbar {
+                width: 0.25rem;
+                height: 0.25rem;
+            }
 
-.scrollbar-thumb-color::-webkit-scrollbar-thumb{
-    --bg-opacity: 1;
-    background-color: #edf2f7;
-    background-color: rgba(237, 242, 247, var(--bg-opacity));
-    border-radius: 0.25rem;
-}
+            .scrollbar-thumb-color::-webkit-scrollbar-thumb {
+                --bg-opacity: 1;
+                background-color: #edf2f7;
+                background-color: rgba(237, 242, 247, var(--bg-opacity));
+                border-radius: 0.25rem;
+            }
 
-.dark .dark\:scrollbal-thumb-color-dark::-webkit-scrollbar-thumb{
-    --bg-opacity: 1;
-    background-color: #1f2937;
-    background-color: rgba(31, 41, 55, var(--bg-opacity));
-    border-radius: 0.25rem;
-}
-</style>
+            .dark .dark\:scrollbal-thumb-color-dark::-webkit-scrollbar-thumb {
+                --bg-opacity: 1;
+                background-color: #1f2937;
+                background-color: rgba(31, 41, 55, var(--bg-opacity));
+                border-radius: 0.25rem;
+            }
+        </style>
         <script>
-            
             if (
                 localStorage["color-theme"] === "dark" ||
                 (!("color-theme" in localStorage) &&
@@ -173,7 +172,7 @@
             var themeToggleBtn = document.getElementById("theme-toggle");
 
             themeToggleBtn.addEventListener("click", function() {
-                
+
                 // Alternar los íconos dentro del botón
                 themeToggleDarkIcon.classList.toggle("hidden");
                 themeToggleLightIcon.classList.toggle("hidden");
@@ -204,7 +203,7 @@
         <h1>Inbox</h1>
         <ul>
             @foreach ($messages as $message)
-                <li>{{ $message['body'] }} ({{ $message['created_at']->diffForHumans() }})</li>
+            <li>{{ $message['body'] }} ({{ $message['created_at']->diffForHumans() }})</li>
             @endforeach
         </ul>
     </div>
