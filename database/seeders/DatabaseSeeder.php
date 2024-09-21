@@ -15,12 +15,15 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->withPersonalTeam()->create();
 
-        User::factory()->withPersonalTeam()->create([
-            'name' => 'Test User',
-            'email' => 'soporterapido@myseocompany.co',
-            'password' => bcrypt('myseo2025'),
-        ]);
 
         $this->call(TeamSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(LeadSeeder::class);
+        $this->call(MessageTypeSeeder::class);
+        $this->call(ChannelSeeder::class);
+        $this->call(MessageSeeder::class);
+        
+        
+
     }
 }

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('channel_id')->constrained('channels');
             $table->foreignId('message_type_id')->constrained('message_types');
             $table->text('content');
-            $table->text('media');
+            $table->text('media_url')->nullable(); // Campo renombrado y marcado como opcional
+            $table->boolean('is_outgoing')->default(true); // Añadir si es un mensaje de salida
             $table->timestamp('sent_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
         });

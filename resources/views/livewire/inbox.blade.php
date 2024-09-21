@@ -11,6 +11,7 @@
                         <div class="max-w-full h-full w-full flex flex-col">
                             <div class="flex p-10 justify-between ">
                                 <div class="text-4xl font-semibold dark:text-white text-gray-900">Chat</div>
+                                <div>{{$selectedLeadId}}</div>
                                 <!-- switcher start -->
                                 <div>
                                     <button id="theme-toggle" type="button" class="text-gray-500 text-sm p-2.5">
@@ -27,16 +28,21 @@
                             <!-- user section start -->
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
                                 <div class="w-full space-y-10">
+
+                                    
+
+                            
+                                @foreach ($leads as $lead)
                                     <!-- USER -->
-                                    <div class="cursor-pointer flex px-10">
+                                    <div class="cursor-pointer flex px-10" wire:click="selectLead({{ $lead->id }})">
                                         <div class="mr-4 relative w-12">
-                                            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
+                                            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="{{ $lead->name }}">
                                             <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
                                         </div>
                                         <div class="flex flex-col flex-1">
                                             <div class="flex justify-between items-center">
-                                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
-                                                <div class="text-gray-700 dark:text-gray-600 text-xs">17:31</div>
+                                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">{{ $lead->name }}</div>
+                                                <div class="text-gray-700 dark:text-gray-600 text-xs">{{ $lead->created_at->format('H:i') }}</div>
                                             </div>
                                             <div class="text-gray-400 text-sm dark:text-gray-600">
                                                 Como estás?
@@ -44,40 +50,8 @@
                                         </div>
                                     </div>
                                     <!-- END USER -->
-                                    <!-- USER -->
-                                    <div class="cursor-pointer flex px-10">
-                                        <div class="mr-4 relative w-12">
-                                            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
-                                            <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
-                                        </div>
-                                        <div class="flex flex-col flex-1">
-                                            <div class="flex justify-between items-center">
-                                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
-                                                <div class="text-gray-700 dark:text-gray-600 text-xs">17:31</div>
-                                            </div>
-                                            <div class="text-gray-400 text-sm dark:text-gray-600">
-                                                Como estás?
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- END USER -->
-                                    <!-- USER -->
-                                    <div class="cursor-pointer flex px-10">
-                                        <div class="mr-4 relative w-12">
-                                            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
-                                            <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
-                                        </div>
-                                        <div class="flex flex-col flex-1">
-                                            <div class="flex justify-between items-center">
-                                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">James Bond</div>
-                                                <div class="text-gray-700 dark:text-gray-600 text-xs">17:31</div>
-                                            </div>
-                                            <div class="text-gray-400 text-sm dark:text-gray-600">
-                                                Como estás?
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- END USER -->
+                                    @endforeach
+                                            
                                 </div>
                             </div>
                             <!-- user section end -->
@@ -89,29 +63,56 @@
                     <!-- right section -->
                     <section class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex hidden">
                         <div id="allmessages" class="flex-1 overflow-y-scroll p-5 scrollbar-thumb-color dark:scrollbar-thumb-color-dark scrollbar-widht space-y-5">
-                            <!-- LEFT MESSAGE START-->
-                            <div class="flex justify-start">
-                                <div class="w-14 mr-5">
-                                    <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="">
-                                </div>
-                                <div class="flex flex-col space-y-5 text-left">
-                                    <span class="bg-gray-100 text-gray-900 p-5 text-base rounded-r-lg rounded-b-lg inline flex max-w-xl dark:text-white dark:bg-gray-800  ">How are you ?</span>
-                                </div>
-                            </div>
-                            <!-- LEFT MESSAGE END-->
+                            
+   <!-- Message section -->
+   @foreach ($messages as $message)
+   
+   <div class="flex {{ $message->is_outgoing ? 'justify-end' : 'justify-start' }}">
+        @if(!$message->is_outgoing)
+        <!-- Avatar for incoming messages -->
+        <div class="w-14 mr-5">
+            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar of ">
+        </div>
+        @endif
+       <div class="p-5 text-base rounded-lg inline-block max-w-xl
+                   {{ $message->is_outgoing ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
+           {{ $message->content }}
+       </div>
+   </div>
+   @endforeach
 
-                            <!-- right MESSAGE -->
-                            <div class="flex justify-end">
-                                <div class="space-y-5 text-right">
-                                    <div class="bg-indigo-800 text-white p-5 text-base rounded-l-lg rounded-b-lg inline-block max-w-xl">
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus officiis dolorum laborum quia doloribus consectetur animi, nemo iste doloremque placeat praesentium dolor veritatis explicabo dignissimos cupiditate fugiat quas, ducimus, veniam iusto expedita minus ipsa magni alias. Ullam eligendi magnam amet officiis accusamus dignissimos maxime iusto odit eveniet perferendis repellat laudantium rerum reprehenderit, ipsum vero nobis sunt quis. Earum commodi ab non deleniti culpa, illum consectetur, dicta fugiat repellendus aliquam atque!
-                                    </div>
-                                </div>
+   <div
+                        x-data="{
+                            messages: [],
+
+                            broadcastMessage () {
+                                fetch(`/broadcast`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
+                            }
+                        }"
+                        x-init="
+                            Echo.channel('global')
+                                .listen('.Message', (e) => {
+                                    messages.push(e.body)
+                                })
+                        "
+                    >
+                        <div>
+                            <button x-on:click="broadcastMessage">Broadcast a message</button>
+
+                            <div class="mt-6" x-show="messages.length">
+                                <template x-for="message in messages">
+                                    <div x-text="message"></div>
+                                </template>
                             </div>
-                            <!-- right MESSAGE END-->
+                        </div>
+                    </div>
+   
+ 
                         </div>
                         <!-- ALL MESSAGES -->
                         <div class="flex-none p-5">
+                            
+
                             <div class="">
                                 <div class="relative flex">
                                     <span class="absolute inset-y-0 flex items-center">
@@ -214,11 +215,6 @@
                 }
             });
         </script>
-        <h1>Inbox</h1>
-        <ul>
-            @foreach ($messages as $message)
-            <li>{{ $message['body'] }} ({{ $message['created_at']->diffForHumans() }})</li>
-            @endforeach
-        </ul>
+
     </div>
 </div>

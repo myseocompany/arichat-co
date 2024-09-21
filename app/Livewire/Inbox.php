@@ -3,18 +3,41 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Models\Lead;
+use App\Models\Message;
+use Illuminate\Support\Facades\Auth;
 
 class Inbox extends Component
 {
-    public $messages;
+    public $leads;
+    public $messages = [];
+    public $selectedLeadId;
 
     public function mount()
     {
-        // Aquí puedes cargar mensajes desde una base de datos, por ejemplo
-        $this->messages = [
-            ['id' => 1, 'body' => 'Hola, ¿cómo estás?', 'created_at' => now()],
-            ['id' => 2, 'body' => '¡Recuerda la reunión mañana!', 'created_at' => now()->subDay()],
-        ];
+        // Obtener el usuario autenticado
+        $user = Auth::user();
+
+        $user = Auth::user();
+        if ($user) {
+            $this->leads = Lead::where('team_id', $user->current_team_id)->get();
+            if($this->leads->first())
+                $this->selectLead($this->leads->first()->id);
+        } else {
+            $this->leads = collect();
+        }
+    }
+
+
+    public function selectLead($leadId)
+    {
+        $this->selectedLeadId = $leadId;
+        $this->loadMessages();
+    }
+
+    public function loadMessages()
+    {
+        $this->messages = Message::where('lead_id', $this->selectedLeadId)->get();
     }
 
     public function render()
