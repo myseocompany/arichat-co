@@ -20,5 +20,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'soporterapido@myseocompany.co',
             'password' => bcrypt('myseo2025'),
         ]);
+
+        $this->call(TeamSeeder::class);
     }
 }

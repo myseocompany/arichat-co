@@ -4,7 +4,7 @@
         -->
     <div class="bg-gray-100 dark:bg-gray-800">
         <div class="flex flex-1 overflow-hidden h-screen max-screen-2xl m-auto">
-            <div class="p-12 lg:p-20 w-full">
+            <div class="p-0 lg:p-0 w-full">
                 <div class="max-h-full h-full flex flex-row">
                     <!-- Left side bar start -->
                     <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg mr-5">

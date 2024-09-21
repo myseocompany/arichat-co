@@ -9,13 +9,12 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('teams', function (Blueprint $table) {
+    public function up(): void {
+        Schema::create('channels', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('name');
-            $table->boolean('personal_team')->nullable();
+            $table->string('type');
+            $table->foreignId('team_id')->constrained('teams');
+            $table->text('settings');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('teams');
+        Schema::dropIfExists('channels');
     }
 };
