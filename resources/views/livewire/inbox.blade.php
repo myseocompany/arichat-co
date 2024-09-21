@@ -29,10 +29,10 @@
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
                                 <div class="w-full space-y-10">
 
-                                    
 
-                            
-                                @foreach ($leads as $lead)
+
+
+                                    @foreach ($leads as $lead)
                                     <!-- USER -->
                                     <div class="cursor-pointer flex px-10" wire:click="selectLead({{ $lead->id }})">
                                         <div class="mr-4 relative w-12">
@@ -51,7 +51,7 @@
                                     </div>
                                     <!-- END USER -->
                                     @endforeach
-                                            
+
                                 </div>
                             </div>
                             <!-- user section end -->
@@ -63,55 +63,54 @@
                     <!-- right section -->
                     <section class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex hidden">
                         <div id="allmessages" class="flex-1 overflow-y-scroll p-5 scrollbar-thumb-color dark:scrollbar-thumb-color-dark scrollbar-widht space-y-5">
-                            
-   <!-- Message section -->
-   @foreach ($messages as $message)
-   
-   <div class="flex {{ $message->is_outgoing ? 'justify-end' : 'justify-start' }}">
-        @if(!$message->is_outgoing)
-        <!-- Avatar for incoming messages -->
-        <div class="w-14 mr-5">
-            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar of ">
-        </div>
-        @endif
-       <div class="p-5 text-base rounded-lg inline-block max-w-xl
-                   {{ $message->is_outgoing ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
-           {{ $message->content }}
-       </div>
-   </div>
-   @endforeach
 
-   <div
-                        x-data="{
+                            <!-- Message section -->
+                            @foreach ($messages as $message)
+
+                            <div class="flex {{ $message->is_outgoing ? 'justify-end' : 'justify-start' }}">
+                                @if(!$message->is_outgoing)
+                                <!-- Avatar for incoming messages -->
+                                <div class="w-14 mr-5">
+                                    <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar of ">
+                                </div>
+                                @endif
+                                <div class="p-5 text-base rounded-lg inline-block max-w-xl
+                   {{ $message->is_outgoing ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
+                                    {{ $message->content }}
+                                </div>
+                            </div>
+                            @endforeach
+
+                            <div
+                                x-data="{
                             messages: [],
 
                             broadcastMessage () {
                                 fetch(`/broadcast`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
                             }
                         }"
-                        x-init="
+                                x-init="
                             Echo.channel('global')
                                 .listen('.Message', (e) => {
                                     messages.push(e.body)
                                 })
-                        "
-                    >
-                        <div>
-                            <button x-on:click="broadcastMessage">Broadcast a message</button>
+                        ">
+                                <div>
+                                    <button x-on:click="broadcastMessage">Broadcast a message</button>
 
-                            <div class="mt-6" x-show="messages.length">
-                                <template x-for="message in messages">
-                                    <div x-text="message"></div>
-                                </template>
+                                    <div class="mt-6" x-show="messages.length">
+                                        <template x-for="message in messages">
+                                            <div x-text="message"></div>
+                                        </template>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-   
- 
+
+
                         </div>
                         <!-- ALL MESSAGES -->
                         <div class="flex-none p-5">
-                            
+
 
                             <div class="">
                                 <div class="relative flex">
