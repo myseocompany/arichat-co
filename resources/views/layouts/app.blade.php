@@ -21,7 +21,7 @@
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex">
             <!-- Sidebar -->
             <aside class="w-64 bg-white dark:bg-gray-800 shadow-lg h-screen">
-                <div class="p-6">
+                <div class="p-0">
                     <!-- Navigation -->
                     @livewire('navigation-menu')
                 </div>
