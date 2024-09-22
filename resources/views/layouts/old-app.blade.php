@@ -18,25 +18,24 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex">
-            <!-- Sidebar -->
-            <aside class="w-64 bg-white dark:bg-gray-800 shadow-lg h-screen">
-                <div class="p-6">
-                    <!-- Navigation -->
-                    @livewire('navigation-menu')
-                </div>
-            </aside>
+        <x-banner />
 
-            <!-- Contenido Principal -->
-            <div class="flex-1">
-                
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+            @livewire('navigation-menu')
 
+            <!-- Page Heading -->
+            @if (isset($header))
+                <header class="bg-white dark:bg-gray-800 shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endif
 
-                <!-- Page Content -->
-                <main class="p-0">
-                    {{ $slot }}
-                </main>
-            </div>
+            <!-- Page Content -->
+            <main>
+                {{ $slot }}
+            </main>
         </div>
 
         @stack('modals')
