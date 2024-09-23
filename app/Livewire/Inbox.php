@@ -6,23 +6,24 @@ use Livewire\Component;
 use App\Models\Lead;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class Inbox extends Component
 {
     public $leads;
     public $messages = [];
     public $selectedLeadId;
+    public $newMessageContent;
 
     public function mount()
     {
-        // Obtain the authenticated user
+        // Obtener el usuario autenticado
         $user = Auth::user();
 
         if ($user) {
             $this->leads = Lead::where('team_id', $user->current_team_id)->get();
-            if ($this->leads->first())
+            if($this->leads->first())
                 $this->selectLead($this->leads->first()->id);
         } else {
             $this->leads = collect();
@@ -40,8 +41,10 @@ class Inbox extends Component
         $this->messages = Message::where('lead_id', $this->selectedLeadId)->get();
     }
 
-    public function sendMessage($content)
+    public function sendMessage()
     {
+        $content = $this->newMessageContent;
+
         // Obtener el canal de WhatsApp desde la base de datos
         $channel = DB::table('channels')->where('type', 'WhatsApp')->first();
 
@@ -77,6 +80,9 @@ class Inbox extends Component
 
             // Recargar los mensajes
             $this->loadMessages();
+
+            // Limpiar el contenido del nuevo mensaje
+            $this->newMessageContent = '';
         } else {
             // Manejar el error en caso de que falle el envío
             session()->flash('error', 'No se pudo enviar el mensaje.');

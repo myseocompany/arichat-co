@@ -95,30 +95,9 @@
                                     </div>
                                 </div>
                             @endforeach
-
-                            <div x-data="{
-                                messages: [],
-                                broadcastMessage() {
-                                    fetch(`/broadcast`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
-                                }
-                            }" x-init="Echo.channel('global')
-                                .listen('.Message', (e) => {
-                                    messages.push(e.body)
-                                })">
-                                <div>
-                                    <button x-on:click="broadcastMessage">Broadcast a message</button>
-                                    <div class="mt-6" x-show="messages.length">
-                                        <template x-for="message in messages">
-                                            <div x-text="message"></div>
-                                        </template>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <!-- ALL MESSAGES -->
                         <div class="flex-none p-5">
-
-
                             <div class="">
                                 <div class="relative flex">
                                     <span class="absolute inset-y-0 flex items-center">
@@ -133,25 +112,23 @@
                                         </button>
                                     </span>
 
-                                    <input type="text"
+                                    <input type="text" wire:model="newMessageContent"
+                                        placeholder="Escribe tu mensaje aquí..."
                                         class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-12 bg-gray-100 dark:bg-gray-800 rounded-full py-3 pr-5">
 
                                     <div class="ml-5">
-                                        <button
+                                        <button wire:click="sendMessage"
                                             class="inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-white bg-indigo-800 hover:bg-indigo-600 focus:outline-none ">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="size-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
                                             </svg>
-
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                     </section>
                     <!-- right section end -->
                 </div>
