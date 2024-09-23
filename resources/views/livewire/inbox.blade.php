@@ -96,6 +96,26 @@
                                 </div>
                             @endforeach
                         </div>
+
+
+                        <div x-data="{
+                                messages: [],
+                                broadcastMessage() {
+                                    fetch(`/broadcast`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
+                                }
+                            }" x-init="Echo.channel('global')
+                                .listen('.Message', (e) => {
+                                    messages.push(e.body)
+                                })">
+                                <div>
+                                    <button x-on:click="broadcastMessage">Broadcast a message</button>
+                                    <div class="mt-6" x-show="messages.length">
+                                        <template x-for="message in messages">
+                                            <div x-text="message"></div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
                         <!-- ALL MESSAGES -->
                         <div class="flex-none p-5">
                             <div class="">
