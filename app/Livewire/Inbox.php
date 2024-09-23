@@ -6,8 +6,6 @@ use Livewire\Component;
 use App\Models\Lead;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 
 class Inbox extends Component
 {
@@ -45,48 +43,14 @@ class Inbox extends Component
     {
         $content = $this->newMessageContent;
 
-        // Obtener el canal de WhatsApp desde la base de datos
-        $channel = DB::table('channels')->where('type', 'WhatsApp')->first();
+        // Agregar el mensaje a la lista de mensajes en memoria
+        $this->messages[] = (object)[
+            'content' => $content,
+            'is_outgoing' => true,
+        ];
 
-        // Verificar si el canal existe
-        if (!$channel) {
-            session()->flash('error', 'No se encontró un canal de WhatsApp configurado.');
-            return;
-        }
-
-        // Decodificar los ajustes del canal
-        $settings = json_decode($channel->settings);
-
-        // Verificar si el webhook_url y el número de teléfono existen en los ajustes
-        if (!isset($settings->webhook_url) || !isset($settings->phone_number)) {
-            session()->flash('error', 'La configuración del canal de WhatsApp es incorrecta.');
-            return;
-        }
-
-        // Enviar el mensaje al webhook de WAToolbox
-        $response = Http::post($settings->webhook_url, [
-            'phone_number' => $settings->phone_number, // Utilizar el número desde los settings
-            'message' => $content,
-        ]);
-
-        // Verificar si la solicitud fue exitosa
-        if ($response->successful()) {
-            // Guardar el mensaje en la base de datos
-            Message::create([
-                'lead_id' => $this->selectedLeadId,
-                'content' => $content,
-                'is_outgoing' => true,
-            ]);
-
-            // Recargar los mensajes
-            $this->loadMessages();
-
-            // Limpiar el contenido del nuevo mensaje
-            $this->newMessageContent = '';
-        } else {
-            // Manejar el error en caso de que falle el envío
-            session()->flash('error', 'No se pudo enviar el mensaje.');
-        }
+        // Limpiar el contenido del nuevo mensaje
+        $this->newMessageContent = '';
     }
 
     public function render()
