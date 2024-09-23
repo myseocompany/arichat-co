@@ -15,10 +15,9 @@ class Inbox extends Component
 
     public function mount()
     {
-        // Obtener el usuario autenticado
+        // Obtain the authenticated user
         $user = Auth::user();
 
-        $user = Auth::user();
         if ($user) {
             $this->leads = Lead::where('team_id', $user->current_team_id)->get();
             if($this->leads->first())
@@ -27,7 +26,6 @@ class Inbox extends Component
             $this->leads = collect();
         }
     }
-
 
     public function selectLead($leadId)
     {
@@ -42,6 +40,8 @@ class Inbox extends Component
 
     public function render()
     {
-        return view('livewire.inbox');
+        return view('livewire.inbox', [
+            'messages' => $this->messages
+        ]);
     }
 }
