@@ -1,41 +1,22 @@
 <?php
-
-namespace App\Livewire;
+namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Models\Lead;
 use App\Models\Message;
-use Illuminate\Support\Facades\Auth;
 
 class Inbox extends Component
 {
-    public $leads;
-    public $messages = [];
+    public $messages;
     public $selectedLeadId;
+
+    protected $listeners = ['messageReceived' => 'refreshMessages'];
 
     public function mount()
     {
-        // Obtener el usuario autenticado
-        $user = Auth::user();
-
-        $user = Auth::user();
-        if ($user) {
-            $this->leads = Lead::where('team_id', $user->current_team_id)->get();
-            if($this->leads->first())
-                $this->selectLead($this->leads->first()->id);
-        } else {
-            $this->leads = collect();
-        }
+        $this->messages = Message::where('lead_id', $this->selectedLeadId)->get();
     }
 
-
-    public function selectLead($leadId)
-    {
-        $this->selectedLeadId = $leadId;
-        $this->loadMessages();
-    }
-
-    public function loadMessages()
+    public function refreshMessages()
     {
         $this->messages = Message::where('lead_id', $this->selectedLeadId)->get();
     }

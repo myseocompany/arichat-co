@@ -1,7 +1,4 @@
 <div>
-    <!--
-        https://www.youtube.com/watch?v=ivKl89Pzq98&t=39s
-        -->
     <div class="bg-gray-100 dark:bg-gray-800">
         <div class="flex flex-1 overflow-hidden h-screen max-screen-2xl m-auto">
             <div class="p-0 lg:p-0 w-full">
@@ -28,10 +25,6 @@
                             <!-- user section start -->
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
                                 <div class="w-full space-y-10">
-
-
-
-
                                     @foreach ($leads as $lead)
                                     <!-- USER -->
                                     <div class="cursor-pointer flex px-10" wire:click="selectLead({{ $lead->id }})">
@@ -51,7 +44,6 @@
                                     </div>
                                     <!-- END USER -->
                                     @endforeach
-
                                 </div>
                             </div>
                             <!-- user section end -->
@@ -59,14 +51,11 @@
                     </aside>
                     <!-- Left side bar end -->
 
-
                     <!-- right section -->
                     <section class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex hidden">
                         <div id="allmessages" class="flex-1 overflow-y-scroll p-5 scrollbar-thumb-color dark:scrollbar-thumb-color-dark scrollbar-widht space-y-5">
-
                             <!-- Message section -->
                             @foreach ($messages as $message)
-
                             <div class="flex {{ $message->is_outgoing ? 'justify-end' : 'justify-start' }}">
                                 @if(!$message->is_outgoing)
                                 <!-- Avatar for incoming messages -->
@@ -81,23 +70,14 @@
                             </div>
                             @endforeach
 
-                            <div
-                                x-data="{
-                            messages: [],
-
-                            broadcastMessage () {
-                                fetch(`/broadcast`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
-                            }
-                        }"
-                                x-init="
-                            Echo.channel('global')
-                                .listen('.Message', (e) => {
-                                    messages.push(e.body)
-                                })
-                        ">
+                            <div x-data="{ messages: @entangle('messages') }" x-init="
+                                Echo.private('messages.{{ $selectedLeadId }}')
+                                    .listen('MessageReceived', (e) => {
+                                        messages.push(e.message);
+                                    });
+                            ">
                                 <div>
                                     <button x-on:click="broadcastMessage">Broadcast a message</button>
-
                                     <div class="mt-6" x-show="messages.length">
                                         <template x-for="message in messages">
                                             <div x-text="message"></div>
@@ -105,13 +85,9 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                         <!-- ALL MESSAGES -->
                         <div class="flex-none p-5">
-
-
                             <div class="">
                                 <div class="relative flex">
                                     <span class="absolute inset-y-0 flex items-center">
@@ -121,26 +97,20 @@
                                             </svg>
                                         </button>
                                     </span>
-
                                     <input type="text" class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-12 bg-gray-100 dark:bg-gray-800 rounded-full py-3 pr-5">
-
                                     <div class="ml-5">
                                         <button class="inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-white bg-indigo-800 hover:bg-indigo-600 focus:outline-none ">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
                                             </svg>
-
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                     </section>
                     <!-- right section end -->
                 </div>
-
             </div>
         </div>
         <!-- Script-->
@@ -214,6 +184,5 @@
                 }
             });
         </script>
-
     </div>
 </div>
