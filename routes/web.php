@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Broadcast;
+use App\Http\Controllers\MessageController;
+
+Route::post('/send-message', [MessageController::class, 'sendMessage']);
+Route::post('/webhook', [MessageController::class, 'receiveMessage']);
 
 Route::get('/', function () {
     return view('welcome');
