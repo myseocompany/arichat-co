@@ -86,7 +86,8 @@
                                         <!-- Avatar for incoming messages -->
                                         <div class="w-14 mr-5">
                                             <img class="rounded-full w-full mr-2"
-                                                src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar of ">
+                                                src="https://unavatar.io/{{ $message->lead->email }}"
+                                                alt="Avatar of {{ $message->lead->name }}">
                                         </div>
                                     @endif
                                     <div
