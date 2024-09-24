@@ -8,6 +8,8 @@ use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Events\MessageProcessed;
+use App\Services\WAToolboxService;
+ 
 
 class Inbox extends Component
 {
@@ -15,12 +17,14 @@ class Inbox extends Component
     public $messages = [];
     public $selectedLeadId;
     public $newMessageContent = "";
+    
 
     public function mount()
     {
         // Obtener el usuario autenticado
         $user = Auth::user();
 
+        
         if ($user) {
             $this->leads = Lead::where('team_id', $user->current_team_id)->get();
             if($this->leads->first())
@@ -45,12 +49,13 @@ class Inbox extends Component
 
     public function sendMessage()
     {
+        $waToolboxService = new WAToolboxService();
 
         
         $message = Message::create([
             'lead_id' => $this->selectedLeadId,
             'user_id' => Auth::id(),
-            'channel_id' => 1, // Suponiendo un canal por defecto
+            'message_source_id' => 1, // Suponiendo un canal por defecto
             'message_type_id' => 1, // Suponiendo un tipo de mensaje por defecto
             'content' => $this->newMessageContent,
             'is_outgoing' => true,
@@ -58,6 +63,25 @@ class Inbox extends Component
 
         $this->messages->push($message);
         $this->newMessageContent = '';
+        $lead = Lead::find($this->selectedLeadId);
+        $data = [];
+        $data['phone_number'] = $lead->phone;
+        $data['message'] = $message;
+        
+ 
+
+        if($lead)
+            $waToolboxService->sendToWhatsApp($data);
+        
+        $user = Auth::user();
+
+        if ($user) {
+            
+            if($this->leads->first())
+                $this->selectLead($this->leads->first()->id);
+        } else {
+            $this->leads = collect();
+        }
         
         //MessageProcessed::dispatch($message);
          

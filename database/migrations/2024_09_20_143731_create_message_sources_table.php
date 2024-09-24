@@ -10,10 +10,11 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void {
-        Schema::create('channels', function (Blueprint $table) {
+        Schema::create('message_sources', function (Blueprint $table) {
             $table->id();
             $table->string('type');
             $table->foreignId('team_id')->constrained('teams');
+            $table->boolean('is_default')->default(false);  // Columna añadida para marcar el canal predeterminado
             $table->text('settings');
             $table->timestamps();
         });
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('channels');
+        Schema::dropIfExists('message_sources');
     }
 };

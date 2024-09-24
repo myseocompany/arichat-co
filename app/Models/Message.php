@@ -13,7 +13,7 @@ class Message extends Model
     protected $fillable = [
         'lead_id',
         'user_id',
-        'channel_id',
+        'message_source_id',
         'message_type_id',
         'content',
         'is_outgoing'

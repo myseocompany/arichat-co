@@ -14,7 +14,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('lead_id')->constrained('leads');
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('channel_id')->constrained('channels');
+            $table->foreignId('message_source_id')->constrained('message_sources');
             $table->foreignId('message_type_id')->constrained('message_types');
             $table->text('content');
             $table->text('media_url')->nullable(); // Campo renombrado y marcado como opcional

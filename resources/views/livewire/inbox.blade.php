@@ -27,7 +27,7 @@
                         <div class="max-w-full h-full w-full flex flex-col">
                             <div class="flex p-10 justify-between ">
                                 <div class="text-4xl font-semibold dark:text-white text-gray-900">Chat</div>
-                                <div>{{$selectedLeadId}}</div>
+                                <div></div>
                                 <!-- switcher start -->
                                 <div>
                                     <button id="theme-toggle" type="button" class="text-gray-500 text-sm p-2.5">

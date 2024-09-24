@@ -4,21 +4,31 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use App\Services\WAToolBoxService;
 
 class MessageController extends Controller
 {
+    protected $waToolBoxService;
+
+
+    public function __construct(WAToolBoxService $waToolBoxService)
+    {
+        $this->waToolBoxService = $waToolBoxService;
+    }
+
     public function sendMessage(Request $request)
     {
         // Recuperar la URL del webhook desde la base de datos
         $channel = DB::table('channels')->where('type', 'WhatsApp')->first();
         $webhookUrl = json_decode($channel->settings)->webhook_url;
-
-        $response = Http::post($webhookUrl, [
+        $response = $this->waToolBoxService->sendToWhatsApp([
             'phone_number' => $request->input('phone_number'),
             'message' => $request->input('message'),
         ]);
 
-        return response()->json($response->json());
+        return response()->json($response);
+
+        
     }
 
     public function receiveMessage(Request $request)

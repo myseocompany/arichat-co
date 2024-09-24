@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(LeadSeeder::class);
         $this->call(MessageTypeSeeder::class);
-        $this->call(ChannelSeeder::class);
+        $this->call(MessageSourceSeeder::class);
         $this->call(MessageSeeder::class);
         
         

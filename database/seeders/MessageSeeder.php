@@ -20,7 +20,7 @@ class MessageSeeder extends Seeder
             [
                 'user_id' => 1,  // Suponiendo que es el mismo usuario que 'escucha'
                 'lead_id' => 1,  // ID del lead que dice "Hola"
-                'channel_id' => 1,
+                'message_source_id' => 1,
                 'message_type_id' => 1,
                 'content' => 'Hola',  // Mensaje de entrada del lead
                 'is_outgoing' => false,  // Este mensaje es de entrada
@@ -30,7 +30,7 @@ class MessageSeeder extends Seeder
             [
                 'user_id' => 1,  // ID del usuario que recibe el mensaje
                 'lead_id' => 1,  // ID del lead que envía el mensaje
-                'channel_id' => 1,
+                'message_source_id' => 1,
                 'message_type_id' => 1,
                 'content' => '¡Hola! Bienvenido a nuestro servicio.',
                 'is_outgoing' => true,  // Este mensaje es de entrada
@@ -41,7 +41,7 @@ class MessageSeeder extends Seeder
             [
                 'user_id' => 1,
                 'lead_id' => 1,
-                'channel_id' => 1,
+                'message_source_id' => 1,
                 'message_type_id' => 1,
                 'content' => '¿Hay algo en lo que pueda asistirte hoy?',
                 'is_outgoing' => true,  // Este mensaje es de salida

@@ -64,4 +64,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Método para obtener el canal predeterminado del equipo actual
+    public function getDefaultChannel()
+    {
+        if ($this->currentTeam) {
+            return $this->currentTeam->defaultChannel;
+        }
+
+        return null;
+    }
+
 }

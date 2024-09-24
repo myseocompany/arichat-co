@@ -7,6 +7,7 @@ use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
+use App\Models\MessageSource;
 
 class Team extends JetstreamTeam
 {
@@ -43,5 +44,13 @@ class Team extends JetstreamTeam
         return [
             'personal_team' => 'boolean',
         ];
+    }
+
+
+
+    // Relación con el modelo Channel para acceder al canal predeterminado
+    public function defaultChannel()
+    {
+        return $this->hasOne(MessageSource::class)->where('is_default', true);
     }
 }
