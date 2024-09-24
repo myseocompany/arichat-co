@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Broadcasting\Channel;
 
 /*
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
@@ -8,7 +9,10 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 */
 
-Broadcast::channel('global', function () {
+/*
+Broadcast::channel('chat', function () {
     //
 });
+*/
 
+return new Channel('chat');

@@ -1,4 +1,20 @@
-<div>
+<div id="messages-body"
+    x-data="{height:0, conversationElement:document.getElementById('allmessages')
+    }"
+    x-init="
+        height = conversationElement.scrollHeight;
+        console.log('init ' + height + ':' + conversationElement.scrollTop);
+        $nextTick(()=>conversationElement.scrollTop = height);
+    "
+    
+    @scrollbottom.window="
+        $nextTick(()=>conversationElement.scrollTop = height);
+        console.log('event ' + height + ':' + conversationElement.scrollTop);
+        height = conversationElement.scrollHeight;
+    "
+
+    
+    >
     <!--
         https://www.youtube.com/watch?v=ivKl89Pzq98&t=39s
         -->
@@ -52,6 +68,13 @@
                                     <!-- END USER -->
                                     @endforeach
 
+                                    <!-- Script para scroll automático al último mensaje -->
+<script>
+
+
+
+</script>
+
                                 </div>
                             </div>
                             <!-- user section end -->
@@ -61,8 +84,21 @@
 
 
                     <!-- right section -->
-                    <section class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex hidden">
-                        <div id="allmessages" class="flex-1 overflow-y-scroll p-5 scrollbar-thumb-color dark:scrollbar-thumb-color-dark scrollbar-widht space-y-5">
+                    <section  class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex hidden">
+                        <div id="allmessages" class="flex-1 overflow-y-scroll p-5 scrollbar-thumb-color dark:scrollbar-thumb-color-dark scrollbar-widht space-y-5"
+                        
+                        
+                        
+                        x-data="{
+                            
+                            
+                        }"
+                                x-init="
+                            Echo.channel('global')
+                                .listen('.Message', (e) => {
+                                    messages.push(e.body)
+                                })
+                        ">
 
                             <!-- Message section -->
                             @foreach ($messages as $message)
@@ -88,6 +124,8 @@
                             broadcastMessage () {
                                 fetch(`/broadcast`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
                             }
+                        
+                            
                         }"
                                 x-init="
                             Echo.channel('global')
@@ -122,10 +160,10 @@
                                         </button>
                                     </span>
 
-                                    <input type="text" class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-12 bg-gray-100 dark:bg-gray-800 rounded-full py-3 pr-5">
+                                    <input type="text"  wire:keydown.enter="sendMessage" wire:model="newMessageContent" id="newMessageContent" name="newMessageContent" class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-12 bg-gray-100 dark:bg-gray-800 rounded-full py-3 pr-5" placeholder="Type your message here...">
 
                                     <div class="ml-5">
-                                        <button class="inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-white bg-indigo-800 hover:bg-indigo-600 focus:outline-none ">
+                                        <button wire:click="sendMessage" class="inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-white bg-indigo-800 hover:bg-indigo-600 focus:outline-none ">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
                                             </svg>
@@ -144,6 +182,7 @@
             </div>
         </div>
         <!-- Script-->
+       
         <style>
             .scrollbar-width::-webkit-scrollbar {
                 width: 0.25rem;
@@ -214,6 +253,7 @@
                 }
             });
         </script>
+
 
     </div>
 </div>

@@ -6,13 +6,15 @@ use Livewire\Component;
 use App\Models\Lead;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Events\MessageProcessed;
 
 class Inbox extends Component
 {
     public $leads;
     public $messages = [];
     public $selectedLeadId;
-    public $newMessageContent;
+    public $newMessageContent = "";
 
     public function mount()
     {
@@ -39,18 +41,27 @@ class Inbox extends Component
         $this->messages = Message::where('lead_id', $this->selectedLeadId)->get();
     }
 
+
+
     public function sendMessage()
     {
-        $content = $this->newMessageContent;
 
-        // Agregar el mensaje a la lista de mensajes en memoria
-        $this->messages[] = (object)[
-            'content' => $content,
+        
+        $message = Message::create([
+            'lead_id' => $this->selectedLeadId,
+            'user_id' => Auth::id(),
+            'channel_id' => 1, // Suponiendo un canal por defecto
+            'message_type_id' => 1, // Suponiendo un tipo de mensaje por defecto
+            'content' => $this->newMessageContent,
             'is_outgoing' => true,
-        ];
+        ]);
 
-        // Limpiar el contenido del nuevo mensaje
+        $this->messages->push($message);
         $this->newMessageContent = '';
+        
+        //MessageProcessed::dispatch($message);
+         
+        $this->dispatch('scrollbottom');
     }
 
     public function render()
