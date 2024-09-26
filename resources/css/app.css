@@ -2,7 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'Arista Pro Alternate';
+    src: url('/path/to/fonts/Arista-Pro-Alternate-Bold-trial.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
 [x-cloak] {
     display: none;
 }
 
+
+.text-rosado {
+    color: #ff003d;
+}
+
+.bg-rosado {
+    background-color: #ff003d;
+}
+
+/* Clase global para la fuente */
+.font-arista {
+    font-family: 'Arista Pro Alternate', sans-serif;
+}
