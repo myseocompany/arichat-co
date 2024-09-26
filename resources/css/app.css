@@ -26,3 +26,13 @@
 .font-arista {
     font-family: 'Arista Pro Alternate', sans-serif;
 }
+
+.feature-card{
+   padding: 1rem;
+   border-radius: 0.5rem;
+   color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
