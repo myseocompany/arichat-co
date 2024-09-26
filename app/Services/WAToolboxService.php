@@ -35,9 +35,11 @@ class WAToolBoxService {
     
     public function sendToWhatsApp($data)
     {
-        $response = Http::post($this->end_point, [
-            'phone_number' => $data['phone_number'],
-            'message' => $data['message'],
+        $response = Http::asJson()->post($this->end_point, [
+            'action' => 'send-message',
+            'type' => 'text',
+            'phone' => $data['phone_number'],
+            'content' => $data['message'],
         ]);
 
         return $response->json();
