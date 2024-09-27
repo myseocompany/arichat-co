@@ -16,7 +16,7 @@ class WAToolBoxController extends Controller
     public function receiveMessage(Request $request)
     {
         Log::info('Receiving data at receiveMessage:', $request->all());
-        
+
         $validatedData = $request->validate([
             'id' => 'required|string',
             'type' => 'required|string',
@@ -38,9 +38,11 @@ class WAToolBoxController extends Controller
         if (!$lead) {
             return response()->json(['message' => 'Lead no encontrado'], 404);
         } else {
+            $type_id = 1;
+            //$this->determineMessageType($validatedData['type']),
             $message = $lead->messages()->create([
                 'lead_id' => $lead->id,
-                'type_id' => $this->determineMessageType($validatedData['type']),
+                'type_id' => $type_id,
                 'content' => $validatedData['content'],
                 'message_source_id' => 1,
                 'message_type_id' => 1,
