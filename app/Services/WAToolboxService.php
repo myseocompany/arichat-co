@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\User;
 
 
-class WAToolBoxService {
+class WAToolboxService {
     public $end_point = "";
     
     public function __construct()

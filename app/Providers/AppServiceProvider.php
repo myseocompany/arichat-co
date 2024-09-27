@@ -11,8 +11,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(WAToolBoxService::class, function ($app) {
-            return new WAToolBoxService();
+        $this->app->singleton(WAToolboxService::class, function ($app) {
+            return new WAToolboxService();
         });
     }
 
