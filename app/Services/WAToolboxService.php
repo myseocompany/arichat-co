@@ -46,28 +46,32 @@ class WAToolBoxService {
     }
 
 
-    public static function sendMedia($phone, $text, $url){
-        Log::info('sendMedia-antes:', ['phone' => $phone, 
-                'text' => $text,
+    public function sendMedia($dataIn){
+        $url = $this->end_point;
+        
+        Log::info('sendMedia-antes:', ['phone' => $dataIn['phone_number'], 
+                'text' => $dataIn['message'],
                 'watoolbox' => $url
             
             ]);
-        //$url = $this->end_point;
+        
         $data = [
             'action' => 'send-message',
             'type' => 'text',
-            'content' => $text,
-            'phone' => $phone,
+            'content' => $dataIn['message'],
+            'phone' => $dataIn['phone_number'],
         ];
         
-        WAToolBoxService::sendCurl($url, $data);
+        //WAToolBoxService::sendCurl($url, $data);
+        //dd(json_encode($data));
+        $res = $this->sendCurl($url, $data);
         Log::info("sendMedia-despues: content: ".
             $data['content'].", phone: ". 
             $data['phone']);
-        
+        return $res;
     }
 
-    public static function sendCurl($url, $data){
+    public function sendCurl($url, $data){
         $ch = curl_init();
 
         curl_setopt_array($ch, [

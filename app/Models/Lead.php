@@ -9,5 +9,10 @@ class Lead extends Model
 {
     use HasFactory;
 
+    // Definiendo la relación con Message
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 
 }

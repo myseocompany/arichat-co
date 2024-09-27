@@ -61,18 +61,23 @@ class Inbox extends Component
             'is_outgoing' => true,
         ]);
 
-        $this->messages->push($message);
-        $this->newMessageContent = '';
         $lead = Lead::find($this->selectedLeadId);
+        
         $data = [];
         $data['phone_number'] = $lead->phone;
-        $data['message'] = $message;
+        $data['message'] = $this->newMessageContent;
         
- 
+        $this->messages->push($message);
+        $this->newMessageContent = '';
+        
+        
+        
 
-        if($lead)
+        if($lead){
             $waToolboxService->sendToWhatsApp($data);
+            //$waToolboxService->sendMedia($data);
         
+        }
         $user = Auth::user();
 
         if ($user) {
