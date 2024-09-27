@@ -15,7 +15,9 @@ class Inbox extends Component
 {
     public $leads;
     public $messages = [];
-    public $selectedLeadId;
+    public $selectedLeadId = null;
+    public $selectedLead;
+    
     public $newMessageContent = "";
     
 
@@ -27,8 +29,11 @@ class Inbox extends Component
         
         if ($user) {
             $this->leads = Lead::where('team_id', $user->current_team_id)->get();
-            if($this->leads->first())
-                $this->selectLead($this->leads->first()->id);
+            if($this->leads->first() )
+                if($this->selectedLeadId = null)
+                    $this->selectLead($this->leads->first()->id);
+                else
+                    $this->selectLead($this->selectedLeadId);
         } else {
             $this->leads = collect();
         }
@@ -37,6 +42,8 @@ class Inbox extends Component
     public function selectLead($leadId)
     {
         $this->selectedLeadId = $leadId;
+        $this->selectedLead = Lead::find($leadId);
+    
         $this->loadMessages();
     }
 
@@ -61,11 +68,9 @@ class Inbox extends Component
             'is_outgoing' => true,
         ]);
 
-        $lead = Lead::find($this->selectedLeadId);
         
-        $data = [];
-        $data['phone_number'] = $lead->phone;
-        $data['message'] = $this->newMessageContent;
+        
+        
         
         $this->messages->push($message);
         $this->newMessageContent = '';
@@ -73,13 +78,17 @@ class Inbox extends Component
         
         
 
-        if($lead){
+        if($this->selectedLead){
+            $data = [];
+            $data['phone_number'] = $this->selectedLead->phone;
+            $data['message'] = $this->newMessageContent;
             $waToolboxService->sendToWhatsApp($data);
             //$waToolboxService->sendMedia($data);
         
         }
         $user = Auth::user();
 
+        /*
         if ($user) {
             
             if($this->leads->first())
@@ -87,6 +96,7 @@ class Inbox extends Component
         } else {
             $this->leads = collect();
         }
+            */
         
         //MessageProcessed::dispatch($message);
          

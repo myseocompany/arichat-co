@@ -85,6 +85,26 @@
 
                     <!-- right section -->
                     <section  class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex hidden">
+                       
+                        @if($selectedLead)
+                         <!-- head selected lead -->
+                        <div class="cursor-pointer flex px-10">
+                            <div class="mr-4 relative w-12">
+                                <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" @if($selectedLead) alt="{{ $selectedLead->name }}" @endif>
+                                <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
+                            </div>
+                            <div class="flex flex-col flex-1">
+                                <div class="flex justify-between items-center">
+                                    <div class="text-gray-800 text-base font-semibold dark:text-gray-300">@if($selectedLead){{ $selectedLead->name }} @endif</div>
+                                    <div class="text-gray-700 dark:text-gray-600 text-xs">@if($selectedLead){{ $selectedLead->created_at->format('H:i') }} @endif</div>
+                                </div>
+                                <div class="text-gray-400 text-sm dark:text-gray-600">
+                                    En Línea
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end selected lead -->
+                        @endif
                         <div id="allmessages" class="flex-1 overflow-y-scroll p-5 scrollbar-thumb-color dark:scrollbar-thumb-color-dark scrollbar-widht space-y-5"
                         
                         
@@ -116,34 +136,6 @@
                                 </div>
                             </div>
                             @endforeach
-
-                            <div
-                                x-data="{
-                            messages: [],
-
-                            broadcastMessage () {
-                                fetch(`/broadcast`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
-                            }
-                        
-                            
-                        }"
-                                x-init="
-                            Echo.channel('global')
-                                .listen('.Message', (e) => {
-                                    messages.push(e.body)
-                                })
-                        ">
-                                <div>
-                                    <button x-on:click="broadcastMessage">Broadcast a message</button>
-
-                                    <div class="mt-6" x-show="messages.length">
-                                        <template x-for="message in messages">
-                                            <div x-text="message"></div>
-                                        </template>
-                                    </div>
-                                </div>
-                            </div>
-
 
                         </div>
                         <!-- ALL MESSAGES -->
