@@ -74,14 +74,14 @@ class WAToolBoxController extends Controller
         // Ejemplo simple: chat, ptt, image
         $type_id = "";
         switch ($type) {
-            case "chat":
-                $type_id = 5;
+            case "text":
+                $type_id = 1;
                 break;
             case "image":
-                $type_id = 17;
+                $type_id = 2;
                 break;
-            case "ptt":
-                $type_id = 18;
+            case "audio":
+                $type_id = 3;
                 break;
         }
 
