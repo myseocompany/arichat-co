@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Events\MessageProcessed;
 use App\Services\WAToolboxService;
+use Illuminate\Support\Facades\Log;
  
 
 class Inbox extends Component
@@ -20,6 +21,29 @@ class Inbox extends Component
     
     public $newMessageContent = "";
     
+    public function getListeners()
+    {
+        return [
+            // Public Channel
+            "echo:chat,MessageReceived" => 'handleMessageReceived',
+        ];
+    }
+
+    public function handleMessageReceived()
+    {
+        Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
+         $this->loadMessages(); 
+        return "recibido";
+    }
+
+
+    #[On('mreceived')] 
+    public function refreshMessages()
+    {
+        Log::info('Evento en el inbox mreceived');
+        $this->loadMessages();
+        $this->refresh();
+    }
 
     public function mount()
     {

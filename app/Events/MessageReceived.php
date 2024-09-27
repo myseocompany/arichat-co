@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class MessageReceived implements ShouldBroadcastNow
 {
@@ -24,6 +25,7 @@ class MessageReceived implements ShouldBroadcastNow
     {
         $this->message = $message;
         $this->phoneNumber = $phoneNumber;
+        Log::info('Evento recivido:', ['message' => $message]);
     }
 
     /**

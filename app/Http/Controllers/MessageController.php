@@ -10,6 +10,8 @@ class MessageController extends Controller
 {
     protected $waToolboxService;
 
+    
+
 
     public function __construct(WAToolboxService $waToolboxService)
     {
@@ -45,6 +47,9 @@ class MessageController extends Controller
 
         // Emite un evento para actualizar la interfaz de usuario
         broadcast(new \App\Events\MessageReceived($message, $phoneNumber))->toOthers();
+        MessageReceived::dispatch($message, $phoneNumber);
+        MessageReceived::dispatch('mreceived');
+        
 
         return response()->json(['status' => 'success']);
     }

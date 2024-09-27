@@ -5,6 +5,18 @@
         height = conversationElement.scrollHeight;
         console.log('init ' + height + ':' + conversationElement.scrollTop);
         $nextTick(()=>conversationElement.scrollTop = height);
+
+        function reload(){
+            $nextTick(()=>conversationElement.scrollTop = height);
+        console.log('reload ' + height + ':' + conversationElement.scrollTop);
+        height = conversationElement.scrollHeight;
+        };
+
+        Echo.channel('chat')
+            .listen('MessageReceived', (e) => {
+                reload();
+
+                                })
     "
     
     @scrollbottom.window="
@@ -114,10 +126,7 @@
                             
                         }"
                                 x-init="
-                            Echo.channel('global')
-                                .listen('.Message', (e) => {
-                                    messages.push(e.body)
-                                })
+                            
                         ">
 
                             <!-- Message section -->
