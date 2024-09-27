@@ -8,12 +8,13 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Lead;
 use App\Models\Message;
+use App\Events\MessageReceived;
 
 class WAToolBoxController extends Controller
 {
     public function receiveMessage(Request $request)
     {
-        $data = $request->validate([
+        $validatedData = $request->validate([
             'id' => 'required|string',
             'type' => 'required|string',
             'user' => 'required|string',
@@ -36,8 +37,10 @@ class WAToolBoxController extends Controller
         } else {
             $message = $lead->messages()->create([
                 'lead_id' => $lead->id,
-                'type_id' => $this->determineActionType($validatedData['type']),
-                'description' => $validatedData['content'],
+                'type_id' => $this->determineMessageType($validatedData['type']),
+                'content' => $validatedData['content'],
+                'message_source_id' => 1,
+                'message_type_id' => 1,
                 'user_id' => 1
                 
             ]);
@@ -46,26 +49,26 @@ class WAToolBoxController extends Controller
         }
         // Emitir el evento DataReceived
         //broadcast(new DataReceived($message));
-        MessageReceived::dispatch($message);
+        MessageReceived::dispatch( $validatedData['content'], $validatedData['phone']);
         
         return response()->json([
             'message' => 'Data processed successfully',
             'customer' => $lead,
-            'action' => $message,
+            'message' => $message,
         ], 200);
     }
 
     public function test(){
         // Emitir el evento DataReceived
         $lead = Lead::find(1);
-        $message = Action::find(1);
+        $message = Message::find(1);
         Log::info('test', ["action"=>"action test"]);
         $e = event(new DataReceived($lead, $message));
 
         return $e;
     }
 
-    private function determineActionType($type)
+    private function determineMessageType($type)
     {
         // Asigna un tipo de acción según el tipo recibido en WAToolbox
         // Ejemplo simple: chat, ptt, image
