@@ -30,7 +30,7 @@ class Inbox extends Component
         if ($user) {
             $this->leads = Lead::where('team_id', $user->current_team_id)->get();
             if($this->leads->first() )
-                if($this->selectedLeadId = null)
+                if($this->selectedLeadId == null)
                     $this->selectLead($this->leads->first()->id);
                 else
                     $this->selectLead($this->selectedLeadId);
@@ -73,11 +73,9 @@ class Inbox extends Component
         
         
         $this->messages->push($message);
-        $this->newMessageContent = '';
         
         
         
-
         if($this->selectedLead){
             $data = [];
             $data['phone_number'] = $this->selectedLead->phone;
@@ -86,6 +84,8 @@ class Inbox extends Component
             //$waToolboxService->sendMedia($data);
         
         }
+        $this->newMessageContent = '';
+        
         $user = Auth::user();
 
         /*
