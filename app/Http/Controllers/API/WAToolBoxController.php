@@ -34,7 +34,7 @@ class WAToolBoxController extends Controller
         if (!$lead) {
             return response()->json(['message' => 'Lead no encontrado'], 404);
         } else {
-            $message = $lead->actions()->create([
+            $message = $lead->messages()->create([
                 'lead_id' => $lead->id,
                 'type_id' => $this->determineActionType($validatedData['type']),
                 'description' => $validatedData['content'],
