@@ -19,38 +19,16 @@
                 }, 100);
             });
 
-            // Espera a que Livewire complete la actualización
-            window.addEventListener('livewire:update', function() {
-                $nextTick(() => {
-                    conversationElement.scrollTop = conversationElement.scrollHeight;
-                    console.log('Livewire update complete, scrolled to bottom: ' + conversationElement.scrollTop);
-                });
-            });
-            
-            // Escuchar cuando Livewire procese una nueva actualización
-            window.addEventListener('livewire:message-processed', function() {
-                $nextTick(() => {
-                    conversationElement.scrollTop = conversationElement.scrollHeight;
-                    console.log('Livewire message processed, scrolled to bottom: ' + conversationElement.scrollTop);
-                });
-            });
-            
         }
             
     }"
     x-init="
-        
-
-        
         reload();
         Echo.channel('chat')
             .listen('MessageReceived', (e) => {
                 console.log('MessageReceived channel chat');
                 reload();
-                
-                
-
-                                })
+            })
     "
     
     @scrollbottom.window="$nextTick(()=>reload());"
@@ -61,15 +39,7 @@
         https://www.youtube.com/watch?v=ivKl89Pzq98&t=39s
         -->
         
-        <script>
-            document.addEventListener('livewire:init', () => {
-                console.log('livewire:init');
-            })
-         
-            document.addEventListener('livewire:initialized', () => {
-                console.log('livewire:initialized');
-            })
-        </script>
+
     <div class="bg-gray-100 dark:bg-gray-800">
         <div class="flex flex-1 overflow-hidden h-screen max-screen-2xl m-auto">
             <div class="p-0 lg:p-0 w-full">
@@ -78,7 +48,7 @@
                     <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg mr-5">
                         <div class="max-w-full h-full w-full flex flex-col">
                             <div class="flex p-10 justify-between ">
-                                <div class="text-4xl font-semibold dark:text-white text-gray-900">Chat</div>
+                                <div class="text-2xl font-bold dark:text-white text-gray-900">Chats</div>
                                 <div></div>
                                 <!-- switcher start -->
                                 <div>
@@ -101,24 +71,36 @@
                                     
 
                                     @foreach ($leads as $lead)
-                                    <!-- USER -->
-                                    <div class="cursor-pointer flex px-10" wire:click="selectLead({{ $lead->id }})">
-                                        <div class="mr-4 relative w-12">
-                                            <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="{{ $lead->name }}">
-                                            <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
-                                        </div>
-                                        <div class="flex flex-col flex-1">
-                                            <div class="flex justify-between items-center">
-                                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">{{ $lead->name }}</div>
-                                                <div class="text-gray-700 dark:text-gray-600 text-xs">{{ $lead->created_at->format('H:i') }}</div>
+                                        <!-- LEAD -->
+                                        <div class="cursor-pointer flex px-5" wire:click="newMessageContent"="selectLead({{ $lead->id }})">
+                                            <div class="mr-4 relative w-12 h-12 flex items-center justify-center bg-pink-400 border border-pink-400 rounded-full text-white font-bold text-lg">
+                                                @if($lead->name)
+                                                    <!-- Mostramos las iniciales del nombre con fondo rosado y letras blancas -->
+                                                    <span>{{ $lead->getInitials(2) }}</span>
+                                                @else
+                                                    <!-- Fallback para mostrar un avatar por defecto si no hay nombre -->
+                                                    <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
+                                                @endif
+                                                <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
                                             </div>
-                                            <div class="text-gray-400 text-sm dark:text-gray-600">
-                                                Como estás?
+                                            <div class="flex flex-col flex-1">
+                                                <div class="flex justify-between items-center">
+                                                    <div class="text-gray-800 text-base font-semibold dark:text-gray-300">{{ $lead->name }}</div>
+                                                    <div class="text-gray-700 dark:text-gray-600 text-xs">@if($lead->lastMessage)
+                                                        {{ $lead->lastMessage->created_at->format('h:i a') }}@endif</div>
+                                                </div>
+                                                <div class="text-gray-400 text-sm dark:text-gray-600">
+                                                    @if($lead->lastMessage)
+                                                        {{ $lead->lastMessage->content }}
+                                                    
+                                                        
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- END USER -->
+                                        <!-- END LEAD  -->
                                     @endforeach
+
 
                                     <!-- Script para scroll automático al último mensaje -->
 <script>
@@ -152,73 +134,77 @@
                                         <div class="text-gray-700 dark:text-gray-600 text-xs">@if($selectedLead){{ $selectedLead->created_at->format('H:i') }} @endif</div>
                                     </div>
                                     <div class="text-gray-400 text-sm dark:text-gray-600" id="status_selected_lead" x-text="height">
-                                        En línea
+                                        --
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- end selected lead -->
                         @endif
-                        <div id="allmessages" class="flex-1 overflow-y-scroll p-5 scrollbar-thumb-color dark:scrollbar-thumb-color-dark scrollbar-widht space-y-5"
-                        
-                        
-                        
-                        x-data="{
-                            
-                            
-                        }"
-                                x-init="
-                            
-                        ">
+                        <!-- Contenedor de todos los mensajes -->
+<div class="flex-1 overflow-y-scroll p-5 bg-slate-100 dark:bg-slate-800 scrollbar-thumb-color dark:scrollbar-thumb-color-dark space-y-5" id="allmessages">
+    
+    <!-- Iterar sobre los mensajes -->
+    @foreach ($messages as $message)
+        <div class="flex {{ $message['is_outgoing'] ? 'justify-end' : 'justify-start' }}">
+            @if(!$message['is_outgoing'])
+                <!-- Avatar para los mensajes entrantes -->
+                <div class="w-12 h-12 mr-3">
+                    <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
+                </div>
+            @endif
+            <div class="p-4 text-base rounded-lg inline-block max-w-lg 
+                {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
+                {{ $message['content'] }}
+            </div>
+        </div>
+    @endforeach
+</div>
+<!-- Fin de todos los mensajes -->
 
-                            <!-- Message section -->
-                            @foreach ($messages as $message)
+<!-- Barra de envío de mensaje -->
+<div class="flex-none p-4 bg-slate-100 dark:bg-slate-800">
+    <div class="relative flex items-center">
+        
+        <!-- Botón de ícono (opcional) -->
+        <button class="inline-flex items-center justify-center rounded-full h-12 w-12 text-gray-500 hover:bg-gray-300 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
+            </svg>
+        </button>
 
-                            <div class="flex {{ $message['is_outgoing'] ? 'justify-end' : 'justify-start' }}">
-                                @if(!$message['is_outgoing'])
-                                <!-- Avatar for incoming messages -->
-                                <div class="w-14 mr-5">
-                                    <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar of ">
-                                </div>
-                                @endif
-                                <div class="p-5 text-base rounded-lg inline-block max-w-xl
-                                    {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
-                                    {{ $message['content'] }}
-                                </div>
-                            </div>
+        <!-- Input de texto -->
+        <div x-data="{ newMessageContent: @entangle('newMessageContent'), messages: @entangle('messages') }" class="flex-1 ml-3">
+            <input type="text"
+                   x-model="newMessageContent"
+                   @keydown.enter="if (newMessageContent.trim() !== '') { 
+                        // Evitar duplicación: agregar mensaje solo si no está ya en la lista
+                        messages.push({ content: newMessageContent, is_outgoing: true }); 
+                        $wire.sendMessage().then(() => {
+                            // Si ya está en la lista, evitar agregarlo otra vez cuando venga del servidor
+                            newMessageContent = ''; // Limpiar el input después de enviar
+                        });
+                   }"
+                   id="newMessageContent"
+                   name="newMessageContent"
+                   class="w-full h-12 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-4 bg-gray-100 dark:bg-gray-800 rounded-full"
+                   placeholder="Type your message here...">
+        </div>
 
-                            @endforeach
+        <!-- Botón para enviar -->
+        <div class="ml-4">
+            <button wire:click="sendMessage" class="inline-flex items-center justify-center rounded-full h-12 w-12 bg-indigo-800 text-white hover:bg-indigo-600 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.125A59.769 59.769 0 0 1 21.485 12a59.768 59.768 0 0 1-18.215 8.875L5.999 12Zm0 0h7.5" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Fin de la barra de envío de mensaje -->
 
 
-                        </div>
-                        <!-- ALL MESSAGES -->
-                        <div class="flex-none p-5 bg-slate-100 dark:bg-slate-800">
-
-
-                            <div class="">
-                                <div class="relative flex">
-                                    <span class="absolute inset-y-0 flex items-center">
-                                        <button class="inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none " type="button">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
-                                            </svg>
-                                        </button>
-                                    </span>
-
-                                    <input type="text"  wire:keydown.enter="sendMessage" wire:model="newMessageContent" id="newMessageContent" name="newMessageContent" class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-12 bg-gray-100 dark:bg-gray-800 rounded-full py-3 pr-5" placeholder="Type your message here...">
-
-                                    <div class="ml-5">
-                                        <button wire:click="sendMessage" class="inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-white bg-indigo-800 hover:bg-indigo-600 focus:outline-none ">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                                            </svg>
-
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                       
 
                     </section>
                     <!-- right section end -->

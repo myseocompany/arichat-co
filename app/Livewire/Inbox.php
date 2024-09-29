@@ -93,9 +93,14 @@ class Inbox extends Component
 
     public function sendMessage()
     {
+        // Verificar que hay un mensaje antes de continuar
+        if (trim($this->newMessageContent) === '') {
+            return;
+        }
+        
         $waToolboxService = new WAToolboxService();
 
-        
+        // Crear el nuevo mensaje en la base de datos
         $message = Message::create([
             'lead_id' => $this->selectedLeadId,
             'user_id' => Auth::id(),
@@ -105,42 +110,25 @@ class Inbox extends Component
             'is_outgoing' => true,
         ]);
 
-        
-        
-        
-        
-        //$this->messages->push($message);
-        // Ahora usando un array en lugar de una colección
-        $this->messages[] = $message->toArray();
-        
-        
-        
-        if($this->selectedLead){
-            $data = [];
-            $data['phone_number'] = $this->selectedLead->phone;
-            $data['message'] = $this->newMessageContent;
-            $waToolboxService->sendToWhatsApp($data);
-            //$waToolboxService->sendMedia($data);
-        
-        }
-        $this->newMessageContent = '';
-        
-        $user = Auth::user();
+        // Agregar el nuevo mensaje al array `messages` (Livewire se encargará de actualizar la vista)
+        //$this->messages[] = $message->toArray();
 
-        /*
-        if ($user) {
-            
-            if($this->leads->first())
-                $this->selectLead($this->leads->first()->id);
-        } else {
-            $this->leads = collect();
+        // Enviar el mensaje a través del servicio externo
+        if ($this->selectedLead) {
+            $data = [
+                'phone_number' => $this->selectedLead->phone,
+                'message' => $this->newMessageContent,
+            ];
+            $waToolboxService->sendToWhatsApp($data);
         }
-            */
-        
-        //MessageProcessed::dispatch($message);
-         
+
+        // Limpiar el campo de entrada después de enviar el mensaje
+        $this->newMessageContent = '';
+
+        // Despachar el evento de desplazamiento para hacer scroll hacia abajo
         $this->dispatch('scrollbottom');
     }
+
 
     public function render()
     {
