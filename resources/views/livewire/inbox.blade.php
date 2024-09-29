@@ -1,35 +1,75 @@
 <div id="messages-body"
-    x-data="{height:0, conversationElement:document.getElementById('allmessages')
+    x-data="{
+        height:0, 
+        conversationElement:document.getElementById('allmessages'),
+        scroll: () => { $el.scrollTo(0, $el.scrollHeight); },
+        reload: () => {
+            conversationElement = document.getElementById('allmessages');
+            height = conversationElement.scrollHeight;
+            document.getElementById('status_selected_lead').innerHTML = conversationElement.scrollTop;
+            console.log('reload height:' + height + ', scrollTop:' + conversationElement.scrollTop);
+            $nextTick(()=>{
+                conversationElement.scrollTop = height;
+                console.log('nextTick reload height:' + height + ', scrollTop:' + conversationElement.scrollTop);
+                document.getElementById('status_selected_lead').innerHTML = conversationElement.scrollTop;
+
+                setTimeout(() => {
+                    conversationElement.scrollTop = conversationElement.scrollHeight;
+                    console.log('nextTick with timeout, height:', conversationElement.scrollHeight, 'scrollTop:', conversationElement.scrollTop);
+                }, 100);
+            });
+
+            // Espera a que Livewire complete la actualización
+            window.addEventListener('livewire:update', function() {
+                $nextTick(() => {
+                    conversationElement.scrollTop = conversationElement.scrollHeight;
+                    console.log('Livewire update complete, scrolled to bottom: ' + conversationElement.scrollTop);
+                });
+            });
+            
+            // Escuchar cuando Livewire procese una nueva actualización
+            window.addEventListener('livewire:message-processed', function() {
+                $nextTick(() => {
+                    conversationElement.scrollTop = conversationElement.scrollHeight;
+                    console.log('Livewire message processed, scrolled to bottom: ' + conversationElement.scrollTop);
+                });
+            });
+            
+        }
+            
     }"
     x-init="
-        height = conversationElement.scrollHeight;
-        console.log('init ' + height + ':' + conversationElement.scrollTop);
-        $nextTick(()=>conversationElement.scrollTop = height);
+        
 
-        function reload(){
-            $nextTick(()=>conversationElement.scrollTop = height);
-        console.log('reload ' + height + ':' + conversationElement.scrollTop);
-        height = conversationElement.scrollHeight;
-        };
-
+        
+        reload();
         Echo.channel('chat')
             .listen('MessageReceived', (e) => {
+                console.log('MessageReceived channel chat');
                 reload();
+                
+                
 
                                 })
     "
     
-    @scrollbottom.window="
-        $nextTick(()=>conversationElement.scrollTop = height);
-        console.log('event ' + height + ':' + conversationElement.scrollTop);
-        height = conversationElement.scrollHeight;
-    "
+    @scrollbottom.window="$nextTick(()=>reload());"
 
     
     >
     <!--
         https://www.youtube.com/watch?v=ivKl89Pzq98&t=39s
         -->
+        
+        <script>
+            document.addEventListener('livewire:init', () => {
+                console.log('livewire:init');
+            })
+         
+            document.addEventListener('livewire:initialized', () => {
+                console.log('livewire:initialized');
+            })
+        </script>
     <div class="bg-gray-100 dark:bg-gray-800">
         <div class="flex flex-1 overflow-hidden h-screen max-screen-2xl m-auto">
             <div class="p-0 lg:p-0 w-full">
@@ -58,8 +98,28 @@
                                 <div class="w-full space-y-10">
 
 
-
-
+                                    <div @scrollbottom="console.log('scrollbottom was dispatched');scroll()">
+                                        <button @click="$dispatch('scrollbottom')" class="bg-white">
+                                            scrollbottom
+                                        </button>
+                                    </div>
+                                    <div @mreceived="console.log('mreceived was dispatched')">
+                                        <button @click="$dispatch('mreceived')" class="bg-white">
+                                            mreceived
+                                        </button>
+                                    </div>
+                                    <div x-on:mreceived="onsole.log('mreceived was recibend x-on')"></div>
+@script
+<script>
+    $wire.on('mreceived', () => {
+        console.log('mreceived was recibend onn wire.on');
+    });
+    $wire.on('MessageReceived', () => {
+        console.log('MessageReceived was dispatched');
+    });
+</script>
+@endscript
+                                    <input type="text" :height="height" value="text">
                                     @foreach ($leads as $lead)
                                     <!-- USER -->
                                     <div class="cursor-pointer flex px-10" wire:click="selectLead({{ $lead->id }})">
@@ -100,18 +160,20 @@
                        
                         @if($selectedLead)
                          <!-- head selected lead -->
-                        <div class="cursor-pointer flex px-10">
-                            <div class="mr-4 relative w-12">
-                                <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" @if($selectedLead) alt="{{ $selectedLead->name }}" @endif>
-                                <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
-                            </div>
-                            <div class="flex flex-col flex-1">
-                                <div class="flex justify-between items-center">
-                                    <div class="text-gray-800 text-base font-semibold dark:text-gray-300">@if($selectedLead){{ $selectedLead->name }} @endif</div>
-                                    <div class="text-gray-700 dark:text-gray-600 text-xs">@if($selectedLead){{ $selectedLead->created_at->format('H:i') }} @endif</div>
+                        <div class="cursor-pointer  px-10 bg-slate-100 dark:bg-slate-800">
+                            <div class="m-2 flex">
+                                <div class="mr-4 relative w-12">
+                                    <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" @if($selectedLead) alt="{{ $selectedLead->name }}" @endif>
+                                    <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
                                 </div>
-                                <div class="text-gray-400 text-sm dark:text-gray-600">
-                                    En Línea
+                                <div class="flex flex-col flex-1">
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-gray-800 text-base font-semibold dark:text-gray-300">@if($selectedLead){{ $selectedLead->name }} @endif</div>
+                                        <div class="text-gray-700 dark:text-gray-600 text-xs">@if($selectedLead){{ $selectedLead->created_at->format('H:i') }} @endif</div>
+                                    </div>
+                                    <div class="text-gray-400 text-sm dark:text-gray-600" id="status_selected_lead" x-text="height">
+                                        En línea
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -148,7 +210,7 @@
 
                         </div>
                         <!-- ALL MESSAGES -->
-                        <div class="flex-none p-5">
+                        <div class="flex-none p-5 bg-slate-100 dark:bg-slate-800">
 
 
                             <div class="">
@@ -183,7 +245,18 @@
             </div>
         </div>
         <!-- Script-->
-       
+       <script>
+            function scroll(){
+                conversationElement = document.getElementById('allmessages');
+                height = conversationElement.scrollHeight;
+                conversationElement.scrollTop = height;
+                console.log('scroll height:' + height + ', scrollTop:' + conversationElement.scrollTop);
+            
+                
+            }
+            scroll();
+            
+       </script>
         <style>
             .scrollbar-width::-webkit-scrollbar {
                 width: 0.25rem;

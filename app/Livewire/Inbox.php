@@ -32,18 +32,17 @@ class Inbox extends Component
     public function handleMessageReceived()
     {
         Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
-         $this->loadMessages(); 
+        //$this->loadMessages(); 
         return "recibido";
     }
 
-
-    #[On('mreceived')] 
-    public function refreshMessages()
+    public function loadMessages()
     {
-        Log::info('Evento en el inbox mreceived');
-        $this->loadMessages();
-        $this->refresh();
+        $this->messages = Message::where('lead_id', $this->selectedLeadId)->get();
     }
+
+
+
 
     public function mount()
     {
@@ -69,11 +68,6 @@ class Inbox extends Component
         $this->selectedLead = Lead::find($leadId);
     
         $this->loadMessages();
-    }
-
-    public function loadMessages()
-    {
-        $this->messages = Message::where('lead_id', $this->selectedLeadId)->get();
     }
 
 

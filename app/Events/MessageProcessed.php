@@ -25,7 +25,7 @@ class MessageProcessed implements ShouldBroadcastNow
     public function __construct(Message $message)
     {
         $this->message = $message;
-        Log::info('Evento creado:', ['message' => $message->id]);
+        Log::info('Evento MessageProcessed creado:', ['message' => $message->id]);
     }
 
     /**

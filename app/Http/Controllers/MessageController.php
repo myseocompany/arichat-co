@@ -22,7 +22,6 @@ class MessageController extends Controller
     {
         // Recuperar la URL del webhook desde la base de datos
         $channel = DB::table('channels')->where('type', 'WhatsApp')->first();
-        $webhookUrl = json_decode($channel->settings)->webhook_url;
         $response = $this->waToolboxService->sendToWhatsApp([
             'phone_number' => $request->input('phone_number'),
             'message' => $request->input('message'),
@@ -46,9 +45,9 @@ class MessageController extends Controller
         ]);
 
         // Emite un evento para actualizar la interfaz de usuario
-        broadcast(new \App\Events\MessageReceived($message, $phoneNumber))->toOthers();
-        MessageReceived::dispatch($message, $phoneNumber);
-        MessageReceived::dispatch('mreceived');
+        //broadcast(new \App\Events\MessageReceived($message, $phoneNumber))->toOthers();
+        //MessageReceived::dispatch($message, $phoneNumber);
+        //MessageReceived::dispatch('mreceived');
         
 
         return response()->json(['status' => 'success']);

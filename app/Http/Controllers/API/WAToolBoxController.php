@@ -15,7 +15,7 @@ class WAToolBoxController extends Controller
 {
     public function receiveMessage(Request $request)
     {
-        Log::info('Receiving data at receiveMessage:', $request->all());
+        Log::info('Receiving data at WAToolBoxController receiveMessage:', $request->all());
 
         $validatedData = $request->validate([
             'id' => 'required|string',

@@ -25,7 +25,7 @@ class MessageReceived implements ShouldBroadcastNow
     {
         $this->message = $message;
         $this->phoneNumber = $phoneNumber;
-        Log::info('Evento recivido:', ['message' => $message]);
+        Log::info('Evento MessageReceived recivido:', ['message' => $message]);
     }
 
     /**
