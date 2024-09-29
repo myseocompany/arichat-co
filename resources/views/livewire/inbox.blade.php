@@ -98,28 +98,8 @@
                                 <div class="w-full space-y-10">
 
 
-                                    <div @scrollbottom="console.log('scrollbottom was dispatched');scroll()">
-                                        <button @click="$dispatch('scrollbottom')" class="bg-white">
-                                            scrollbottom
-                                        </button>
-                                    </div>
-                                    <div @mreceived="console.log('mreceived was dispatched')">
-                                        <button @click="$dispatch('mreceived')" class="bg-white">
-                                            mreceived
-                                        </button>
-                                    </div>
-                                    <div x-on:mreceived="onsole.log('mreceived was recibend x-on')"></div>
-@script
-<script>
-    $wire.on('mreceived', () => {
-        console.log('mreceived was recibend onn wire.on');
-    });
-    $wire.on('MessageReceived', () => {
-        console.log('MessageReceived was dispatched');
-    });
-</script>
-@endscript
-                                    <input type="text" :height="height" value="text">
+                                    
+
                                     @foreach ($leads as $lead)
                                     <!-- USER -->
                                     <div class="cursor-pointer flex px-10" wire:click="selectLead({{ $lead->id }})">
@@ -194,19 +174,21 @@
                             <!-- Message section -->
                             @foreach ($messages as $message)
 
-                            <div class="flex {{ $message->is_outgoing ? 'justify-end' : 'justify-start' }}">
-                                @if(!$message->is_outgoing)
+                            <div class="flex {{ $message['is_outgoing'] ? 'justify-end' : 'justify-start' }}">
+                                @if(!$message['is_outgoing'])
                                 <!-- Avatar for incoming messages -->
                                 <div class="w-14 mr-5">
                                     <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar of ">
                                 </div>
                                 @endif
                                 <div class="p-5 text-base rounded-lg inline-block max-w-xl
-                   {{ $message->is_outgoing ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
-                                    {{ $message->content }}
+                                    {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
+                                    {{ $message['content'] }}
                                 </div>
                             </div>
+
                             @endforeach
+
 
                         </div>
                         <!-- ALL MESSAGES -->

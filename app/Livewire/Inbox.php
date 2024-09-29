@@ -29,16 +29,35 @@ class Inbox extends Component
         ];
     }
 
-    public function handleMessageReceived()
+    public function handleMessageReceivedOld()
     {
         Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
         //$this->loadMessages(); 
         return "recibido";
     }
+    public function handleMessageReceived($data)
+{
+    Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
+        
+    // Asegurarse de que el mensaje recibido pertenece al lead seleccionado actualmente
+    if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
+        // Agregar el nuevo mensaje al final de la lista de mensajes
+        $this->messages[] = [
+            'is_outgoing' => false,
+            'content' => $data['message'],
+            'lead_id' => $this->selectedLeadId
+        ];
+        
+        // Despachar evento para hacer scroll al final de la lista
+        $this->dispatch('scrollbottom');
+    }
+}
 
     public function loadMessages()
     {
-        $this->messages = Message::where('lead_id', $this->selectedLeadId)->get();
+        $messages =  Message::where('lead_id', $this->selectedLeadId)->get();
+        $this->messages = $this->messages[] = $messages->toArray();
+        
     }
 
 
@@ -90,7 +109,9 @@ class Inbox extends Component
         
         
         
-        $this->messages->push($message);
+        //$this->messages->push($message);
+        // Ahora usando un array en lugar de una colección
+        $this->messages[] = $message->toArray();
         
         
         
