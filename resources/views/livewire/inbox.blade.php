@@ -72,7 +72,7 @@
 
                                     @foreach ($leads as $lead)
                                         <!-- LEAD -->
-                                        <div class="cursor-pointer flex px-5" wire:click="newMessageContent"="selectLead({{ $lead->id }})">
+                                        <div class="cursor-pointer flex px-5" wire:click="selectLead({{ $lead->id }})">
                                             <div class="mr-4 relative w-12 h-12 flex items-center justify-center bg-pink-400 border border-pink-400 rounded-full text-white font-bold text-lg">
                                                 @if($lead->name)
                                                     <!-- Mostramos las iniciales del nombre con fondo rosado y letras blancas -->
@@ -142,7 +142,7 @@
                         <!-- end selected lead -->
                         @endif
                         <!-- Contenedor de todos los mensajes -->
-<div class="flex-1 overflow-y-scroll p-5 bg-slate-100 dark:bg-slate-800 scrollbar-thumb-color dark:scrollbar-thumb-color-dark space-y-5" id="allmessages">
+<div class="flex-1 overflow-y-scroll p-5 bg-white dark:bg-slate-800 scrollbar-thumb-color dark:scrollbar-thumb-color-dark space-y-5" id="allmessages">
     
     <!-- Iterar sobre los mensajes -->
     @foreach ($messages as $message)
