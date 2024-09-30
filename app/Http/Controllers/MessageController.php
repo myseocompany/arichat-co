@@ -40,7 +40,7 @@ class MessageController extends Controller
         \App\Models\Message::create([
             'content' => $message,
             'phone_number' => $phoneNumber,
-            'is_outgoing' => false,
+            'is_outgoing' => true,
         ]);
 
         // Emite un evento para actualizar la interfaz de usuario
