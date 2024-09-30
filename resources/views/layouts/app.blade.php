@@ -29,6 +29,9 @@
 
             <!-- Contenido Principal -->
             <div class="flex-1">
+                
+
+
                 <!-- Page Content -->
                 <main class="p-0">
                     {{ $slot }}
@@ -39,6 +42,5 @@
         @stack('modals')
 
         @livewireScripts
-        <script src="//unpkg.com/alpinejs" defer></script>
     </body>
 </html>
