@@ -121,7 +121,13 @@
                         <div class="cursor-pointer  px-10 bg-slate-100 dark:bg-slate-800">
                             <div class="m-2 flex">
                                 <div class="mr-4 relative w-12">
-                                    <img class="rounded-full w-full mr-2" src="https://unavatar.io/sindresorhus@gmail.com" @if($selectedLead) alt="{{ $selectedLead->name }}" @endif>
+                                    @if($lead->name)
+                                    <!-- Mostramos las iniciales del nombre con fondo rosado y letras blancas -->
+                                    <span>{{ $lead->getInitials(2) }}</span>
+                                    @else
+                                    <!-- Fallback para mostrar un avatar por defecto si no hay nombre -->
+                                    <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
+                                    @endif
                                     <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
                                 </div>
                                 <div class="flex flex-col flex-1">
@@ -146,11 +152,17 @@
                                 @if(!$message['is_outgoing'])
                                 <!-- Avatar para los mensajes entrantes -->
                                 <div class="w-12 h-12 mr-3">
+                                    @if($lead->name)
+                                    <!-- Mostramos las iniciales del nombre con fondo rosado y letras blancas -->
+                                    <span>{{ $lead->getInitials(2) }}</span>
+                                    @else
+                                    <!-- Fallback para mostrar un avatar por defecto si no hay nombre -->
                                     <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
+                                    @endif
                                 </div>
                                 @endif
                                 <div class="p-4 text-base rounded-lg inline-block max-w-lg 
-                {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
+                                        {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
                                     {{ $message['content'] }}
                                 </div>
                             </div>
