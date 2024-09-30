@@ -1,18 +1,15 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use App\Services\WAToolboxService;
+use App\Models\Lead;
+use App\Models\Message;
 
 class MessageController extends Controller
 {
     protected $waToolboxService;
-
-
-
 
     public function __construct(WAToolboxService $waToolboxService)
     {
@@ -33,24 +30,29 @@ class MessageController extends Controller
 
     public function receiveMessage(Request $request)
     {
-        $message = $request->input('message');
+        $messageContent = $request->input('message');
         $phoneNumber = $request->input('phone_number');
 
-        // Guarda el mensaje en la base de datos
-        $model = \App\Models\Message::create([
-            'content' => $message,
-            'phone_number' => $phoneNumber,
-            'is_outgoing' => true,
+        // Verificar si el número de teléfono ya existe en la tabla de leads
+        $lead = Lead::where('phone', $phoneNumber)->first();
+
+        // Si no existe, crear un nuevo lead
+        if (!$lead) {
+            $lead = Lead::create([
+                'phone' => $phoneNumber,
+                'name' => 'Desconocido', // Puedes cambiar esto si tienes otra lógica para nombres desconocidos
+            ]);
+        }
+
+        // Guarda el mensaje en la base de datos, asignando el lead_id
+        $message = Message::create([
+            'lead_id' => $lead->id, // Relacionar el mensaje con el lead
+            'content' => $messageContent,
+            'is_outgoing' => false, // Es un mensaje entrante, no saliente
         ]);
-        dd($model);
 
-        // Emite un evento para actualizar la interfaz de usuario
-        //broadcast(new \App\Events\MessageReceived($message, $phoneNumber))->toOthers();
-        //MessageReceived::dispatch($message, $phoneNumber);
-        //MessageReceived::dispatch('mreceived');
-
-        // Emite un evento para actualizar la interfaz de usuario
-        broadcast(new \App\Events\MessageReceived($message, $phoneNumber))->toOthers();
+        // Transmitir evento para actualizar la interfaz de usuario
+        broadcast(new \App\Events\MessageReceived($messageContent, $phoneNumber))->toOthers();
 
         return response()->json(['status' => 'success']);
     }

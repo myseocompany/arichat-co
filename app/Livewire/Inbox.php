@@ -6,7 +6,6 @@ use Livewire\Component;
 use App\Models\Lead;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\WAToolboxService;
 use Illuminate\Support\Facades\Log;
@@ -35,6 +34,7 @@ class Inbox extends Component
         //$this->loadMessages(); 
         return "recibido";
     }
+
     public function handleMessageReceived($data)
     {
         Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
@@ -72,9 +72,6 @@ class Inbox extends Component
         $this->messages = $this->messages[] = $messages->toArray();
     }
 
-
-
-
     public function mount()
     {
         // Obtener el usuario autenticado
@@ -108,8 +105,6 @@ class Inbox extends Component
 
         $this->loadMessages();
     }
-
-
 
     public function sendMessage()
     {
@@ -148,7 +143,6 @@ class Inbox extends Component
         // Despachar el evento de desplazamiento para hacer scroll hacia abajo
         $this->dispatch('scrollbottom');
     }
-
 
     public function render()
     {
