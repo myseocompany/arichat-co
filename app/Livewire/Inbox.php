@@ -51,7 +51,7 @@ class Inbox extends Component
             // Despachar evento para hacer scroll al final de la lista
             $this->dispatch('scrollbottom');
 
-            $this->dispatchBrowserEvent('new-message-notification', ['message' => $data['message']]);
+            $this->dispatch('new-message-notification', ['message' => $data['message']]);
         }
     }
 
