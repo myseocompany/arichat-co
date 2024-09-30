@@ -28,29 +28,7 @@
             .listen('MessageReceived', (e) => {
                 console.log('MessageReceived channel chat');
                 reload();
-            });
-             Livewire.on('newMessageNotification', event => {
-            // Crear un div para la notificación
-            let notification = document.createElement('div');
-            notification.style.position = 'fixed';
-            notification.style.bottom = '20px';
-            notification.style.right = '20px';
-            notification.style.padding = '10px 20px';
-            notification.style.backgroundColor = '#333';
-            notification.style.color = '#fff';
-            notification.style.borderRadius = '5px';
-            notification.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
-            notification.innerText = 'Nuevo mensaje: ' + event.message;
-
-            // Agregar el div al cuerpo del documento
-            document.body.appendChild(notification);
-
-            // Remover la notificación después de 3 segundos
-            setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 3000);
-        });
-    
+            })
     "
     
     @scrollbottom.window="$nextTick(()=>reload());"
