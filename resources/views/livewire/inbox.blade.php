@@ -29,7 +29,7 @@
                 console.log('MessageReceived channel chat');
                 reload();
             });
-            window.livewire.on('newMessageNotification', event => {
+             Livewire.on('newMessageNotification', event => {
             // Crear un div para la notificación
             let notification = document.createElement('div');
             notification.style.position = 'fixed';
