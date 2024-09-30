@@ -37,11 +37,12 @@ class MessageController extends Controller
         $phoneNumber = $request->input('phone_number');
 
         // Guarda el mensaje en la base de datos
-        \App\Models\Message::create([
+        $model = \App\Models\Message::create([
             'content' => $message,
             'phone_number' => $phoneNumber,
             'is_outgoing' => true,
         ]);
+        dd($model);
 
         // Emite un evento para actualizar la interfaz de usuario
         //broadcast(new \App\Events\MessageReceived($message, $phoneNumber))->toOthers();

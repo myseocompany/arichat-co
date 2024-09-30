@@ -36,3 +36,7 @@ Route::post('/broadcast', function () {
         ->sendNow();
 });
 
+Route::get('/test', function(){
+
+    return view('test');
+});

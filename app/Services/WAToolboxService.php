@@ -40,7 +40,10 @@ class WAToolboxService {
             'type' => 'text',
             'phone' => $data['phone_number'],
             'content' => $data['message'],
+            'is_outgoing' => true,
         ]);
+
+        
 
         return $response->json();
     }
