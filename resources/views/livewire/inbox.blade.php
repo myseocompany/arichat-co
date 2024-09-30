@@ -28,7 +28,11 @@
             .listen('MessageReceived', (e) => {
                 console.log('MessageReceived channel chat');
                 reload();
-            })
+            });
+            window.addEventListener('new-message-notification', event => {
+            alert('Nuevo mensaje: ' + event.detail.message);
+        });
+    
     "
     
     @scrollbottom.window="$nextTick(()=>reload());"

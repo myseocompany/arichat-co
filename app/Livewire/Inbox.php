@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Events\MessageProcessed;
 use App\Services\WAToolboxService;
 use Illuminate\Support\Facades\Log;
- 
+
 
 class Inbox extends Component
 {
@@ -18,9 +18,9 @@ class Inbox extends Component
     public $messages = [];
     public $selectedLeadId = null;
     public $selectedLead;
-    
+
     public $newMessageContent = "";
-    
+
     public function getListeners()
     {
         return [
@@ -36,28 +36,29 @@ class Inbox extends Component
         return "recibido";
     }
     public function handleMessageReceived($data)
-{
-    Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
-        
-    // Asegurarse de que el mensaje recibido pertenece al lead seleccionado actualmente
-    if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
-        // Agregar el nuevo mensaje al final de la lista de mensajes
-        $this->messages[] = [
-            'is_outgoing' => false,
-            'content' => $data['message'],
-            'lead_id' => $this->selectedLeadId
-        ];
-        
-        // Despachar evento para hacer scroll al final de la lista
-        $this->dispatch('scrollbottom');
+    {
+        Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
+
+        // Asegurarse de que el mensaje recibido pertenece al lead seleccionado actualmente
+        if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
+            // Agregar el nuevo mensaje al final de la lista de mensajes
+            $this->messages[] = [
+                'is_outgoing' => false,
+                'content' => $data['message'],
+                'lead_id' => $this->selectedLeadId
+            ];
+
+            // Despachar evento para hacer scroll al final de la lista
+            $this->dispatch('scrollbottom');
+
+            $this->dispatchBrowserEvent('new-message-notification', ['message' => $data['message']]);
+        }
     }
-}
 
     public function loadMessages()
     {
         $messages =  Message::where('lead_id', $this->selectedLeadId)->get();
         $this->messages = $this->messages[] = $messages->toArray();
-        
     }
 
 
@@ -68,11 +69,11 @@ class Inbox extends Component
         // Obtener el usuario autenticado
         $user = Auth::user();
 
-        
+
         if ($user) {
             $this->leads = Lead::where('team_id', $user->current_team_id)->get();
-            if($this->leads->first() )
-                if($this->selectedLeadId == null)
+            if ($this->leads->first())
+                if ($this->selectedLeadId == null)
                     $this->selectLead($this->leads->first()->id);
                 else
                     $this->selectLead($this->selectedLeadId);
@@ -85,7 +86,7 @@ class Inbox extends Component
     {
         $this->selectedLeadId = $leadId;
         $this->selectedLead = Lead::find($leadId);
-    
+
         $this->loadMessages();
     }
 
@@ -97,7 +98,7 @@ class Inbox extends Component
         if (trim($this->newMessageContent) === '') {
             return;
         }
-        
+
         $waToolboxService = new WAToolboxService();
 
         // Crear el nuevo mensaje en la base de datos

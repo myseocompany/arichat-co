@@ -1,16 +1,18 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use App\Services\WAToolboxService;
+use App\Events\MessageReceived;
 
 class MessageController extends Controller
 {
     protected $waToolboxService;
 
-    
+
 
 
     public function __construct(WAToolboxService $waToolboxService)
@@ -28,8 +30,6 @@ class MessageController extends Controller
         ]);
 
         return response()->json($response);
-
-        
     }
 
     public function receiveMessage(Request $request)
@@ -48,7 +48,9 @@ class MessageController extends Controller
         //broadcast(new \App\Events\MessageReceived($message, $phoneNumber))->toOthers();
         //MessageReceived::dispatch($message, $phoneNumber);
         //MessageReceived::dispatch('mreceived');
-        
+        // Emite un evento para actualizar la interfaz de usuario
+        broadcast(new MessageReceived($message, $phoneNumber))->toOthers();
+
 
         return response()->json(['status' => 'success']);
     }
