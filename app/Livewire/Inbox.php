@@ -83,10 +83,10 @@ class Inbox extends Component
         if ($user) {
             // Obtener el lead_id del último mensaje enviado por el usuario
             $lastSentLeadId = DB::table('messages')
-                ->where('team_id', $user->current_team_id)
                 ->where('is_outgoing', true)
                 ->orderBy('created_at', 'desc')
                 ->value('lead_id');
+
 
             // Verificar que se haya encontrado un lastSentLeadId
             if (!$lastSentLeadId) {
