@@ -54,10 +54,9 @@ class Inbox extends Component
                     ];
                 }
 
-                // Reubicar el lead al principio de la lista
-                $selectedLead = $this->leads[$index];
-                unset($this->leads[$index]);
-                array_unshift($this->leads, $selectedLead);
+                // Reubicar el lead al principio usando los métodos de colección
+                $selectedLead = $this->leads->splice($index, 1)->first(); // Eliminar el lead de la posición actual
+                $this->leads->prepend($selectedLead); // Agregar el lead al inicio de la colección
 
                 // Despachar evento para hacer scroll al final de la lista
                 $this->dispatch('scrollbottom');
