@@ -69,7 +69,7 @@
 
                                     @foreach ($leads as $lead)
                                     <!-- LEAD -->
-                                    <div class="cursor-pointer flex px-5" wire:click="selectLead({{ $lead->id }})">
+                                    <div class="cursor-pointer flex px-5" wire:click="selectLead({{ $lead->id }})" wire:key="lead-{{ $lead->id }}">
                                         <div class="mr-4 relative w-12 h-12 flex items-center justify-center bg-pink-400 border border-pink-400 rounded-full text-white font-bold text-lg">
                                             @if($lead->name)
                                             <!-- Mostramos las iniciales del nombre con fondo rosado y letras blancas -->
@@ -78,7 +78,6 @@
                                             <!-- Fallback para mostrar un avatar por defecto si no hay nombre -->
                                             <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
                                             @endif
-                                            <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
                                         </div>
                                         <div class="flex flex-col flex-1">
                                             <div class="flex justify-between items-center">
@@ -90,8 +89,6 @@
                                             <div class="text-gray-400 text-sm dark:text-gray-600">
                                                 @if($lead->lastMessage)
                                                 {{ $lead->lastMessage->content }}
-
-
                                                 @endif
                                             </div>
                                         </div>
