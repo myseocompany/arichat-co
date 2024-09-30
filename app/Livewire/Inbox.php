@@ -21,8 +21,6 @@ class Inbox extends Component
 
     public $newMessageContent = "";
 
-    public $hasNewMessage = false;
-
     public function getListeners()
     {
         return [
@@ -40,19 +38,24 @@ class Inbox extends Component
     public function handleMessageReceived($data)
     {
         Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
+        
+        foreach($this->leads as $index => $lead){
 
-        // Asegurarse de que el mensaje recibido pertenece al lead seleccionado actualmente
-        if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
-            // Agregar el nuevo mensaje al final de la lista de mensajes
-            $this->messages[] = [
-                'is_outgoing' => false,
-                'content' => $data['message'],
-                'lead_id' => $this->selectedLeadId
-            ];
-            $this->hasNewMessage = true;
 
-            // Despachar evento para hacer scroll al final de la lista
-            $this->dispatch('scrollbottom');
+            // Asegurarse de que el mensaje recibido pertenece al lead seleccionado actualmente
+            if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
+                // Agregar el nuevo mensaje al final de la lista de mensajes
+                $this->messages[] = [
+                    'is_outgoing' => false,
+                    'content' => $data['message'],
+                    'lead_id' => $this->selectedLeadId
+                ];
+                
+                array_unshift($this->leads, $this->leads[$index]);
+                unset($this->leads[$index + 1]);
+                // Despachar evento para hacer scroll al final de la lista
+                $this->dispatch('scrollbottom');
+            }
         }
     }
 
