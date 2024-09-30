@@ -81,26 +81,12 @@ class Inbox extends Component
         $user = Auth::user();
 
         if ($user) {
-            // Obtener el lead_id del último mensaje enviado por el usuario
-            $lastSentLeadId = DB::table('messages')
-                ->where('is_outgoing', true)
-                ->orderBy('created_at', 'desc')
-                ->value('lead_id');
-
-
-            // Verificar que se haya encontrado un lastSentLeadId
-            if (!$lastSentLeadId) {
-                // Si no hay mensajes enviados, puedes proceder sin priorizar ningún lead en particular
-                $lastSentLeadId = -1; // Un valor que no será coincidente para evitar errores
-            }
-
             // Ordenar los leads por el tiempo del último mensaje en orden descendente
-            // y priorizar el lead con el último mensaje enviado por el usuario
             $this->leads = Lead::where('team_id', $user->current_team_id)
                 ->leftJoin('messages', 'leads.id', '=', 'messages.lead_id')
                 ->select('leads.*', DB::raw('MAX(messages.created_at) as last_message_time'))
                 ->groupBy('leads.id')
-                ->orderByRaw("leads.id = ? DESC, last_message_time DESC", [$lastSentLeadId])
+                ->orderBy('last_message_time', 'desc')
                 ->get();
 
             if ($this->leads->first()) {
@@ -114,7 +100,6 @@ class Inbox extends Component
             $this->leads = collect();
         }
     }
-
 
     public function selectLead($leadId)
     {
