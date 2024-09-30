@@ -48,7 +48,6 @@ class MessageController extends Controller
         //MessageReceived::dispatch($message, $phoneNumber);
         //MessageReceived::dispatch('mreceived');
 
-        
         // Emite un evento para actualizar la interfaz de usuario
         broadcast(new \App\Events\MessageReceived($message, $phoneNumber))->toOthers();
 
