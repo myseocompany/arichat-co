@@ -7,7 +7,7 @@ use App\Models\Lead;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Events\MessageProcessed;
+use Illuminate\Support\Facades\DB;
 use App\Services\WAToolboxService;
 use Illuminate\Support\Facades\Log;
 
@@ -80,14 +80,22 @@ class Inbox extends Component
         // Obtener el usuario autenticado
         $user = Auth::user();
 
-
         if ($user) {
-            $this->leads = Lead::where('team_id', $user->current_team_id)->get();
-            if ($this->leads->first())
-                if ($this->selectedLeadId == null)
+            // Ordenar los leads por el tiempo del último mensaje en orden descendente
+            $this->leads = Lead::where('team_id', $user->current_team_id)
+                ->leftJoin('messages', 'leads.id', '=', 'messages.lead_id')
+                ->select('leads.*', DB::raw('MAX(messages.created_at) as last_message_time'))
+                ->groupBy('leads.id')
+                ->orderBy('last_message_time', 'desc')
+                ->get();
+
+            if ($this->leads->first()) {
+                if ($this->selectedLeadId == null) {
                     $this->selectLead($this->leads->first()->id);
-                else
+                } else {
                     $this->selectLead($this->selectedLeadId);
+                }
+            }
         } else {
             $this->leads = collect();
         }
