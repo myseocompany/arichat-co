@@ -78,6 +78,7 @@
                                             <!-- Fallback para mostrar un avatar por defecto si no hay nombre -->
                                             <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
                                             @endif
+                                            <div class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0"></div>
                                         </div>
                                         <div class="flex flex-col flex-1">
                                             <div class="flex justify-between items-center">

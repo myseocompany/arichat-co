@@ -38,23 +38,31 @@ class Inbox extends Component
     public function handleMessageReceived($data)
     {
         Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
-        
-        foreach($this->leads as $index => $lead){
 
+        foreach ($this->leads as $index => $lead) {
 
-            // Asegurarse de que el mensaje recibido pertenece al lead seleccionado actualmente
-            if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
-                // Agregar el nuevo mensaje al final de la lista de mensajes
-                $this->messages[] = [
-                    'is_outgoing' => false,
-                    'content' => $data['message'],
-                    'lead_id' => $this->selectedLeadId
-                ];
-                
-                array_unshift($this->leads, $this->leads[$index]);
-                unset($this->leads[$index + 1]);
+            // Comprobar si el mensaje pertenece al lead que ha enviado el mensaje
+            if ($lead->phone == $data['phoneNumber']) {
+
+                // Si el lead es el que está actualmente seleccionado
+                if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
+                    // Agregar el nuevo mensaje al final de la lista de mensajes
+                    $this->messages[] = [
+                        'is_outgoing' => false,
+                        'content' => $data['message'],
+                        'lead_id' => $this->selectedLeadId
+                    ];
+                }
+
+                // Reubicar el lead al principio de la lista
+                $selectedLead = $this->leads[$index];
+                unset($this->leads[$index]);
+                array_unshift($this->leads, $selectedLead);
+
                 // Despachar evento para hacer scroll al final de la lista
                 $this->dispatch('scrollbottom');
+
+                break;
             }
         }
     }
