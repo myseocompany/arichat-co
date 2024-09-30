@@ -46,7 +46,8 @@ class WAToolBoxController extends Controller
                 'content' => $validatedData['content'],
                 'message_source_id' => 1,
                 'message_type_id' => 1,
-                'user_id' => 1
+                'user_id' => 1,
+                'is_outgoing' => false,
                 
             ]);
 
