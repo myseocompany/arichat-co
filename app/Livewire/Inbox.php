@@ -7,7 +7,6 @@ use App\Models\Lead;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Events\MessageProcessed;
 use App\Services\WAToolboxService;
 use Illuminate\Support\Facades\Log;
 
@@ -39,8 +38,16 @@ class Inbox extends Component
     {
         Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
 
+        // Encuentra el lead correspondiente al número de teléfono
+        $lead = Lead::where('phone', $data['phone_number'])->first();
+        if ($lead) {
+            // Marca el lead como que tiene un nuevo mensaje
+            $lead->has_new_message = true;
+            $lead->save();
+        }
+
         // Asegurarse de que el mensaje recibido pertenece al lead seleccionado actualmente
-        if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
+        if ($this->selectedLead && $this->selectedLead->phone == $data['phone_number']) {
             // Agregar el nuevo mensaje al final de la lista de mensajes
             $this->messages[] = [
                 'is_outgoing' => false,
@@ -50,8 +57,6 @@ class Inbox extends Component
 
             // Despachar evento para hacer scroll al final de la lista
             $this->dispatch('scrollbottom');
-
-            $this->dispatch('new-message-notification', ['message' => $data['message']]);
         }
     }
 
@@ -69,14 +74,15 @@ class Inbox extends Component
         // Obtener el usuario autenticado
         $user = Auth::user();
 
-
         if ($user) {
             $this->leads = Lead::where('team_id', $user->current_team_id)->get();
-            if ($this->leads->first())
-                if ($this->selectedLeadId == null)
+            if ($this->leads->first()) {
+                if ($this->selectedLeadId == null) {
                     $this->selectLead($this->leads->first()->id);
-                else
+                } else {
                     $this->selectLead($this->selectedLeadId);
+                }
+            }
         } else {
             $this->leads = collect();
         }
@@ -86,6 +92,10 @@ class Inbox extends Component
     {
         $this->selectedLeadId = $leadId;
         $this->selectedLead = Lead::find($leadId);
+
+        // Marca el lead como que no tiene nuevos mensajes
+        $this->selectedLead->has_new_message = false;
+        $this->selectedLead->save();
 
         $this->loadMessages();
     }
@@ -110,9 +120,6 @@ class Inbox extends Component
             'content' => $this->newMessageContent,
             'is_outgoing' => true,
         ]);
-
-        // Agregar el nuevo mensaje al array `messages` (Livewire se encargará de actualizar la vista)
-        //$this->messages[] = $message->toArray();
 
         // Enviar el mensaje a través del servicio externo
         if ($this->selectedLead) {

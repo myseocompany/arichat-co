@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use App\Services\WAToolboxService;
-use App\Events\MessageReceived;
 
 class MessageController extends Controller
 {
@@ -48,9 +47,10 @@ class MessageController extends Controller
         //broadcast(new \App\Events\MessageReceived($message, $phoneNumber))->toOthers();
         //MessageReceived::dispatch($message, $phoneNumber);
         //MessageReceived::dispatch('mreceived');
-        // Emite un evento para actualizar la interfaz de usuario
-        broadcast(new MessageReceived($message, $phoneNumber))->toOthers();
 
+        
+        // Emite un evento para actualizar la interfaz de usuario
+        broadcast(new \App\Events\MessageReceived($message, $phoneNumber))->toOthers();
 
         return response()->json(['status' => 'success']);
     }
