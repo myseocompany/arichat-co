@@ -1,4 +1,4 @@
-<div id="messages-body"
+<div id="messages-body" 
     x-data="{
         height:0, 
         conversationElement:document.getElementById('allmessages'),
@@ -18,9 +18,7 @@
                     console.log('nextTick with timeout, height:', conversationElement.scrollHeight, 'scrollTop:', conversationElement.scrollTop);
                 }, 100);
             });
-
         }
-            
     }"
     x-init="
         reload();
@@ -30,23 +28,87 @@
                 reload();
             })
     "
-
     @scrollbottom.window="$nextTick(()=>reload());">
-    <!--
-        https://www.youtube.com/watch?v=ivKl89Pzq98&t=39s
-        -->
-
 
     <div class="bg-gray-100 dark:bg-gray-800">
         <div class="flex flex-1 overflow-hidden h-screen max-screen-2xl m-auto">
             <div class="p-0 lg:p-0 w-full">
-                <div class="max-h-full h-full flex flex-row">
+                <div class="max-h-full h-full flex flex-row gap-2">
+                    <!-- left navigation -->
+                    <div class="bg-black w-auto h-full">
+                        <nav x-data="{ openSettings: false, openTeams: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 h-screen relative">
+                            <!-- Primary Navigation Menu -->
+                            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-between items-center">
+                                <div>
+                                    <!-- Logo -->
+                                    <div class="shrink-0 flex items-center py-4">
+                                        <a href="{{ route('dashboard') }}">
+                                            <x-application-mark class="block h-9 w-auto" />
+                                        </a>
+                                    </div>
+
+                                    <!-- Navigation Links -->
+                                    <div class="space-y-4 mt-4">
+                                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                                            {{ __('Dashboard') }}
+                                        </x-nav-link>
+                                    </div>
+                                </div>
+
+                                <!-- Settings Dropdown -->
+                                <div class="relative mb-2 w-full" x-data="{ open: false }">
+                                    <button @click="open = ! open" class="flex items-center text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition w-full">
+                                        <img class="h-8 w-8 rounded-full object-cover mr-2" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                                        <span class="text-gray-700 dark:text-gray-300">{{ Auth::user()->name }}</span>
+                                        <svg class="ms-2 -me-0.5 h-4 w-4 ml-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                        </svg>
+                                    </button>
+
+                                    <div x-show="open"
+                                        @click.away="open = false"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform scale-95"
+                                        x-transition:enter-end="opacity-100 transform scale-100"
+                                        x-transition:leave="transition ease-in duration-75"
+                                        x-transition:leave-start="opacity-100 transform scale-100"
+                                        x-transition:leave-end="opacity-0 transform scale-95"
+                                        class="absolute bottom-10 left-0 z-50 w-full max-w-full py-2 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+
+                                        <!-- Account Management -->
+                                        <div class="block px-4 py-2 text-xs text-gray-400">
+                                            {{ __('Manage Account') }}
+                                        </div>
+
+                                        <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900">
+                                            {{ __('Profile') }}
+                                        </a>
+
+                                        @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
+                                        <a href="{{ route('api-tokens.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900">
+                                            {{ __('API Tokens') }}
+                                        </a>
+                                        @endif
+
+                                        <div class="border-t border-gray-200 dark:border-gray-600"></div>
+
+                                        <!-- Authentication -->
+                                        <form method="POST" action="{{ route('logout') }}" x-data>
+                                            @csrf
+                                            <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900">
+                                                {{ __('Log Out') }}
+                                            </a>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
                     <!-- Left side bar start -->
                     <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg mr-5">
                         <div class="max-w-full h-full w-full flex flex-col">
                             <div class="flex p-10 justify-between ">
                                 <div class="text-2xl font-bold dark:text-white text-gray-900">Chats</div>
-                                <div></div>
                                 <!-- switcher start -->
                                 <div>
                                     <button id="theme-toggle" type="button" class="text-gray-500 text-sm p-2.5">
@@ -63,10 +125,6 @@
                             <!-- user section start -->
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
                                 <div class="w-full space-y-10">
-
-
-
-
                                     @foreach ($leads as $lead)
                                     <!-- LEAD -->
                                     <div class="cursor-pointer flex px-5" wire:click="selectLead({{ $lead->id }})" wire:key="lead-{{ $lead->id }}">
@@ -95,15 +153,6 @@
                                     </div>
                                     <!-- END LEAD  -->
                                     @endforeach
-
-
-                                    <!-- Script para scroll automático al último mensaje -->
-                                    <script>
-
-
-
-                                    </script>
-
                                 </div>
                             </div>
                             <!-- user section end -->
@@ -111,18 +160,16 @@
                     </aside>
                     <!-- Left side bar end -->
 
-
                     <!-- right section -->
                     <section class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex hidden">
-
                         @if($selectedLead)
                         <!-- head selected lead -->
-                        <div class="cursor-pointer  px-10 bg-slate-100 dark:bg-slate-800">
+                        <div class="cursor-pointer px-10 bg-slate-100 dark:bg-slate-800">
                             <div class="m-2 flex">
                                 <div class="mr-4 relative w-12 h-12 flex items-center justify-center bg-pink-400 border border-pink-400 rounded-full text-white font-bold text-lg">
                                     @if($lead->name)
                                     <!-- Mostramos las iniciales del nombre con fondo rosado y letras blancas -->
-                                    <span>{{ $lead->getInitials(2) }}</span>
+                                    <span>{{$lead->getInitials(2)}}</span>
                                     @else
                                     <!-- Fallback para mostrar un avatar por defecto si no hay nombre -->
                                     <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
@@ -141,20 +188,25 @@
                         </div>
                         <!-- end selected lead -->
                         @endif
+
                         <!-- Contenedor de todos los mensajes -->
                         <div class="flex-1 overflow-y-scroll p-5 bg-white dark:bg-slate-800 scrollbar-thumb-color dark:scrollbar-thumb-color-dark space-y-5" id="allmessages">
-
                             <!-- Iterar sobre los mensajes -->
                             @foreach ($messages as $message)
                             <div class="flex {{ $message['is_outgoing'] ? 'justify-end' : 'justify-start' }}">
                                 @if(!$message['is_outgoing'])
                                 <!-- Avatar para los mensajes entrantes -->
-                                <div class="w-12 h-12 mr-3">
+                                <div class="mr-4 relative w-12 h-12 flex items-center justify-center bg-pink-400 border border-pink-400 rounded-full text-white font-bold text-lg">
+                                    @if($lead->name)
+                                    <!-- Mostramos las iniciales del nombre con fondo rosado y letras blancas -->
+                                    <span>{{ $lead->getInitials(2) }}</span>
+                                    @else
+                                    <!-- Fallback para mostrar un avatar por defecto si no hay nombre -->
                                     <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
+                                    @endif
                                 </div>
                                 @endif
-                                <div class="p-4 text-base rounded-lg inline-block max-w-lg 
-                {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
+                                <div class="p-4 text-base rounded-lg inline-block max-w-lg {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
                                     {{ $message['content'] }}
                                 </div>
                             </div>
@@ -165,7 +217,6 @@
                         <!-- Barra de envío de mensaje -->
                         <div class="flex-none p-4 bg-slate-100 dark:bg-slate-800">
                             <div class="relative flex items-center">
-
                                 <!-- Botón de ícono (opcional) -->
                                 <button class="inline-flex items-center justify-center rounded-full h-12 w-12 text-gray-500 hover:bg-gray-300 focus:outline-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -178,13 +229,13 @@
                                     <input type="text"
                                         x-model="newMessageContent"
                                         @keydown.enter="if (newMessageContent.trim() !== '') { 
-                        // Evitar duplicación: agregar mensaje solo si no está ya en la lista
-                        messages.push({ content: newMessageContent, is_outgoing: true }); 
-                        $wire.sendMessage().then(() => {
-                            // Si ya está en la lista, evitar agregarlo otra vez cuando venga del servidor
-                            newMessageContent = ''; // Limpiar el input después de enviar
-                        });
-                   }"
+                                        // Evitar duplicación: agregar mensaje solo si no está ya en la lista
+                                        messages.push({ content: newMessageContent, is_outgoing: true }); 
+                                        $wire.sendMessage().then(() => {
+                                            // Si ya está en la lista, evitar agregarlo otra vez cuando venga del servidor
+                                            newMessageContent = ''; // Limpiar el input después de enviar
+                                        });
+                                   }"
                                         id="newMessageContent"
                                         name="newMessageContent"
                                         class="w-full h-12 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-4 bg-gray-100 dark:bg-gray-800 rounded-full"
@@ -202,99 +253,94 @@
                             </div>
                         </div>
                         <!-- Fin de la barra de envío de mensaje -->
-
-
-
-
                     </section>
                     <!-- right section end -->
                 </div>
-
             </div>
         </div>
-        <!-- Script-->
-        <script>
-            function scroll() {
-                conversationElement = document.getElementById('allmessages');
-                height = conversationElement.scrollHeight;
-                conversationElement.scrollTop = height;
-                console.log('scroll height:' + height + ', scrollTop:' + conversationElement.scrollTop);
-
-
-            }
-            scroll();
-        </script>
-        <style>
-            .scrollbar-width::-webkit-scrollbar {
-                width: 0.25rem;
-                height: 0.25rem;
-            }
-
-            .scrollbar-thumb-color::-webkit-scrollbar-thumb {
-                --bg-opacity: 1;
-                background-color: #edf2f7;
-                background-color: rgba(237, 242, 247, var(--bg-opacity));
-                border-radius: 0.25rem;
-            }
-
-            .dark .dark\:scrollbal-thumb-color-dark::-webkit-scrollbar-thumb {
-                --bg-opacity: 1;
-                background-color: #1f2937;
-                background-color: rgba(31, 41, 55, var(--bg-opacity));
-                border-radius: 0.25rem;
-            }
-        </style>
-        <script>
-            if (
-                localStorage["color-theme"] === "dark" ||
-                (!("color-theme" in localStorage) &&
-                    window.matchMedia("(prefers-color-scheme: dark)").matches)
-            ) {
-                document.documentElement.classList.add("dark")
-            } else {
-                document.documentElement.classList.remove("dark")
-            }
-        </script>
-        <script>
-            var themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
-            var themeToggleLightIcon = document.getElementById("theme-toggle-light-icon");
-            // Cambiar los íconos según la configuración previa
-            if (
-                localStorage.getItem("color-theme") === "dark" ||
-                (!("color-theme" in localStorage) &&
-                    window.matchMedia("(prefers-color-scheme: dark)").matches)
-            ) {
-                themeToggleLightIcon.classList.remove("hidden");
-            } else {
-                themeToggleDarkIcon.classList.remove("hidden");
-            }
-            var themeToggleBtn = document.getElementById("theme-toggle");
-            themeToggleBtn.addEventListener("click", function() {
-                // Alternar los íconos dentro del botón
-                themeToggleDarkIcon.classList.toggle("hidden");
-                themeToggleLightIcon.classList.toggle("hidden");
-                console.log(document.documentElement.classList);
-                // Si está configurado en el almacenamiento local
-                if (localStorage.getItem("color-theme")) {
-                    if (localStorage.getItem("color-theme") === "light") {
-                        document.documentElement.classList.add("dark");
-                        localStorage.setItem("color-theme", "dark");
-                    } else {
-                        document.documentElement.classList.remove("dark");
-                        localStorage.setItem("color-theme", "light");
-                    }
-                } else {
-                    if (document.documentElement.classList.contains("dark")) {
-                        document.documentElement.classList.remove("dark");
-                        localStorage.setItem("color-theme", "light");
-                    } else {
-                        document.documentElement.classList.add("dark");
-                        localStorage.setItem("color-theme", "dark");
-                    }
-                }
-            });
-        </script>
-
-
     </div>
+
+    <!-- Script-->
+    <script>
+        function scroll() {
+            conversationElement = document.getElementById('allmessages');
+            height = conversationElement.scrollHeight;
+            conversationElement.scrollTop = height;
+            console.log('scroll height:' + height + ', scrollTop:' + conversationElement.scrollTop);
+        }
+        scroll();
+    </script>
+
+    <style>
+        .scrollbar-width::-webkit-scrollbar {
+            width: 0.25rem;
+            height: 0.25rem;
+        }
+
+        .scrollbar-thumb-color::-webkit-scrollbar-thumb {
+            --bg-opacity: 1;
+            background-color: #edf2f7;
+            background-color: rgba(237, 242, 247, var(--bg-opacity));
+            border-radius: 0.25rem;
+        }
+
+        .dark .dark\:scrollbal-thumb-color-dark::-webkit-scrollbar-thumb {
+            --bg-opacity: 1;
+            background-color: #1f2937;
+            background-color: rgba(31, 41, 55, var(--bg-opacity));
+            border-radius: 0.25rem;
+        }
+    </style>
+
+    <script>
+        if (
+            localStorage["color-theme"] === "dark" ||
+            (!("color-theme" in localStorage) &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+            document.documentElement.classList.add("dark")
+        } else {
+            document.documentElement.classList.remove("dark")
+        }
+    </script>
+
+    <script>
+        var themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
+        var themeToggleLightIcon = document.getElementById("theme-toggle-light-icon");
+        // Cambiar los íconos según la configuración previa
+        if (
+            localStorage.getItem("color-theme") === "dark" ||
+            (!("color-theme" in localStorage) &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+            themeToggleLightIcon.classList.remove("hidden");
+        } else {
+            themeToggleDarkIcon.classList.remove("hidden");
+        }
+        var themeToggleBtn = document.getElementById("theme-toggle");
+        themeToggleBtn.addEventListener("click", function() {
+            // Alternar los íconos dentro del botón
+            themeToggleDarkIcon.classList.toggle("hidden");
+            themeToggleLightIcon.classList.toggle("hidden");
+            console.log(document.documentElement.classList);
+            // Si está configurado en el almacenamiento local
+            if (localStorage.getItem("color-theme")) {
+                if (localStorage.getItem("color-theme") === "light") {
+                    document.documentElement.classList.add("dark");
+                    localStorage.setItem("color-theme", "dark");
+                } else {
+                    document.documentElement.classList.remove("dark");
+                    localStorage.setItem("color-theme", "light");
+                }
+            } else {
+                if (document.documentElement.classList.contains("dark")) {
+                    document.documentElement.classList.remove("dark");
+                    localStorage.setItem("color-theme", "light");
+                } else {
+                    document.documentElement.classList.add("dark");
+                    localStorage.setItem("color-theme", "dark");
+                }
+            }
+        });
+    </script>
 </div>
