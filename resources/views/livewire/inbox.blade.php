@@ -136,9 +136,11 @@
                                             <!-- Fallback para mostrar un avatar por defecto si no hay nombre -->
                                             <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
                                             @endif
-                                            @if($lead->is_outgoing == 0)
+                                            @if($lead->lastMessage && $lead->lastMessage->is_outgoing == 0)
+                                            <!-- Mostrar indicador de mensaje entrante -->
                                             <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full"></span>
                                             @else
+                                            <!-- Mostrar indicador de mensaje saliente -->
                                             <span class="absolute bottom-0 right-0 w-3 h-3 bg-gray-500 rounded-full"></span>
                                             @endif
                                         </div>
