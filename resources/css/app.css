@@ -13,7 +13,6 @@
     display: none;
 }
 
-
 .text-rosado {
     color: #ff003d;
 }
@@ -22,17 +21,25 @@
     background-color: #ff003d;
 }
 
+.text-azul {
+    color: #020c27;
+}
+
+.bg-azul {
+    background-color: #020c27;
+}
+
 /* Clase global para la fuente */
 .font-arista {
     font-family: 'Arista Pro Alternate', sans-serif;
 }
 
-.feature-card{
-   padding: 1rem;
-   border-radius: 0.5rem;
-   color: white;
+.feature-card {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    color: white;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    /* justify-content: space-evenly; */
     align-items: center;
 }
-

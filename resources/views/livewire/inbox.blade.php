@@ -147,13 +147,13 @@
                                         <div class="flex flex-col flex-1">
                                             <div class="flex justify-between items-center">
                                                 <div class="text-gray-800 text-base font-semibold dark:text-gray-300">{{ $lead->name }}</div>
-                                                <div>
+                                                <div class="px-8">
 
                                                     @if($lead->lastMessage && $lead->lastMessage->is_outgoing == 0)
-                                                        <span class="w-5 h-5 absolute bg-green-500 rounded-full "></span>
+                                                    <span class="w-5 h-5 absolute bg-green-500 rounded-full "></span>
                                                     @endif
                                                 </div>
-                                                
+
                                             </div>
                                             <div class="text-gray-400 text-sm dark:text-gray-600">
                                                 @if($lead->lastMessage)
