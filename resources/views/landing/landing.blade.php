@@ -39,7 +39,7 @@
                     </h2>
                 </div>
                 <figure class="flex-shrink-1">
-                    <img class="h-32 md:h-44 transform scale-x-[-1]" src="{{ asset('images/celular.webp') }}" alt="Imagen de un celular">
+                    <img class="h-32 md:h-44 transform scale-x-[-1]" src="{{ asset('images/Celular.webp') }}" alt="Imagen de un celular">
                 </figure>
             </article>
 
