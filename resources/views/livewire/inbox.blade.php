@@ -107,7 +107,7 @@
                     <!-- Left side bar start -->
                     <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg mr-5">
                         <div class="max-w-full h-full w-full flex flex-col">
-                            <div class="flex p-10 justify-between ">
+                            <div class="flex p-10 justify-between">
                                 <div class="text-2xl font-bold dark:text-white text-gray-900">Chats</div>
                                 <!-- switcher start -->
                                 <div>
@@ -147,22 +147,20 @@
                                         <div class="flex flex-col flex-1">
                                             <div class="flex justify-between items-center">
                                                 <div class="text-gray-800 text-base font-semibold dark:text-gray-300">{{ $lead->name }}</div>
-                                                <div class="px-8">
-
-                                                    @if($lead->lastMessage && $lead->lastMessage->is_outgoing == 0)
-                                                    <span class="w-5 h-5 absolute bg-green-500 rounded-full "></span>
+                                                <div class="text-gray-700 dark:text-gray-600 text-xs">
+                                                    @if($lead->lastMessage)
+                                                        {{ $lead->lastMessage->created_at->format('h:i a') }}
                                                     @endif
                                                 </div>
-
                                             </div>
                                             <div class="text-gray-400 text-sm dark:text-gray-600">
                                                 @if($lead->lastMessage)
-                                                {{ $lead->lastMessage->content }}
+                                                    {{ $lead->lastMessage->content }}
                                                 @endif
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- END LEAD  -->
+                                    <!-- END LEAD -->
                                     @endforeach
                                 </div>
                             </div>
@@ -231,7 +229,7 @@
                                 <!-- Botón de ícono (opcional) -->
                                 <button class="inline-flex items-center justify-center rounded-full h-12 w-12 text-gray-500 hover:bg-gray-300 focus:outline-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1-18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
                                     </svg>
                                 </button>
 
