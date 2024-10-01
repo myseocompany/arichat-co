@@ -72,6 +72,32 @@ class Inbox extends Component
         $this->messages = $this->messages[] = $messages->toArray();
     }
 
+    // public function mount()
+    // {
+    //     // Obtener el usuario autenticado
+    //     $user = Auth::user();
+
+    //     if ($user) {
+    //         // Ordenar los leads por el tiempo del último mensaje en orden descendente
+    //         $this->leads = Lead::where('team_id', $user->current_team_id)
+    //             ->leftJoin('messages', 'leads.id', '=', 'messages.lead_id')
+    //             ->select('leads.*', DB::raw('MAX(messages.created_at) as last_message_time'))
+    //             ->groupBy('leads.id')
+    //             ->orderBy('last_message_time', 'desc')
+    //             ->get();
+
+    //         if ($this->leads->first()) {
+    //             if ($this->selectedLeadId == null) {
+    //                 $this->selectLead($this->leads->first()->id);
+    //             } else {
+    //                 $this->selectLead($this->selectedLeadId);
+    //             }
+    //         }
+    //     } else {
+    //         $this->leads = collect();
+    //     }
+    // }
+
     public function mount()
     {
         // Obtener el usuario autenticado
@@ -81,8 +107,8 @@ class Inbox extends Component
             // Ordenar los leads por el tiempo del último mensaje en orden descendente
             $this->leads = Lead::where('team_id', $user->current_team_id)
                 ->leftJoin('messages', 'leads.id', '=', 'messages.lead_id')
-                ->select('leads.*', DB::raw('MAX(messages.created_at) as last_message_time'))
-                ->groupBy('leads.id')
+                ->select('leads.id', 'leads.name', 'leads.phone', 'leads.email', DB::raw('MAX(messages.created_at) as last_message_time'))
+                ->groupBy('leads.id', 'leads.name', 'leads.phone', 'leads.email')
                 ->orderBy('last_message_time', 'desc')
                 ->get();
 
@@ -97,6 +123,7 @@ class Inbox extends Component
             $this->leads = collect();
         }
     }
+
 
     public function selectLead($leadId)
     {

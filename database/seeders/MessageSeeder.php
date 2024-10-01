@@ -15,7 +15,19 @@ class MessageSeeder extends Seeder
      */
     public function run()
     {
-        // Asumiendo que los campos incluyen user_id, lead_id, content, is_outgoing, created_at y updated_at
-        
+        DB::table('messages')->insert([
+            [
+                'lead_id' => 1,
+                'user_id' => 1,
+                'message_source_id' => 1,
+                'message_type_id' => 1,
+                'content' => 'Este es un mensaje de prueba.',
+                'media_url' => null,
+                'is_outgoing' => true,
+                'sent_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]
+        ]);
     }
 }
