@@ -1,4 +1,4 @@
-<div id="messages-body" 
+<div id="messages-body"
     x-data="{
         height:0, 
         conversationElement:document.getElementById('allmessages'),
@@ -135,6 +135,11 @@
                                             @else
                                             <!-- Fallback para mostrar un avatar por defecto si no hay nombre -->
                                             <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
+                                            @endif
+                                            @if($lead->is_outgoing == 0)
+                                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full"></span>
+                                            @else
+                                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-gray-500 rounded-full"></span>
                                             @endif
                                         </div>
                                         <div class="flex flex-col flex-1">

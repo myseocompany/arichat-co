@@ -20,10 +20,10 @@
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex">
             <!-- Sidebar -->
-            <aside class="w-64 bg-white dark:bg-gray-800 shadow-lg h-screen">
+            <aside class="">
                 <div class="p-0">
                     <!-- Navigation -->
-                    @livewire('navigation-menu')
+                    
                 </div>
             </aside>
 
