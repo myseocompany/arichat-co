@@ -9,13 +9,11 @@ Route::post('/send-message', [MessageController::class, 'sendMessage']);
 Route::post('/webhook', [MessageController::class, 'receiveMessage']);
 
 Route::get('/', function () {
-    return view('welcome');
-});
-
-
-Route::get('/landing', function () {
     return view('landing.landing');
 });
+
+
+
 
 Route::middleware([
     'auth:sanctum',
