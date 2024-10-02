@@ -11,7 +11,9 @@
 <body class="">
     <!-- Header -->
     <header class="bg-rosado w-full h-16 flex justify-between items-center px-4">
-        <h1 class="text-white text-2xl">Ari-Chat</h1>
+        <div class="h-full w-16">
+            <img src="{{ asset('images/ari-logo.png') }}" alt="">
+        </div>
         <div class="text-white h-full w-10 flex items-center">
             <button class="w-full">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -137,4 +139,5 @@
         </section>
     </main>
 </body>
+
 </html>
