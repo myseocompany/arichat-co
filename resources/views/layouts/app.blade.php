@@ -18,25 +18,22 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex">
+        <div class="min-h-screen bg-gray-200 dark:bg-gray-900 flex">
             <!-- Sidebar -->
             <aside class="">
                 <div class="p-0">
                     <!-- Navigation -->
-                    
                 </div>
             </aside>
 
             <!-- Contenido Principal -->
             <div class="flex-1">
-                
-
-
                 <!-- Page Content -->
                 <main class="p-0">
                     {{ $slot }}
                 </main>
             </div>
+            <!-- Fin contenido Principal -->
         </div>
 
         @stack('modals')
