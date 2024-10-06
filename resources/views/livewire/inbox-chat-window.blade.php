@@ -34,9 +34,9 @@
                 @if(!$message['is_outgoing'])
                 <!-- Avatar para los mensajes entrantes -->
                 <div class="mr-4 relative w-12 h-12 flex items-center justify-center bg-pink-400 border border-pink-400 rounded-full text-white font-bold text-lg">
-                    @if($lead->name)
+                    @if($selectedLead->name)
                     <!-- Mostramos las iniciales del nombre con fondo rosado y letras blancas -->
-                    <span>{{ $lead->getInitials(2) }}</span>
+                    <span>{{ $selectedLead->getInitials(2) }}</span>
                     @else
                     <!-- Fallback para mostrar un avatar por defecto si no hay nombre -->
                     <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
