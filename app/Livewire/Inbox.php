@@ -28,6 +28,13 @@ class Inbox extends Component
         ];
     }
 
+        // Escuchar el evento con #[On]
+        #[On('lead-selected')]
+        public function selectLeadHandler($leadId)
+        {
+            $this->selectLead( $leadId );
+        }
+
     public function handleMessageReceivedOld()
     {
         Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
@@ -100,6 +107,7 @@ class Inbox extends Component
 
     public function mount()
     {
+        
         // Obtener el usuario autenticado
         $user = Auth::user();
 

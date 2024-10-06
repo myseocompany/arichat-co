@@ -12,4 +12,6 @@ class InboxLeadList extends Component
     {
         return view('livewire.inbox-lead-list');
     }
+
+
 }
