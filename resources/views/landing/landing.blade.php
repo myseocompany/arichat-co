@@ -32,9 +32,9 @@
         </button>
         <ul class="text-center">
             <li><a href="/" class="block p-4 text-2xl">Inicio</a></li>
-            <li><a href="/login" class="block p-4 text-2xl">Acerca de</a></li>
-            <li><a href="#" class="block p-4 text-2xl">Servicios</a></li>
-            <li><a href="#" class="block p-4 text-2xl">Contacto</a></li>
+            <li><a href="/login" class="block p-4 text-2xl">Login</a></li>
+            <!-- <li><a href="#" class="block p-4 text-2xl">Servicios</a></li>
+            <li><a href="#" class="block p-4 text-2xl">Contacto</a></li> -->
         </ul>
     </div>
 
