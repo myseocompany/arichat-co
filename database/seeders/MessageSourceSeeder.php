@@ -30,7 +30,7 @@ class MessageSourceSeeder extends Seeder
                 'type' => 'WhatsApp ',
                 'team_id' => 1,  // Asegúrate de que este team_id exista en tu base de datos
                 'user_id' => 2,
-                'is_default' => true,
+                'is_default' => false,
                 'settings' => json_encode([
                     'webhook_url' => 'https://api.watoolbox.com/webhooks/NKHQ97FJ7',
                     'phone_number' => '573044483357'

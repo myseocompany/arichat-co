@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Lead;
 use App\Models\Message;
+use App\Services\LeadOrderService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\WAToolboxService;
@@ -19,6 +20,13 @@ class Inbox extends Component
     public $selectedLead;
 
     public $newMessageContent = "";
+
+    protected $leadOrderService;
+
+    public function __construct()
+    {
+        $this->leadOrderService = new LeadOrderService(); // Inyección de dependencia
+    }
 
     public function getListeners()
     {
@@ -113,12 +121,9 @@ class Inbox extends Component
 
         if ($user) {
             // Ordenar los leads por el tiempo del último mensaje en orden descendente
-            $this->leads = Lead::where('team_id', $user->current_team_id)
-                ->leftJoin('messages', 'leads.id', '=', 'messages.lead_id')
-                ->select('leads.id', 'leads.name', 'leads.phone', 'leads.email', DB::raw('MAX(messages.created_at) as last_message_time'))
-                ->groupBy('leads.id', 'leads.name', 'leads.phone', 'leads.email')
-                ->orderBy('last_message_time', 'desc')
-                ->get();
+            // Utiliza el servicio para obtener los leads ordenados
+            $this->leads = $this->leadOrderService->getOrderedLeads();
+
 
             if ($this->leads->first()) {
                 if ($this->selectedLeadId == null) {
