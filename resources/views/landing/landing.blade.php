@@ -150,6 +150,37 @@
         </section>
     </main>
 
+    <!-- WhatsApp Widget -->
+    <div class="fixed bottom-4 right-4 z-50">
+        <button id="whatsapp-button" class="block w-16 h-16 bg-green-500 rounded-full shadow-lg flex items-center justify-center">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.125 1.61 5.91L0 24l6.09-1.61A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm6.18 17.82c-.26.73-1.52 1.35-2.1 1.44-.56.08-1.24.11-2-.12-.46-.14-1.06-.34-1.82-.67-3.2-1.32-5.28-4.56-5.46-4.78-.18-.22-1.3-1.73-1.3-3.3 0-1.56.82-2.33 1.12-2.66.3-.33.66-.41.88-.41.22 0 .44.01.63.01.2 0 .47-.08.74.56.28.64.95 2.22 1.03 2.38.08.16.14.35.03.56-.1.21-.15.34-.3.52-.15.18-.31.4-.44.54-.15.15-.3.31-.13.6.18.3.78 1.28 1.67 2.07 1.15 1.02 2.12 1.34 2.42 1.49.3.15.47.13.64-.08.17-.22.74-.86.94-1.16.2-.3.4-.25.67-.15.28.1 1.77.84 2.08.99.3.15.5.22.57.34.08.12.08.73-.18 1.44z" />
+            </svg>
+        </button>
+        <div id="whatsapp-form" class="hidden fixed bottom-20 right-4 bg-white p-4 rounded-lg shadow-lg w-80">
+            <button id="close-whatsapp-form" class="absolute top-2 right-2 text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <form id="contact-form" action="/send-message" method="post">
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-700">Nombre:</label>
+                    <input type="text" id="name" name="name" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label for="phone" class="block text-gray-700">Teléfono:</label>
+                    <input type="text" id="phone" name="phone" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label for="message" class="block text-gray-700">Mensaje:</label>
+                    <textarea id="message" name="message" class="w-full px-3 py-2 border rounded-lg" required></textarea>
+                </div>
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg">Enviar</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         document.getElementById('menu-button').addEventListener('click', function() {
             var sidebar = document.getElementById('sidebar');
@@ -163,6 +194,16 @@
         document.getElementById('close-button').addEventListener('click', function() {
             var sidebar = document.getElementById('sidebar');
             sidebar.classList.add('-translate-x-full');
+        });
+
+        document.getElementById('whatsapp-button').addEventListener('click', function() {
+            var form = document.getElementById('whatsapp-form');
+            form.classList.toggle('hidden');
+        });
+
+        document.getElementById('close-whatsapp-form').addEventListener('click', function() {
+            var form = document.getElementById('whatsapp-form');
+            form.classList.add('hidden');
         });
     </script>
 </body>
