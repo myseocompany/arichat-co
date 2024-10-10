@@ -168,10 +168,11 @@ class Inbox extends Component
             'is_outgoing' => true,
         ]);
 
+        // Agregar el nuevo mensaje al array `messages` asegurando que 'time' esté definido
         $this->messages[] = [
             'content' => $message->content,
             'is_outgoing' => true,
-            'time' => $message->created_at ? $message->created_at->format('H:i') : '', // Asegurarse de que 'time' siempre esté definido
+            'time' => $message->created_at ? $message->created_at->format('H:i') : '', // Hora de envío del mensaje
         ];
 
         // Enviar el mensaje a través del servicio externo
@@ -189,6 +190,7 @@ class Inbox extends Component
         // Despachar el evento de desplazamiento para hacer scroll hacia abajo
         $this->dispatch('scrollbottom');
     }
+
 
     public function render()
     {
