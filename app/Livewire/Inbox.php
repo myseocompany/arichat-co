@@ -168,11 +168,10 @@ class Inbox extends Component
             'is_outgoing' => true,
         ]);
 
-        // Agregar el nuevo mensaje al array `messages` con la hora formateada
         $this->messages[] = [
             'content' => $message->content,
             'is_outgoing' => true,
-            'time' => $message->created_at->format('H:i'), // Hora de envío del mensaje
+            'time' => $message->created_at ? $message->created_at->format('H:i') : '', // Asegurarse de que 'time' siempre esté definido
         ];
 
         // Enviar el mensaje a través del servicio externo
