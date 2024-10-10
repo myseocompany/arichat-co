@@ -137,21 +137,21 @@
                         <div class="flex-1 overflow-y-scroll p-5 bg-slate-50 dark:bg-slate-800 scrollbar-thumb-color dark:scrollbar-thumb-color-dark space-y-5" id="allmessages">
                             <!-- Iterar sobre los mensajes -->
                             @foreach ($messages as $message)
-                            <div class="flex {{ $message['is_outgoing'] ? 'justify-end' : 'justify-start' }}">
+                            <div class="flex {{ $message['is_outgoing'] ? 'justify-end' : 'justify-start' }} mb-3">
                                 @if(!$message['is_outgoing'])
                                 <!-- Avatar para los mensajes entrantes -->
                                 <div class="mr-4 relative w-12 h-12 flex items-center justify-center bg-pink-400 border border-pink-400 rounded-full text-white font-bold text-lg">
                                     @if($selectedLead->name)
-                                    <!-- Mostramos las iniciales del nombre con fondo rosado y letras blancas -->
                                     <span>{{ $selectedLead->getInitials(2) }}</span>
                                     @else
-                                    <!-- Fallback para mostrar un avatar por defecto si no hay nombre -->
                                     <img class="rounded-full w-full h-full" src="https://unavatar.io/sindresorhus@gmail.com" alt="Avatar">
                                     @endif
                                 </div>
                                 @endif
-                                <div class="p-4 text-base rounded-lg inline-block max-w-lg {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
-                                    {{ $message['content'] }}
+                            
+                                <div class="py-1 px-2 text-base rounded-lg inline-block max-w-lg {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
+                                    <div>{{ $message['content'] }}</div>
+                                    <div class="text-xs text-gray-200 mt-1">{{ $message['time'] }}</div> <!-- Hora debajo del mensaje -->
                                 </div>
                             </div>
                             @endforeach

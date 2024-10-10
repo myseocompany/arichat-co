@@ -51,40 +51,41 @@ class Inbox extends Component
     }
 
     public function handleMessageReceived($data)
-    {
-        Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
+{
+    Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
 
-        foreach ($this->leads as $index => $lead) {
-
-            // Comprobar si el mensaje pertenece al lead que ha enviado el mensaje
-            if ($lead->phone == $data['phoneNumber']) {
-
-                // Si el lead es el que está actualmente seleccionado
-                if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
-                    // Agregar el nuevo mensaje al final de la lista de mensajes
-                    $this->messages[] = [
-                        'is_outgoing' => false,
-                        'content' => $data['message'],
-                        'lead_id' => $this->selectedLeadId
-                    ];
-                }
-
-                // Reubicar el lead al principio usando los métodos de colección
-                $selectedLead = $this->leads->splice($index, 1)->first(); // Eliminar el lead de la posición actual
-                $this->leads->prepend($selectedLead); // Agregar el lead al inicio de la colección
-
-                // Despachar evento para hacer scroll al final de la lista
-                $this->dispatch('scrollbottom');
-
-                break;
+    foreach ($this->leads as $index => $lead) {
+        if ($lead->phone == $data['phoneNumber']) {
+            if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
+                $this->messages[] = [
+                    'is_outgoing' => false,
+                    'content' => $data['message'],
+                    'time' => now()->format('H:i'), // Asume que el mensaje fue recibido en el momento actual
+                    'lead_id' => $this->selectedLeadId
+                ];
             }
+
+            $selectedLead = $this->leads->splice($index, 1)->first();
+            $this->leads->prepend($selectedLead);
+            $this->dispatch('scrollbottom');
+            break;
         }
     }
+}
+
 
     public function loadMessages()
     {
-        $messages =  Message::where('lead_id', $this->selectedLeadId)->get();
-        $this->messages = $this->messages[] = $messages->toArray();
+        $messages = Message::where('lead_id', $this->selectedLeadId)
+            ->orderBy('created_at', 'asc') // Asegura que los mensajes se ordenen por la hora de creación
+            ->get(['content', 'is_outgoing', 'created_at']); // Selecciona también la hora de creación
+        $this->messages = $messages->map(function ($message) {
+            return [
+                'content' => $message->content,
+                'is_outgoing' => $message->is_outgoing,
+                'time' => $message->created_at->format('H:i'), // Formatea la hora
+            ];
+        })->toArray();
     }
 
     // public function mount()
