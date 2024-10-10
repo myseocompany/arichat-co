@@ -28,10 +28,13 @@ class Inbox extends Component
         $this->leadOrderService = new LeadOrderService(); // Inyección de dependencia
     }
 
-    protected $listeners = [
-        'testEvent' => 'testEvent',
-        'loadAllConversations' => 'loadAllConversations'
-    ];
+    public function getListeners()
+    {
+        return [
+            // Public Channel
+            "echo:chat,MessageReceived" => 'handleMessageReceived',
+        ];
+    }
 
     // Escuchar el evento con #[On]
     #[On('lead-selected')]
@@ -70,27 +73,20 @@ class Inbox extends Component
         }
     }
 
-    public function testEvent()
-    {
-        Log::info('El evento de prueba fue ejecutado');
-    }
-
 
     public function loadMessages()
     {
         $messages = Message::where('lead_id', $this->selectedLeadId)
-            ->orderBy('created_at', 'asc')
-            ->get(['content', 'is_outgoing', 'created_at']);
-
+            ->orderBy('created_at', 'asc') // Asegura que los mensajes se ordenen por la hora de creación
+            ->get(['content', 'is_outgoing', 'created_at']); // Selecciona también la hora de creación
         $this->messages = $messages->map(function ($message) {
             return [
                 'content' => $message->content,
                 'is_outgoing' => $message->is_outgoing,
-                'time' => $message->created_at->format('H:i'),
+                'time' => $message->created_at->format('H:i'), // Formatea la hora
             ];
         })->toArray();
     }
-
 
     // public function mount()
     // {
@@ -120,30 +116,36 @@ class Inbox extends Component
 
     public function mount()
     {
+
+        // Obtener el usuario autenticado
         $user = Auth::user();
 
         if ($user) {
-            // Obtener todos los leads que pertenecen al usuario autenticado
-            $this->leads = Lead::where('user_id', $user->id)->get();
+            // Ordenar los leads por el tiempo del último mensaje en orden descendente
+            // Utiliza el servicio para obtener los leads ordenados
+            $this->leads = $this->leadOrderService->getOrderedLeads();
 
-            // Cargar las conversaciones del primer lead por defecto si hay alguno disponible
+
             if ($this->leads->first()) {
-                $this->selectLead($this->leads->first()->id);
+                if ($this->selectedLeadId == null) {
+                    $this->selectLead($this->leads->first()->id);
+                } else {
+                    $this->selectLead($this->selectedLeadId);
+                }
             }
         } else {
             $this->leads = collect();
         }
     }
 
+
     public function selectLead($leadId)
     {
         $this->selectedLeadId = $leadId;
         $this->selectedLead = Lead::find($leadId);
 
-        // Cargar los mensajes solo del lead seleccionado
         $this->loadMessages();
     }
-
 
     public function sendMessage()
     {
@@ -182,26 +184,6 @@ class Inbox extends Component
         // Despachar el evento de desplazamiento para hacer scroll hacia abajo
         $this->dispatch('scrollbottom');
     }
-
-    public function loadAllConversations()
-    {
-        Log::info('Evento loadAllConversations ejecutado');
-        $this->selectedLeadId = null;
-        $this->selectedLead = null;
-
-        $this->messages = Message::orderBy('created_at', 'asc')
-            ->get(['content', 'is_outgoing', 'created_at', 'lead_id'])
-            ->map(function ($message) {
-                return [
-                    'content' => $message->content,
-                    'is_outgoing' => $message->is_outgoing,
-                    'time' => $message->created_at->format('H:i'),
-                    'lead_name' => optional(Lead::find($message->lead_id))->name,
-                ];
-            })->toArray();
-    }
-
-
 
     public function render()
     {
