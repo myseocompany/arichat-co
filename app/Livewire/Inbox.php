@@ -83,7 +83,7 @@ class Inbox extends Component
 
     public function loadMessages()
     {
-        $messages =  Message::where('lead_id', $this->selectedLeadId)->get();
+        $messages = Message::where('lead_id', $this->selectedLeadId)->get();
         $this->messages = $this->messages[] = $messages->toArray();
     }
 
