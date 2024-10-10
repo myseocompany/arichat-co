@@ -126,13 +126,7 @@
                             <div class="flex {{ $message['is_outgoing'] ? 'justify-end' : 'justify-start' }} mb-3">
                                 @if(!$message['is_outgoing'])
                                 <div class="mr-4 relative w-12 h-12 flex items-center justify-center bg-pink-400 border border-pink-400 rounded-full text-white font-bold text-lg">
-                                    @if($selectedLead)
-                                    <!-- Mostrar iniciales si hay un lead seleccionado -->
-                                    <span>{{ $selectedLead->getInitials(2) }}</span>
-                                    @else
-                                    <!-- Mostrar el nombre del lead junto al mensaje si no hay un lead específico seleccionado -->
                                     <span>{{ $message['lead_name'] ?? 'Unknown' }}</span>
-                                    @endif
                                 </div>
                                 @endif
 
@@ -143,8 +137,6 @@
                             </div>
                             @endforeach
                         </div>
-
-
                         <!-- Fin de todos los mensajes -->
 
                         <!-- Barra de envío de mensaje -->

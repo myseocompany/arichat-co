@@ -31,7 +31,7 @@ class Inbox extends Component
     public function getListeners()
     {
         return [
-            // Public Channel
+            'loadAllConversations' => 'loadAllConversations',
             "echo:chat,MessageReceived" => 'handleMessageReceived',
         ];
     }
@@ -183,10 +183,10 @@ class Inbox extends Component
 
     public function loadAllConversations()
     {
+        Log::info('Método loadAllConversations invocado');
         $this->selectedLeadId = null;
         $this->selectedLead = null;
 
-        // Cargar todos los mensajes, independientemente del lead
         $this->messages = Message::orderBy('created_at', 'asc')
             ->get(['content', 'is_outgoing', 'created_at', 'lead_id'])
             ->map(function ($message) {
@@ -194,10 +194,11 @@ class Inbox extends Component
                     'content' => $message->content,
                     'is_outgoing' => $message->is_outgoing,
                     'time' => $message->created_at->format('H:i'),
-                    'lead_name' => optional(Lead::find($message->lead_id))->name, // Obtener el nombre del lead
+                    'lead_name' => optional(Lead::find($message->lead_id))->name,
                 ];
             })->toArray();
     }
+
 
 
     public function render()
