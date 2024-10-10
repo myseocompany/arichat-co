@@ -13,8 +13,6 @@ Route::get('/', function () {
 });
 
 
-
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -24,6 +22,7 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
 
 Route::post('/broadcast', function () {
     Broadcast::on('global')

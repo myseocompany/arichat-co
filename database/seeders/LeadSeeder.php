@@ -38,7 +38,7 @@ class LeadSeeder extends Seeder
         
 
         DB::table('leads')->insert([
-            'user_id' => 1, // Asegúrate de que este ID de usuario exista en tu base de datos
+            'user_id' => 2, // Asegúrate de que este ID de usuario exista en tu base de datos
             'team_id' => 1, // Asegúrate de que este ID de equipo exista en tu base de datos
             'name' => 'Kevin Virgen',
             'email' => 'soporterapido@myseocompany.co', // Añade un correo electrónico si la columna es requerida
@@ -48,7 +48,7 @@ class LeadSeeder extends Seeder
         ]);
 
         DB::table('leads')->insert([
-            'user_id' => 1, // Asegúrate de que este ID de usuario exista en tu base de datos
+            'user_id' => 2, // Asegúrate de que este ID de usuario exista en tu base de datos
             'team_id' => 1, // Asegúrate de que este ID de equipo exista en tu base de datos
             'name' => 'Maquiempanadas',
             'email' => 'mqe@myseocompany.co', // Añade un correo electrónico si la columna es requerida
