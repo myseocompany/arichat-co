@@ -28,13 +28,10 @@ class Inbox extends Component
         $this->leadOrderService = new LeadOrderService(); // Inyección de dependencia
     }
 
-    public function getListeners()
-    {
-        return [
-            'loadAllConversations' => 'loadAllConversations',
-            "echo:chat,MessageReceived" => 'handleMessageReceived',
-        ];
-    }
+    protected $listeners = [
+        'testEvent' => 'testEvent',
+        'loadAllConversations' => 'loadAllConversations'
+    ];
 
     // Escuchar el evento con #[On]
     #[On('lead-selected')]
@@ -71,6 +68,11 @@ class Inbox extends Component
                 break;
             }
         }
+    }
+
+    public function testEvent()
+    {
+        Log::info('El evento de prueba fue ejecutado');
     }
 
 
@@ -183,7 +185,7 @@ class Inbox extends Component
 
     public function loadAllConversations()
     {
-        Log::info('Método loadAllConversations invocado');
+        Log::info('Evento loadAllConversations ejecutado');
         $this->selectedLeadId = null;
         $this->selectedLead = null;
 
