@@ -36,12 +36,12 @@ class Inbox extends Component
         ];
     }
 
-    // Escuchar el evento con #[On]
-    #[On('lead-selected')]
-    public function selectLeadHandler($leadId)
-    {
-        $this->selectLead($leadId);
-    }
+        // Escuchar el evento con #[On]
+        #[On('lead-selected')]
+        public function selectLeadHandler($leadId)
+        {
+            $this->selectLead( $leadId );
+        }
 
     public function handleMessageReceivedOld()
     {
@@ -51,44 +51,42 @@ class Inbox extends Component
     }
 
     public function handleMessageReceived($data)
-    {
-        Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
+{
+    Log::info('Evento en el componente:', ['evento' => 'MessageReceived']);
 
-        foreach ($this->leads as $index => $lead) {
-            if ($lead->phone == $data['phoneNumber']) {
-                if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
-                    $this->messages[] = [
-                        'is_outgoing' => false,
-                        'content' => $data['message'],
-                        'time' => now()->format('H:i'), // Asume que el mensaje fue recibido en el momento actual
-                        'lead_id' => $this->selectedLeadId
-                    ];
-                }
-
-                $selectedLead = $this->leads->splice($index, 1)->first();
-                $this->leads->prepend($selectedLead);
-                $this->dispatch('scrollbottom');
-                break;
+    foreach ($this->leads as $index => $lead) {
+        if ($lead->phone == $data['phoneNumber']) {
+            if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
+                $this->messages[] = [
+                    'is_outgoing' => false,
+                    'content' => $data['message'],
+                    'time' => now()->format('H:i'), // Asume que el mensaje fue recibido en el momento actual
+                    'lead_id' => $this->selectedLeadId
+                ];
             }
+
+            $selectedLead = $this->leads->splice($index, 1)->first();
+            $this->leads->prepend($selectedLead);
+            $this->dispatch('scrollbottom');
+            break;
         }
     }
+}
 
 
     public function loadMessages()
     {
         $messages = Message::where('lead_id', $this->selectedLeadId)
-            ->orderBy('created_at', 'asc')
-            ->get(['content', 'is_outgoing', 'created_at']);
-
+            ->orderBy('created_at', 'asc') // Asegura que los mensajes se ordenen por la hora de creación
+            ->get(['content', 'is_outgoing', 'created_at']); // Selecciona también la hora de creación
         $this->messages = $messages->map(function ($message) {
             return [
                 'content' => $message->content,
                 'is_outgoing' => $message->is_outgoing,
-                'time' => $message->created_at ? $message->created_at->format('H:i') : null, // Formato de la hora
+                'time' => $message->created_at->format('H:i'), // Formatea la hora
             ];
         })->toArray();
     }
-
 
     // public function mount()
     // {
@@ -118,7 +116,7 @@ class Inbox extends Component
 
     public function mount()
     {
-
+        
         // Obtener el usuario autenticado
         $user = Auth::user();
 
@@ -162,18 +160,14 @@ class Inbox extends Component
         $message = Message::create([
             'lead_id' => $this->selectedLeadId,
             'user_id' => Auth::id(),
-            'message_source_id' => 1,
-            'message_type_id' => 1,
+            'message_source_id' => 1, // Suponiendo un canal por defecto
+            'message_type_id' => 1, // Suponiendo un tipo de mensaje por defecto
             'content' => $this->newMessageContent,
             'is_outgoing' => true,
         ]);
 
-        // Agregar el nuevo mensaje al array `messages` asegurando que 'time' esté definido
-        $this->messages[] = [
-            'content' => $message->content,
-            'is_outgoing' => true,
-            'time' => $message->created_at ? $message->created_at->format('H:i') : '', // Hora de envío del mensaje
-        ];
+        // Agregar el nuevo mensaje al array `messages` (Livewire se encargará de actualizar la vista)
+        //$this->messages[] = $message->toArray();
 
         // Enviar el mensaje a través del servicio externo
         if ($this->selectedLead) {
@@ -190,7 +184,6 @@ class Inbox extends Component
         // Despachar el evento de desplazamiento para hacer scroll hacia abajo
         $this->dispatch('scrollbottom');
     }
-
 
     public function render()
     {
