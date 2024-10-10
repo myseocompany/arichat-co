@@ -77,16 +77,18 @@ class Inbox extends Component
     public function loadMessages()
     {
         $messages = Message::where('lead_id', $this->selectedLeadId)
-            ->orderBy('created_at', 'asc') // Asegura que los mensajes se ordenen por la hora de creación
-            ->get(['content', 'is_outgoing', 'created_at']); // Selecciona también la hora de creación
+            ->orderBy('created_at', 'asc')
+            ->get(['content', 'is_outgoing', 'created_at']);
+
         $this->messages = $messages->map(function ($message) {
             return [
                 'content' => $message->content,
                 'is_outgoing' => $message->is_outgoing,
-                'time' => $message->created_at->format('H:i'), // Formatea la hora
+                'time' => $message->created_at ? $message->created_at->format('H:i') : null, // Formatea la hora si existe
             ];
         })->toArray();
     }
+
 
     // public function mount()
     // {

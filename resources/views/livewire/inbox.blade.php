@@ -61,7 +61,7 @@
                                 <div class="w-full space-y-10">
                                     @foreach ($leads as $lead)
                                     <!-- LEAD -->
-                                    <div class="cursor-pointer flex px-5" wire:click="selectLead({{ $lead->id }})"  wire:key="lead-{{ $lead->id }}">
+                                    <div class="cursor-pointer flex px-5" wire:click="selectLead({{ $lead->id }})" wire:key="lead-{{ $lead->id }}">
                                         <div class="mr-4 relative w-12 h-12 flex items-center justify-center bg-pink-400 border border-pink-400 rounded-full text-white font-bold text-lg">
                                             @if($lead->name)
                                             <!-- Mostramos las iniciales del nombre con fondo rosado y letras blancas -->
@@ -83,13 +83,13 @@
                                                 <div class="text-gray-800 text-base font-semibold dark:text-gray-300">{{ $lead->name }}</div>
                                                 <div class="text-gray-700 dark:text-gray-600 text-xs">
                                                     @if($lead->lastMessage)
-                                                        {{ $lead->lastMessage->created_at->format('h:i a') }}
+                                                    {{ $lead->lastMessage->created_at->format('h:i a') }}
                                                     @endif
                                                 </div>
                                             </div>
                                             <div class="text-gray-400 text-sm dark:text-gray-600">
                                                 @if($lead->lastMessage)
-                                                    {{ $lead->lastMessage->content }}
+                                                {{ $lead->lastMessage->content }}
                                                 @endif
                                             </div>
                                         </div>
@@ -101,7 +101,7 @@
                             <!-- user section end -->
                         </div>
                     </aside>
-                
+
                     <!-- Left side bar end -->
 
                     <!-- right section -->
@@ -132,7 +132,7 @@
                         </div>
                         <!-- end selected lead -->
                         @endif
-                
+
                         <!-- Contenedor de todos los mensajes -->
                         <div class="flex-1 overflow-y-scroll p-5 bg-slate-50 dark:bg-slate-800 scrollbar-thumb-color dark:scrollbar-thumb-color-dark space-y-5" id="allmessages">
                             <!-- Iterar sobre los mensajes -->
@@ -148,16 +148,19 @@
                                     @endif
                                 </div>
                                 @endif
-                            
+
                                 <div class="py-1 px-2 text-base rounded-lg inline-block max-w-lg {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
                                     <div>{{ $message['content'] }}</div>
-                                    <div class="text-xs text-gray-200 mt-1">{{ $message['time'] }}</div> <!-- Hora debajo del mensaje -->
+                                    <div class="text-xs text-gray-200 mt-1">
+                                        {{ $message['time'] ?? '--' }} <!-- Mostrar '--' si 'time' no está presente -->
+                                    </div>
+
                                 </div>
                             </div>
                             @endforeach
                         </div>
                         <!-- Fin de todos los mensajes -->
-                
+
                         <!-- Barra de envío de mensaje -->
                         <div class="flex-none p-4 bg-slate-100 dark:bg-slate-800">
                             <div class="relative flex items-center">
@@ -167,7 +170,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1-18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
                                     </svg>
                                 </button>
-                
+
                                 <!-- Input de texto -->
                                 <div x-data="{ newMessageContent: @entangle('newMessageContent'), messages: @entangle('messages') }" class="flex-1 ml-3">
                                     <input type="text"
@@ -185,7 +188,7 @@
                                         class="w-full h-12 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-4 bg-gray-100 dark:bg-gray-800 rounded-full"
                                         placeholder="Type your message here...">
                                 </div>
-                
+
                                 <!-- Botón para enviar -->
                                 <div class="ml-4">
                                     <button wire:click="sendMessage" class="inline-flex items-center justify-center rounded-full h-12 w-12 bg-indigo-800 text-white hover:bg-indigo-600 focus:outline-none">
@@ -198,7 +201,7 @@
                         </div>
                         <!-- Fin de la barra de envío de mensaje -->
                     </section>
-                
+
                     <!-- right section end -->
                 </div>
             </div>
