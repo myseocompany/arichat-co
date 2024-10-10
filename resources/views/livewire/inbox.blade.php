@@ -151,12 +151,10 @@
 
                                 <div class="py-1 px-2 text-base rounded-lg inline-block max-w-lg {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
                                     <div>{{ $message['content'] }}</div>
-                                    <div class="text-xs text-gray-200 mt-1">
-                                        {{ $message['time'] ?? '--' }} <!-- Mostrar '--' si 'time' no está presente -->
-                                    </div>
-
+                                    <div class="text-xs text-gray-500 mt-1">{{ $message['time'] }}</div> <!-- Hora debajo del mensaje -->
                                 </div>
                             </div>
+
                             @endforeach
                         </div>
                         <!-- Fin de todos los mensajes -->

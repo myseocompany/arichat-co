@@ -84,7 +84,7 @@ class Inbox extends Component
             return [
                 'content' => $message->content,
                 'is_outgoing' => $message->is_outgoing,
-                'time' => $message->created_at ? $message->created_at->format('H:i') : null, // Formatea la hora si existe
+                'time' => $message->created_at ? $message->created_at->format('H:i') : null, // Formato de la hora
             ];
         })->toArray();
     }
@@ -162,14 +162,18 @@ class Inbox extends Component
         $message = Message::create([
             'lead_id' => $this->selectedLeadId,
             'user_id' => Auth::id(),
-            'message_source_id' => 1, // Suponiendo un canal por defecto
-            'message_type_id' => 1, // Suponiendo un tipo de mensaje por defecto
+            'message_source_id' => 1,
+            'message_type_id' => 1,
             'content' => $this->newMessageContent,
             'is_outgoing' => true,
         ]);
 
-        // Agregar el nuevo mensaje al array `messages` (Livewire se encargará de actualizar la vista)
-        //$this->messages[] = $message->toArray();
+        // Agregar el nuevo mensaje al array `messages` con la hora formateada
+        $this->messages[] = [
+            'content' => $message->content,
+            'is_outgoing' => true,
+            'time' => $message->created_at->format('H:i'), // Hora de envío del mensaje
+        ];
 
         // Enviar el mensaje a través del servicio externo
         if ($this->selectedLead) {
