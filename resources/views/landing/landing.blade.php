@@ -68,7 +68,9 @@
                 <p>Incluye funciones avanzadas como listas personalizadas, mensajes automáticos y seguimiento en tiempo real.</p>
             </div>
             <div class="w-full flex justify-center">
-                <button class="bg-rosado text-white rounded-xl px-4 py-3 text-xl">Suscríbete ahora</button>
+                <a href="https://wa.me/+573004410097">
+                    <button class="bg-rosado text-white rounded-xl px-4 py-3 text-xl">Suscríbete ahora</button>
+                </a>
             </div>
         </section>
 
@@ -125,10 +127,10 @@
             </div>
             <div class="flex flex-col md:flex-row justify-around gap-12 mt-8">
                 <!-- Plan Básico -->
-                <div class="bg-azul rounded-lg py-6 px-8 text-center shadow-md md:w-72">
+                <div class="bg-azul rounded-lg py-6 px-8 text-center shadow-md md:w-72 text-gray-200">
                     <span class="text-xl font-bold">Básico</span>
                     <h2 class="text-4xl font-bold mt-2">$9.99<span class="text-lg">/mes</span></h2>
-                    <div class="mt-4 text-sm text-gray-200">
+                    <div class="mt-4 text-sm ">
                         <ul class="space-y-2">
                             <li>1 Usuario</li>
                             <li>Difusiones</li>
@@ -136,11 +138,13 @@
                             <li>5 flujos de trabajo</li>
                         </ul>
                     </div>
-                    <button class="bg-white text-azul p-3 my-5 rounded-xl">Suscríbete</button>
+                    <a href="https://wa.me/+573004410097">
+                        <button class="bg-white text-azul p-3 my-5 rounded-xl">Suscríbete</button>
+                    </a>
                 </div>
 
                 <!-- Plan PRO -->
-                <div class="bg-azul rounded-lg py-6 px-8 text-center shadow-md md:w-72">
+                <div class="bg-azul rounded-lg py-6 px-8 text-center shadow-md md:w-72 text-gray-200">
                     <span class="text-xl font-bold">PRO</span>
                     <h2 class="text-4xl font-bold mt-2">$19.99<span class="text-lg">/mes</span></h2>
                     <div class="mt-4 text-sm text-gray-200">
@@ -152,7 +156,9 @@
                             <li>Herramientas de grupo</li>
                         </ul>
                     </div>
-                    <button class="bg-white text-azul p-3 my-5 rounded-xl">Suscríbete</button>
+                    <a href="https://wa.me/+573004410097">
+                        <button class="bg-white text-azul p-3 my-5 rounded-xl">Suscríbete</button>
+                    </a>
                 </div>
             </div>
         </section>
