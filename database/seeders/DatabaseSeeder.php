@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LeadSeeder::class);
         $this->call(MessageTypeSeeder::class);
         $this->call(MessageSeeder::class);
+        $this->call(UserChannelPreferencesSeeder::class);
         
         
 
