@@ -20,8 +20,21 @@ class Message extends Model
     ];
 
     
+    // Relación con Lead
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class);
+    }
+
+    // Si necesitas acceder al equipo, lo harías a través del Lead
     public function team()
     {
-        return $this->belongsTo(Team::class);
+        return $this->lead->team();
+    }
+
+    // Relación con MessageSource
+    public function messageSource()
+    {
+        return $this->belongsTo(MessageSource::class, 'message_source_id');
     }
 }

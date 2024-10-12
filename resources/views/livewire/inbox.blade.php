@@ -41,8 +41,10 @@
                     <!-- Left side bar start -->
                     <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg">
                         <div class="max-w-full h-full w-full flex flex-col">
+                            
                             <div class="flex p-10 justify-between">
-                                <div class="text-2xl font-bold dark:text-white text-gray-900">Chats</div>
+                                
+                                <div class="text-2xl font-bold dark:text-white text-gray-900">Chats {{$viewMode}}</div>
                                 <!-- switcher start -->
                                 <div>
                                     <button id="theme-toggle" type="button" class="text-gray-500 text-sm p-2.5">
@@ -55,6 +57,10 @@
                                     </button>
                                 </div>
                                 <!-- switcher end -->
+                            </div>
+                            <div class="flex p-10 justify-between">
+                                <button wire:click="setViewMode('team')">Mensajes del equipo</button>
+                                <button wire:click="setViewMode('user')">Mis mensajes</button>
                             </div>
                             <!-- user section start -->
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">

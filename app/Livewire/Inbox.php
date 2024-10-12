@@ -18,6 +18,8 @@ class Inbox extends Component
     public $messages = [];
     public $selectedLeadId = null;
     public $selectedLead;
+    public $viewMode = 'team'; // Puede ser 'team' o 'user'
+
 
     public $newMessageContent = "";
 
@@ -73,12 +75,40 @@ class Inbox extends Component
     }
 }
 
+public function setViewMode($mode)
+{
+    if (in_array($mode, ['team', 'user'])) {
+        $this->viewMode = $mode;
+        $this->loadMessages();
+    }
+}
 
     public function loadMessages()
     {
+        /*
         $messages = Message::where('lead_id', $this->selectedLeadId)
             ->orderBy('created_at', 'asc') // Asegura que los mensajes se ordenen por la hora de creación
             ->get(['content', 'is_outgoing', 'created_at']); // Selecciona también la hora de creación
+        */
+
+        if ($this->viewMode === 'team') {
+            // Cargar mensajes de todos los leads asociados al equipo actual del usuario y sus fuentes
+            $messages = Message::where('lead_id', $this->selectedLeadId)
+                ->whereHas('messageSource', function ($query) {
+                    $query->where('team_id', Auth::user()->current_team_id);
+                })
+                ->orderBy('created_at', 'asc')
+                ->get(['content', 'is_outgoing', 'created_at']);
+        } elseif ($this->viewMode === 'user') {
+            // Cargar solo mensajes de los leads asignados directamente al usuario autenticado y sus fuentes
+            $messages = Message::where('lead_id', $this->selectedLeadId)
+                ->whereHas('messageSource', function ($query) {
+                    $query->where('user_id', Auth::id());
+                })
+                ->orderBy('created_at', 'asc')
+                ->get(['content', 'is_outgoing', 'created_at']);
+        }
+
         $this->messages = $messages->map(function ($message) {
             return [
                 'content' => $message->content,
