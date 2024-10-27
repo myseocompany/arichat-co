@@ -41,9 +41,9 @@
                     <!-- Left side bar start -->
                     <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg">
                         <div class="max-w-full h-full w-full flex flex-col">
-                            
+
                             <div class="flex p-10 justify-between">
-                                
+
                                 <div class="text-2xl font-bold dark:text-white text-gray-900">Chats {{$viewMode}}</div>
                                 <!-- switcher start -->
                                 <div>
@@ -154,16 +154,14 @@
                                     @endif
                                 </div>
                                 @endif
-
+                        
                                 <div class="py-1 px-2 text-base rounded-lg inline-block max-w-lg {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
                                     <div>{{ $message['content'] }}</div>
                                     <div class="text-xs text-gray-200 mt-1">
-                                        {{ $message['time'] ?? '' }}
+                                        {{ $message['time'] ?? '' }} <!-- Mostrar la hora del mensaje -->
                                     </div>
-
                                 </div>
                             </div>
-
                             @endforeach
                         </div>
                         <!-- Fin de todos los mensajes -->

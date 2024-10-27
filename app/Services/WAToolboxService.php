@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
-
 class WAToolboxService {
     public $end_point = "";
     
@@ -41,11 +40,8 @@ class WAToolboxService {
             'is_outgoing' => true,
         ]);
 
-        
-
         return $response->json();
     }
-
 
     public function sendMedia($dataIn){
         $url = $this->end_point;
@@ -53,7 +49,6 @@ class WAToolboxService {
         Log::info('sendMedia-antes:', ['phone' => $dataIn['phone_number'], 
                 'text' => $dataIn['message'],
                 'watoolbox' => $url
-            
             ]);
         
         $data = [
@@ -63,60 +58,33 @@ class WAToolboxService {
             'phone' => $dataIn['phone_number'],
         ];
         
-        //WAToolBoxService::sendCurl($url, $data);
-        //dd(json_encode($data));
-        $res = $this->sendCurl($url, $data);
+        $res = $this->sendHttp($url, $data);
         Log::info("sendMedia-despues: content: ".
             $data['content'].", phone: ". 
             $data['phone']);
         return $res;
     }
 
-    public function sendCurl($url, $data){
-        $ch = curl_init();
-
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 60,  // Aumentar el tiempo de espera a 60 segundos
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($data),
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-        ]);
-
+    public function sendHttp($url, $data){
         try {
-            $response = curl_exec($ch);
-            if ($response === false) {
-                throw new \Exception(curl_error($ch), curl_errno($ch));
+            $response = Http::asJson()->post($url, $data);
+
+            if ($response->failed()) {
+                throw new \Exception("HTTP status code: " . $response->status());
             }
 
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            if ($httpCode != 200) {
-                throw new \Exception("HTTP status code: " . $httpCode);
-            }
-
-            // Verificar la respuesta de la API
-            $responseData = json_decode($response, true);
+            $responseData = $response->json();
             if (isset($responseData['error'])) {
                 throw new \Exception("API error: " . $responseData['error']);
             }
 
             return redirect()->back()->with('success', 'Mensaje enviado exitosamente a ' . $data['phone']);
         } catch (\Exception $e) {
-            // Registrar el error para depuración
             Log::error("Error sending WhatsApp message: " . $e->getMessage(), [
-                'curl_error' => curl_error($ch),
-                'curl_errno' => curl_errno($ch),
-                'response' => $response,
-                'httpCode' => $httpCode ?? 'N/A'
+                'response' => $response->body(),
+                'httpCode' => $response->status()
             ]);
             return redirect()->back()->with('error', 'Error al enviar el mensaje: ' . $e->getMessage());
-        } finally {
-            curl_close($ch);
         }
     }
 }

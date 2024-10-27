@@ -44,15 +44,22 @@ class MessageController extends Controller
             ]);
         }
 
-        // Guarda el mensaje en la base de datos, asignando el lead_id
-        $message = Message::create([
-            'lead_id' => $lead->id, // Relacionar el mensaje con el lead
-            'content' => $messageContent,
-            'is_outgoing' => false, // Es un mensaje entrante, no saliente
-        ]);
+        // Verificar si el mensaje ya existe para evitar duplicados
+        $exists = Message::where('lead_id', $lead->id)
+            ->where('content', $messageContent)
+            ->exists();
 
-        // Transmitir evento para actualizar la interfaz de usuario
-        broadcast(new \App\Events\MessageReceived($messageContent, $phoneNumber))->toOthers();
+        if (!$exists) {
+            // Guarda el mensaje en la base de datos, asignando el lead_id
+            $message = Message::create([
+                'lead_id' => $lead->id, // Relacionar el mensaje con el lead
+                'content' => $messageContent,
+                'is_outgoing' => false, // Es un mensaje entrante, no saliente
+            ]);
+
+            // Transmitir evento para actualizar la interfaz de usuario
+            broadcast(new \App\Events\MessageReceived($messageContent, $phoneNumber))->toOthers();
+        }
 
         return response()->json(['status' => 'success']);
     }
