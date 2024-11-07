@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\MessageSource;
 use App\Models\UserChannelPreference;
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class UserChannelPreferencesSeeder extends Seeder
 {
