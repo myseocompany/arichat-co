@@ -10,7 +10,7 @@
 
 <body class="bg-gray-100">
     <!-- Header -->
-    <header class="bg-rosado w-full h-16 flex justify-between items-center px-4">
+    <header class="bg-slate-800 w-full h-16 flex justify-between items-center px-4">
         <div class="h-full w-16">
             <img src="{{ asset('images/ari-logo.png') }}" alt="Logo de Ari-Chat">
         </div>
