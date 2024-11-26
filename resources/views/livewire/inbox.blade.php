@@ -1,34 +1,38 @@
 <div id="messages-body"
     x-data="{
-        height:0, 
-        conversationElement:document.getElementById('allmessages'),
-        scroll: () => { $el.scrollTo(0, $el.scrollHeight); },
-        reload: () => {
-            conversationElement = document.getElementById('allmessages');
-            height = conversationElement.scrollHeight;
-            document.getElementById('status_selected_lead').innerHTML = conversationElement.scrollTop;
-            console.log('reload height:' + height + ', scrollTop:' + conversationElement.scrollTop);
-            $nextTick(()=>{
-                conversationElement.scrollTop = height;
-                console.log('nextTick reload height:' + height + ', scrollTop:' + conversationElement.scrollTop);
-                document.getElementById('status_selected_lead').innerHTML = conversationElement.scrollTop;
-
+        height: 0,
+        conversationElement: null,
+        currentView: 'contacts',
+        init() {
+            this.conversationElement = document.getElementById('allmessages');
+            this.reload();
+            Echo.channel('chat').listen('MessageReceived', () => {
+                this.reload();
+            });
+        },
+        scroll() {
+            this.conversationElement.scrollTop = this.conversationElement.scrollHeight;
+        },
+        reload() {
+            this.height = this.conversationElement.scrollHeight;
+            document.getElementById('status_selected_lead').innerHTML = this.conversationElement.scrollTop;
+            this.$nextTick(() => {
+                this.conversationElement.scrollTop = this.height;
+                document.getElementById('status_selected_lead').innerHTML = this.conversationElement.scrollTop;
                 setTimeout(() => {
-                    conversationElement.scrollTop = conversationElement.scrollHeight;
-                    console.log('nextTick with timeout, height:', conversationElement.scrollHeight, 'scrollTop:', conversationElement.scrollTop);
+                    this.conversationElement.scrollTop = this.conversationElement.scrollHeight;
                 }, 100);
             });
+        },
+        selectChat() {
+            this.currentView = 'chat';
+        },
+        backToContacts() {
+            this.currentView = 'contacts';
         }
     }"
-    x-init="
-        reload();
-        Echo.channel('chat')
-            .listen('MessageReceived', (e) => {
-                console.log('MessageReceived channel chat');
-                reload();
-            })
-    "
-    @scrollbottom.window="$nextTick(()=>reload());">
+    x-init="init()"
+    @scrollbottom.window="$nextTick(() => reload())">
 
     <div class="bg-gray-100 dark:bg-gray-800">
         <div class="flex flex-1 overflow-hidden h-screen max-screen-2xl m-auto">
@@ -39,11 +43,9 @@
                     <!-- left navigation end -->
 
                     <!-- Left side bar start -->
-                    <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg">
+                    <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg lg:block" :class="{'hidden lg:block': currentView === 'chat', 'block': currentView === 'contacts'}">
                         <div class="max-w-full h-full w-full flex flex-col">
-
                             <div class="flex p-10 justify-between">
-
                                 <div class="text-2xl font-bold dark:text-white text-gray-900">Chats {{$viewMode}}</div>
                                 <!-- switcher start -->
                                 <div>
@@ -67,7 +69,7 @@
                                 <div class="w-full space-y-10">
                                     @foreach ($leads as $lead)
                                     <!-- LEAD -->
-                                    <div class="cursor-pointer flex px-5" wire:click="selectLead({{ $lead->id }})" wire:key="lead-{{ $lead->id }}">
+                                    <div class="cursor-pointer flex px-5" wire:click="selectLead({{ $lead->id }})" wire:key="lead-{{ $lead->id }}" @click="selectChat">
                                         <div class="mr-4 relative w-12 h-12 flex items-center justify-center bg-pink-400 border border-pink-400 rounded-full text-white font-bold text-lg">
                                             @if($lead->name)
                                             <!-- Mostramos las iniciales del nombre con fondo rosado y letras blancas -->
@@ -111,7 +113,7 @@
                     <!-- Left side bar end -->
 
                     <!-- right section -->
-                    <section class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex hidden">
+                    <section class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex lg:w-4/6" :class="{'hidden lg:block': currentView === 'contacts', 'block': currentView === 'chat'}">
                         @if($selectedLead)
                         <!-- head selected lead -->
                         <div class="cursor-pointer px-10 bg-slate-100 dark:bg-slate-800">
@@ -134,6 +136,9 @@
                                         --
                                     </div>
                                 </div>
+                                <button @click="backToContacts" class="ml-auto text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 lg:hidden">
+                                    Volver a contactos
+                                </button>
                             </div>
                         </div>
                         <!-- end selected lead -->
@@ -154,7 +159,7 @@
                                     @endif
                                 </div>
                                 @endif
-                        
+
                                 <div class="py-1 px-2 text-base rounded-lg inline-block max-w-lg {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
                                     <div>{{ $message['content'] }}</div>
                                     <div class="text-xs text-gray-200 mt-1">
@@ -167,8 +172,8 @@
                         <!-- Fin de todos los mensajes -->
 
                         <!-- Barra de envío de mensaje -->
-                        <div class="flex-none p-4 bg-slate-100 dark:bg-slate-800">
-                            <div class="relative flex items-center">
+                        <div class="flex-none p-4 bg-slate-100 dark:bg-slate-800 fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto lg:left-auto lg:right-auto">
+                            <div class="relative flex items-center max-w-2xl mx-auto">
                                 <!-- Botón de ícono (opcional) -->
                                 <button class="inline-flex items-center justify-center rounded-full h-12 w-12 text-gray-500 hover:bg-gray-300 focus:outline-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -181,17 +186,15 @@
                                     <input type="text"
                                         x-model="newMessageContent"
                                         @keydown.enter="if (newMessageContent.trim() !== '') { 
-                                        // Evitar duplicación: agregar mensaje solo si no está ya en la lista
-                                        messages.push({ content: newMessageContent, is_outgoing: true }); 
-                                        $wire.sendMessage().then(() => {
-                                            // Si ya está en la lista, evitar agregarlo otra vez cuando venga del servidor
-                                            newMessageContent = ''; // Limpiar el input después de enviar
-                                        });
-                                   }"
+    messages.push({ content: newMessageContent, is_outgoing: true }); 
+    $wire.sendMessage().then(() => {
+        newMessageContent = ''; // Limpiar el input después de enviar
+    });
+}"
                                         id="newMessageContent"
                                         name="newMessageContent"
                                         class="w-full h-12 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-4 bg-gray-100 dark:bg-gray-800 rounded-full"
-                                        placeholder="Type your message here...">
+                                        placeholder="Escribe tu mensaje aquí...">
                                 </div>
 
                                 <!-- Botón para enviar -->
@@ -216,10 +219,9 @@
     <!-- Script-->
     <script>
         function scroll() {
-            conversationElement = document.getElementById('allmessages');
-            height = conversationElement.scrollHeight;
+            const conversationElement = document.getElementById('allmessages');
+            const height = conversationElement.scrollHeight;
             conversationElement.scrollTop = height;
-            console.log('scroll height:' + height + ', scrollTop:' + conversationElement.scrollTop);
         }
         scroll();
     </script>
@@ -260,40 +262,30 @@
     <script>
         var themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
         var themeToggleLightIcon = document.getElementById("theme-toggle-light-icon");
+
         // Cambiar los íconos según la configuración previa
-        if (
-            localStorage.getItem("color-theme") === "dark" ||
-            (!("color-theme" in localStorage) &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches)
-        ) {
-            themeToggleLightIcon.classList.remove("hidden");
-        } else {
-            themeToggleDarkIcon.classList.remove("hidden");
+        function updateIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                themeToggleDarkIcon.classList.add('hidden');
+                themeToggleLightIcon.classList.remove('hidden');
+            } else {
+                themeToggleDarkIcon.classList.remove('hidden');
+                themeToggleLightIcon.classList.add('hidden');
+            }
         }
+
+        updateIcons();
+
         var themeToggleBtn = document.getElementById("theme-toggle");
         themeToggleBtn.addEventListener("click", function() {
             // Alternar los íconos dentro del botón
-            themeToggleDarkIcon.classList.toggle("hidden");
-            themeToggleLightIcon.classList.toggle("hidden");
-            console.log(document.documentElement.classList);
-            // Si está configurado en el almacenamiento local
-            if (localStorage.getItem("color-theme")) {
-                if (localStorage.getItem("color-theme") === "light") {
-                    document.documentElement.classList.add("dark");
-                    localStorage.setItem("color-theme", "dark");
-                } else {
-                    document.documentElement.classList.remove("dark");
-                    localStorage.setItem("color-theme", "light");
-                }
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('color-theme', 'dark');
             } else {
-                if (document.documentElement.classList.contains("dark")) {
-                    document.documentElement.classList.remove("dark");
-                    localStorage.setItem("color-theme", "light");
-                } else {
-                    document.documentElement.classList.add("dark");
-                    localStorage.setItem("color-theme", "dark");
-                }
+                localStorage.setItem('color-theme', 'light');
             }
+            updateIcons();
         });
     </script>
 </div>
