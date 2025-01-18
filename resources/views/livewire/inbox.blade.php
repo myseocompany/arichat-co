@@ -280,21 +280,44 @@
             fileInput.click();
         });
 
-        // Evento para mostrar la imagen seleccionada
         fileInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    // Mostrar la imagen seleccionada
-                    image.src = e.target.result;
-                    console.log(imagen.src);
-                    image.classList.remove('hidden');
-                    marco.classList.remove('hidden');
+                    const base64Image = e.target.result; // Imagen en formato Base64
+
+                    // Enviar la imagen al servidor usando fetch o Axios
+                    fetch('/send-message', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            lead_id: 1, // ID del lead relacionado
+                            message: 'Aquí está mi mensaje',
+                            image: base64Image // Imagen en Base64
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la respuesta del servidor');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Respuesta del servidor:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error al subir la imagen:', error);
+                    });
+
                 };
                 reader.readAsDataURL(file);
             }
         });
+
     </script>
 
     <!-- Script para enviar el audio -->
