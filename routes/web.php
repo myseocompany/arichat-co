@@ -13,6 +13,9 @@ Route::get('/', function () {
 });
 
 
+Route::post('/send-audio', [AudioController::class, 'store']);
+
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
