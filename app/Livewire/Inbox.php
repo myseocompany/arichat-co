@@ -19,8 +19,7 @@ class Inbox extends Component
     public $selectedLead;
     public $viewMode = 'team'; // Puede ser 'team' o 'user'
     public $newMessageContent = "";
-
-    protected $leadOrderService;
+   protected $leadOrderService;
 
     public function __construct()
     {

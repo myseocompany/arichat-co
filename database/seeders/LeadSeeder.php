@@ -28,9 +28,9 @@ class LeadSeeder extends Seeder
         DB::table('leads')->insert([
             'user_id' => 1, // Asegúrate de que este ID de usuario exista en tu base de datos
             'team_id' => 1, // Asegúrate de que este ID de equipo exista en tu base de datos
-            'name' => 'Luisa Cañas',
+            'name' => 'Michael',
             'email' => 'admin@myseocompany.co', // Añade un correo electrónico si la columna es requerida
-            'phone' => '573195094691',
+            'phone' => '573205534914',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -40,9 +40,9 @@ class LeadSeeder extends Seeder
         DB::table('leads')->insert([
             'user_id' => 2, // Asegúrate de que este ID de usuario exista en tu base de datos
             'team_id' => 1, // Asegúrate de que este ID de equipo exista en tu base de datos
-            'name' => 'Kevin Virgen',
+            'name' => 'Juan David',
             'email' => 'soporterapido@myseocompany.co', // Añade un correo electrónico si la columna es requerida
-            'phone' => '573244484504',
+            'phone' => '573125407247',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
