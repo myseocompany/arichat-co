@@ -288,6 +288,7 @@
                 reader.onload = function (e) {
                     // Mostrar la imagen seleccionada
                     image.src = e.target.result;
+                    console.log(imagen.src);
                     image.classList.remove('hidden');
                     marco.classList.remove('hidden');
                 };

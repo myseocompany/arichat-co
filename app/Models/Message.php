@@ -16,8 +16,10 @@ class Message extends Model
         'message_source_id',
         'message_type_id',
         'content',
-        'is_outgoing'
+        'media_url', // Agregar este campo
+        'is_outgoing',
     ];
+    
 
     
     // Relación con Lead
