@@ -10,8 +10,10 @@
                 return;
             }
             this.reload();
-            Echo.channel('chat').listen('MessageReceived', () => {
-                this.reload();
+            Echo.channel('chat')
+                .stopListening('MessageReceived') // Evitar duplicados
+                .listen('MessageReceived', () => {
+                    this.reload();
             });
         },
 
@@ -269,7 +271,7 @@
                                     <input type="text"
                                         x-model="newMessageContent"
                                         @keydown.enter="if (newMessageContent.trim() !== '') { 
-                                            messages.push({ content: newMessageContent, is_outgoing: true }); 
+                                             
                                             $wire.sendMessage().then(() => {
                                                 newMessageContent = ''; // Limpiar el input después de enviar
                                             });

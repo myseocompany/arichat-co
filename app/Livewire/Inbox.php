@@ -10,7 +10,7 @@ use App\Models\MessageSource;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Services\WAToolboxService;
+
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On; 
 use Livewire\WithFileUploads;
@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Services\LeadService;
 use App\Services\MessageService;
+use App\Services\WAToolboxService;
 
 
 class Inbox extends Component
@@ -27,6 +28,7 @@ class Inbox extends Component
 
     protected $leadService;
     protected $messageService;
+    protected $waToolboxService;
 
     public $leads;
     public $messages = [];
@@ -40,6 +42,7 @@ class Inbox extends Component
     public $viewOwnSourcesOnly = true;
     public $defaultMessageSource;
     public $showImagePopUp;
+    public $messageType;
 
     
     
@@ -52,10 +55,16 @@ class Inbox extends Component
 
     public function __construct()
     {
+
+        
+
+        
+        $user = User::find(Auth::id());
+        $this->defaultMessageSource = $user->getDefaultMessageSource();
+        $this->waToolboxService = new WAToolboxService($this->defaultMessageSource);
+        $this->messageService = new MessageService($this->waToolboxService);
         $this->leadService = new LeadService();
-        $this->messageService = new MessageService();
-        
-        
+
     }
 
     public function getListeners()
@@ -83,17 +92,10 @@ class Inbox extends Component
             if ($lead->phone == $data['phoneNumber']) {
                 if ($this->selectedLead && $this->selectedLead->phone == $data['phoneNumber']) {
                     // Verificar si el mensaje ya existe para evitar duplicados
-                    $exists = collect($this->messages)->contains(function ($message) use ($data) {
-                        return $message['content'] === $data['message'] && !$message['is_outgoing'];
-                    });
+                    $exists = $this->messageService->isDuplicateMessage($this, $data);
 
                     if (!$exists) {
-                        $this->messages[] = [
-                            'is_outgoing' => false,
-                            'content' => $data['message'],
-                            'time' => now()->format('H:i'),
-                            'lead_id' => $this->selectedLeadId
-                        ];
+                        $this->messageService->addMessageUI($this);
                     }
                 }
 
@@ -133,25 +135,7 @@ class Inbox extends Component
         
     }
 
-    public function loadMessages()
-    {
-        $messages = Message::where('lead_id', $this->selectedLeadId)
-            ->where(function ($query) {
-                $query->where('user_id', Auth::id())
-                      ->orWhere('is_outgoing', true);
-            })
-            ->orderBy('created_at', 'asc')
-            ->get(['content', 'media_url', 'is_outgoing', 'created_at']);
-
-        $this->messages = $messages->map(function ($message) {
-            return [
-                'content' => $message->content,
-                'media_url' => $message->media_url, // Añadir URL de la imagen
-                'is_outgoing' => $message->is_outgoing,
-                'time' => $message->created_at->format('H:i a'), // Formato de hora
-            ];
-        })->toArray();
-    }
+ 
 
     public function mount()
     {
@@ -159,14 +143,11 @@ class Inbox extends Component
         // Cargar el Message Source predeterminado del usuario
 
 
-        $user = User::find(Auth::id());
 
- 
-        $this->defaultMessageSource = $user->getDefaultMessageSource();
         
 
         if (!$this->defaultMessageSource) {
-            Log::warning('No se encontró un MessageSource predeterminado para el usuario: ' . $user->id);
+            Log::warning('No se encontró un MessageSource predeterminado para el usuario ' );
         }else{
             Log::info('Se encontró un MessageSource predeterminado para el usuario: ' . $this->defaultMessageSource->settings);
         }
@@ -177,15 +158,17 @@ class Inbox extends Component
 
     }
     public function saveImage(){
-        $this->messageService->saveImage($this->photo, $this->mediaUrl);
+        $this->mediaUrl = $this->messageService->saveImage($this->photol);
         $this->sendMessage();
+        $this->photo = null;
+        
     }
 
     public function selectLead($leadId)
     {
         $this->selectedLeadId = $leadId;
         $this->selectedLead = Lead::find($leadId);
-        $this->loadMessages();
+        $this->messageService->loadMessages($this->messages, $this->selectedLeadId);
     }
 
     public function sendMessage()
@@ -196,49 +179,23 @@ class Inbox extends Component
         }
         
 
-        $waToolboxService = new WAToolboxService($this->defaultMessageSource);
-        if($this->mediaUrl)
-            $messageType = 2;
-        else
-            $messageType = 1;
-
-        $message = Message::create([
-            'lead_id' => $this->selectedLeadId,
-            'user_id' => Auth::id(),
-            'message_source_id' => $this->defaultMessageSource->id,
-            'message_type_id' => $messageType,
-            'content' => $this->newMessageContent,
-            'is_outgoing' => true,
-            'media_url' => $this->mediaUrl ?? null,
-        ]);
-
 
         try {
             // Llamar al servicio con los datos adecuados
-            $waToolboxService->sendMessageToWhatsApp([
+            $this->waToolboxService->sendMessageToWhatsApp([
                 'phone_number' => $this->selectedLead->phone,
                 'message' => $this->newMessageContent,
                 'media_url' => $this->mediaUrl ?? null, // Pasar la URL si es un mensaje multimedia
             ]);
-    
-            // Añadir el mensaje a la interfaz
-            $this->messages[] = [
-                'content' => $this->newMessageContent,
-                'media_url' => $this->mediaUrl ?? null,
-                'is_outgoing' => true,
-                'time' => now()->format('H:i a'),
-            ];
-    
-            // Limpiar los campos después de enviar
-            $this->newMessageContent = '';
-            $this->mediaUrl = null;
     
             $this->dispatch('scrollbottom');
         } catch (\Exception $e) {
             Log::error('Error enviando mensaje: ' . $e->getMessage());
             session()->flash('error', 'Error enviando el mensaje.');
         }
-        
+
+        $this->messageService->storeMessage($this);
+        $this->messageService->addMessageUI($this);
     }
 
     public function render()

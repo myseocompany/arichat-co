@@ -17,11 +17,11 @@ class MessageController extends Controller
     public $waToolboxService;
     public $defaultMessageSource;
 
-    /*
+    
     public function __construct(WAToolboxService $waToolboxService)
     {
         $this->waToolboxService = $waToolboxService;
-    }*/
+    }
 
     public function sendMessage(Request $request)
     {
