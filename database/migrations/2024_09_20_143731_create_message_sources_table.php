@@ -14,7 +14,8 @@ return new class extends Migration
             $table->id();
             $table->string('type');
             $table->foreignId('team_id')->constrained('teams');
-            $table->boolean('is_default')->default(false);  // Columna añadida para marcar el canal predeterminado
+            $table->boolean('is_default')->default(false);
+            $table->string('APIKEY');
             $table->text('settings');
             $table->timestamps();
         });

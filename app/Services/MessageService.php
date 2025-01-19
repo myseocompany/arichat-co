@@ -28,25 +28,43 @@ class MessageService
         return Storage::url($fileName);
     }
 
-    public function loadMessages(&$messages, $selectedLeadId)
+    public function loadMessages(&$messages, $selectedLeadId, $filterAllSources)
     {
+        // Obtener el modelo del usuario autenticado
+        $userId = Auth::id(); // Obtener el ID del usuario autenticado
+        $user = User::find($userId); // Recuperar el modelo completo del usuario
+    
+        if (!$user) {
+            Log::error("Usuario no encontrado con ID: $userId");
+            $messages = []; // Retornar vacío si no se encuentra el usuario
+            return;
+        }
+    
+        // Obtener las fuentes del usuario autenticado
+        $userSources = $user->messageSources->pluck('id')->toArray(); // Obtener IDs de las fuentes
+    
+        // Consulta de los mensajes
         $messages = Message::where('lead_id', $selectedLeadId)
-            ->where(function ($query) {
-                $query->where('user_id', Auth::id())
-                      ->orWhere('is_outgoing', true);
+            ->where(function ($query) use ($filterAllSources, $userSources) {
+                if (!$filterAllSources) {
+                    $query->whereIn('message_source_id', $userSources); // Filtrar por fuentes del usuario
+                }
             })
             ->orderBy('created_at', 'asc')
             ->get(['content', 'media_url', 'is_outgoing', 'created_at']);
-
+    
+        // Mapear los mensajes al formato esperado
         $messages = $messages->map(function ($message) {
             return [
                 'content' => $message->content,
-                'media_url' => $message->media_url, // Añadir URL de la imagen
+                'media_url' => $message->media_url, // URL de la imagen o multimedia
                 'is_outgoing' => $message->is_outgoing,
                 'time' => $message->created_at->format('H:i a'), // Formato de hora
             ];
         })->toArray();
     }
+    
+    
 
     public function storeMessage(Inbox $inbox ){
         if($inbox->mediaUrl)

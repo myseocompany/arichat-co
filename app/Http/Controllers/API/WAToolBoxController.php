@@ -16,55 +16,80 @@ use Illuminate\Support\Facades\Log;
 class WAToolBoxController extends Controller
 {
     public function receiveMessage(Request $request)
-    {
-        Log::info('Receiving data at WAToolBoxController receiveMessage:', [$request->all()]);
+{
+    Log::info('Receiving data at WAToolBoxController receiveMessage:', [$request->all()]);
 
-        $validatedData = $request->validate([
-            'id' => 'required|string',
-            'type' => 'required|string',
-            'user' => 'required|string',
-            'phone' => 'required|string',
-            'content' => 'required|string',
-            'name' => 'required|string',
-            'name2' => 'string|nullable',
-            'image' => 'string|nullable'
-        ]);
+    // Validar los datos del request
+    $validatedData = $request->validate([
+        'id' => 'required|string',
+        'type' => 'required|string',
+        'user' => 'required|string',
+        'phone' => 'required|string',
+        'content' => 'required|string',
+        'name' => 'required|string',
+        'name2' => 'string|nullable',
+        'image' => 'string|nullable',
+        'APIKEY' => 'required|string'
+    ]);
 
-    
+    // Identificar el Message Source
+    $messageSource = \App\Models\MessageSource::where('APIKEY', $validatedData['APIKEY'])->first();
 
-        $lead = Lead::where('phone', $validatedData['phone'])->first();
-        if(($lead) && ($lead->name == null)){
-            $lead->name = $validatedData['name2'];
-            $lead->save();
-        }
-        $message = "";
-        if (!$lead) {
-            return response()->json(['message' => 'Lead no encontrado'], 404);
-        } else {
-            $type_id =  $this->determineMessageType($validatedData['type']);
-            $message = $lead->messages()->create([
-                'lead_id' => $lead->id,
-                'type_id' => $type_id,
-                'content' => $validatedData['content'],
-                'message_source_id' => 1,
-                'message_type_id' => 1,
-                'user_id' => 1,
-                'is_outgoing' => false,
-                
-            ]);
-
-            
-        }
-        // Emitir el evento DataReceived
-        //broadcast(new DataReceived($message));
-        MessageReceived::dispatch( $validatedData['content'], $validatedData['phone']);
-        
-        return response()->json([
-            'message' => 'Data processed successfully',
-            'customer' => $lead,
-            'message' => $message,
-        ], 200);
+    if (!$messageSource) {
+        Log::warning('Message source no encontrado para APIKEY: ' . $validatedData['APIKEY']);
+        return response()->json(['message' => 'Fuente del mensaje no encontrada'], 404);
     }
+
+    // Obtener el team_id desde la fuente
+    $teamId = $messageSource->team_id;
+
+    // Buscar o crear el Lead
+    $lead = Lead::firstOrCreate(
+        ['phone' => $validatedData['phone']],
+        [
+            'name' => $validatedData['name'] ?? $validatedData['name2'],
+            'team_id' => $teamId,
+        ]
+    );
+
+    // Si el lead existe pero no tiene nombre, actualizarlo
+    if (is_null($lead->name)) {
+        $lead->name = $validatedData['name2'];
+        $lead->save();
+    }
+
+    // Crear el mensaje asociado al Lead
+    $type_id = $this->determineMessageType($validatedData['type']);
+    $message = $lead->messages()->create([
+        'lead_id' => $lead->id,
+        'type_id' => $type_id,
+        'content' => $validatedData['content'],
+        'message_source_id' => $messageSource->id, // Asocia la fuente del mensaje
+        'message_type_id' => 1,
+        'user_id' => 1, // Ajusta según corresponda el usuario relacionado
+        'is_outgoing' => false,
+    ]);
+
+    Log::info('Mensaje creado:', [
+        'team_id' => $teamId,
+        'message_source_id' => $messageSource->id,
+        'lead_id' => $lead->id,
+        'message_id' => $message->id,
+    ]);
+
+    // Emitir el evento MessageReceived
+    MessageReceived::dispatch($validatedData['content'], $validatedData['phone']);
+
+    return response()->json([
+        'message' => 'Data processed successfully',
+        'team_id' => $teamId,
+        'message_source' => $messageSource,
+        'customer' => $lead,
+        'message' => $message,
+    ], 200);
+}
+
+
 
     public function test(){
         // Emitir el evento DataReceived

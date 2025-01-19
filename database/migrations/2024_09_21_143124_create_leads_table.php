@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('leads', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->nullable()->constrained('users');
             $table->foreignId('team_id')->constrained('teams');
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('phone')->nullable();
             $table->timestamps();

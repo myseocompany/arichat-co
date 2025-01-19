@@ -44,21 +44,35 @@ class Inbox extends Component
     public $showImagePopUp;
     public $messageType;
 
+    public $filterAllLeads = false;
+    public $filterAllSources = false;
+
+
     
     
 
     #[Validate('image|max:1024')] // 1MB Max
     public $photo;
  
+    public function toggleAllLeads(){
+        $this->filterAllLeads = !$this->filterAllLeads;
+        Log::info('Filtro updatedFilterAllLeads actualizado con '. $this->filterAllLeads);
+        $this->loadLeads(); 
+    }
+
+    public function toggleAllSources(){
+        $this->filterAllSources = !$this->filterAllSources;
+        Log::info('Filtro updatedFilterAllLeads actualizado con '. $this->filterAllSources);
+        if ($this->selectedLeadId) {
+            $this->messageService->loadMessages($this->messages, $this->selectedLeadId, $this->filterAllSources);
+        }
+        $this->loadLeads(); 
+    }
 
 
 
     public function __construct()
     {
-
-        
-
-        
         $user = User::find(Auth::id());
         $this->defaultMessageSource = $user->getDefaultMessageSource();
         $this->waToolboxService = new WAToolboxService($this->defaultMessageSource);
@@ -66,6 +80,15 @@ class Inbox extends Component
         $this->leadService = new LeadService();
 
     }
+
+    
+    #[On('filter-updated')]
+    public function updateFilter($filterName, $value)
+    {
+        $this->$filterName = $value;
+        //$this.filterMessages(); // Aplicar el filtro dinámico
+    }
+
 
     public function getListeners()
     {
@@ -117,12 +140,16 @@ class Inbox extends Component
 
     public function loadLeads()
     {
-        if ($this->viewMode === 'team') {
-            $this->leads = $this->leadService->getTeamLeads();
-        } elseif ($this->viewMode === 'user') {
-            $this->leads = $this->leadService->getUserLeads();
+        // Verificar si se deben cargar todos los leads o solo los asignados
+        if ($this->filterAllLeads) {
+            // Cargar todos los leads del equipo o usuario según corresponda
+            $this->leads = $this->leadService->getAllLeads(Auth::id());
+        } else {
+            // Cargar solo los leads asignados al equipo o usuario
+            $this->leads = $this->leadService->getUserLeads(Auth::id());
         }
-
+    
+        // Verificar si hay leads y seleccionar el primero como predeterminado
         if ($this->leads->first()) {
             if ($this->selectedLeadId == null) {
                 $this->selectLead($this->leads->first()->id);
@@ -130,10 +157,12 @@ class Inbox extends Component
                 $this->selectLead($this->selectedLeadId);
             }
         } else {
+            // Si no hay leads, inicializar como colección vacía
             $this->leads = collect();
         }
-        
     }
+    
+    
 
  
 
@@ -168,7 +197,8 @@ class Inbox extends Component
     {
         $this->selectedLeadId = $leadId;
         $this->selectedLead = Lead::find($leadId);
-        $this->messageService->loadMessages($this->messages, $this->selectedLeadId);
+        $this->messageService->loadMessages($this->messages, $this->selectedLeadId, $this->filterAllSources);
+    
     }
 
     public function sendMessage()

@@ -13,15 +13,20 @@ return new class extends Migration
     public function up(): void {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('lead_id')->constrained('leads');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('message_source_id')->constrained('message_sources');
-            $table->foreignId('message_type_id')->constrained('message_types');
+            $table->foreignId('lead_id')->constrained('leads')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('message_source_id')->constrained('message_sources')->onDelete('cascade');
+            $table->foreignId('message_type_id')->constrained('message_types')->onDelete('restrict');
             $table->text('content');
-            $table->text('media_url')->nullable(); // Campo renombrado y marcado como opcional
-            $table->boolean('is_outgoing')->default(true); // Añadir si es un mensaje de salida
-            $table->timestamp('sent_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->text('media_url')->nullable();
+            $table->boolean('is_outgoing')->default(true);
+            $table->timestamp('sent_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
+
+            // Índices para consultas comunes
+            $table->index('is_outgoing');
+            $table->index('sent_at');
+            $table->index('lead_id');
         });
     }
 

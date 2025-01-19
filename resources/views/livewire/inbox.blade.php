@@ -69,6 +69,9 @@
                         <div class="max-w-full h-full w-full flex flex-col">
                             <div class="flex p-10 justify-between">
                                 <div class="text-2xl font-bold dark:text-white text-gray-900">Chats {{$viewMode}}</div>
+                                
+                                
+                                
                                 <!-- switcher start -->
                                 <div>
                                     <button id="theme-toggle" type="button" class="text-gray-500 text-sm p-2.5">
@@ -82,10 +85,21 @@
                                 </div>
                                 <!-- switcher end -->
                             </div>
-                            <div class="flex p-10 justify-between">
-                                <button wire:click="setViewMode('team')">Mensajes del equipo</button>
-                                <button wire:click="setViewMode('user')">Mis mensajes</button>
-                            </div>
+                                    <!-- Filters -->
+        <div class="p-4">
+            <label class="flex items-center mb-4">
+                <input type="checkbox" wire:click="toggleAllLeads" wire.live:model="filterAllLeads"
+                       class="form-checkbox h-6 w-6 text-green-500 rounded-full border-gray-300 focus:ring focus:ring-green-300">
+                
+                <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar todos los leads del equipo</span>
+            </label>
+            <label class="flex items-center mb-4">
+                <input type="checkbox" wire:click="toggleAllSources" wire.live:model="filterAllSources"
+                       class="form-checkbox h-6 w-6 text-green-500 rounded-full border-gray-300 focus:ring focus:ring-green-300">
+                <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar mensajes de todas las fuentes</span>
+            </label>
+        </div>
+
                             <!-- user section start -->
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
                                 <div class="w-full space-y-10">
@@ -163,6 +177,23 @@
                                 </button>
                             </div>
                         </div>
+
+                         <!-- Información de los filtros activos -->
+                        <div class="bg-gray-200 dark:bg-gray-700 text-sm text-gray-800 dark:text-gray-200 px-6 py-3 rounded-md mx-10 mt-2">
+                            <p>
+                                <strong>Filtros:</strong>
+                            </p>
+                            <ul class="list-disc pl-4">
+                                <li>
+                                    <span class="font-semibold">Cargar todos los leads del equipo: </span> 
+                                    {{ $filterAllLeads ? 'Activo' : 'Inactivo' }}
+                                </li>
+                                <li>
+                                    <span class="font-semibold">Cargar mensajes de todas las fuentes:</span> 
+                                    {{ $filterAllSources ? 'Activo' : 'Inactivo' }}
+                                </li>
+                            </ul>
+                        </div>
                         <!-- end selected lead -->
                         @endif
 
@@ -183,22 +214,22 @@
                                 </div>
                                 @endif
                         
+                                    <!-- Contenido del mensaje -->
                                 <!-- Contenido del mensaje -->
-    <!-- Contenido del mensaje -->
-    <div class="py-1 px-2 text-base rounded-lg inline-block max-w-lg {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
-        <!-- Verificar si el mensaje tiene una URL de imagen -->
-        @if(isset($message['media_url']) && $message['media_url'])
-            <img src="{{ $message['media_url'] }}" alt="Imagen" class="max-w-full rounded">
-        @endif
-        <!-- Mostrar el contenido del mensaje si es texto -->
-        @if($message['content'])
-            <div>{{ $message['content'] }}</div>
-        @endif
-        <div class="text-xs text-gray-200 mt-1">
-            {{ $message['time'] ?? '' }}
-        </div>
-    </div>
-                            </div>
+                                <div class="py-1 px-2 text-base rounded-lg inline-block max-w-lg {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
+                                    <!-- Verificar si el mensaje tiene una URL de imagen -->
+                                    @if(isset($message['media_url']) && $message['media_url'])
+                                        <img src="{{ $message['media_url'] }}" alt="Imagen" class="max-w-full rounded">
+                                    @endif
+                                    <!-- Mostrar el contenido del mensaje si es texto -->
+                                    @if($message['content'])
+                                        <div>{{ $message['content'] }}</div>
+                                    @endif
+                                    <div class="text-xs text-gray-200 mt-1">
+                                        {{ $message['time'] ?? '' }}
+                                    </div>
+                                </div>
+                                                    </div>
                             @endforeach
                         
                             <!-- Audio para reproducción -->
