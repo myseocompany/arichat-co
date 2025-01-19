@@ -69,7 +69,7 @@ class MessageService
     public function addMessageUI(Inbox $inbox){
         // Añadir el mensaje a la interfaz
         $inbox->messages[] = [
-            'content' => $inbox->newMessageContent ."..",
+            'content' => $inbox->newMessageContent,
             'media_url' => $inbox->mediaUrl ?? null,
             'is_outgoing' => true,
             'time' => now()->format('H:i a'),

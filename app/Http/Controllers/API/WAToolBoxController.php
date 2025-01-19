@@ -35,13 +35,13 @@ class WAToolBoxController extends Controller
         $lead = Lead::where('phone', $validatedData['phone'])->first();
         if(($lead) && ($lead->name == null)){
             $lead->name = $validatedData['name2'];
+            $lead->save();
         }
         $message = "";
         if (!$lead) {
             return response()->json(['message' => 'Lead no encontrado'], 404);
         } else {
-            $type_id = 1;
-            //$this->determineMessageType($validatedData['type']),
+            $type_id =  $this->determineMessageType($validatedData['type']);
             $message = $lead->messages()->create([
                 'lead_id' => $lead->id,
                 'type_id' => $type_id,
