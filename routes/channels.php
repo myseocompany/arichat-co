@@ -14,5 +14,8 @@ Broadcast::channel('chat', function () {
     //
 });
 */
+Broadcast::channel('chat', function ($user) {
+    return true; // Permite que todos los usuarios escuchen este canal
+});
 
 return new Channel('chat');

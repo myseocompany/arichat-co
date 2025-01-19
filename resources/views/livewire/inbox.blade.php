@@ -2,7 +2,7 @@
     x-data="{
         height: 0,
         conversationElement: null,
-        currentView: 'contacts',
+        
         init() {
             this.conversationElement = document.getElementById('allmessages');
             if (!this.conversationElement) {
@@ -13,6 +13,7 @@
             Echo.channel('chat')
                 .stopListening('MessageReceived') // Evitar duplicados
                 .listen('MessageReceived', () => {
+                    console.log('MessageReceived');
                     this.reload();
             });
         },
@@ -33,12 +34,7 @@
         
             });
         },
-        selectChat() {
-            this.currentView = 'chat';
-        },
-        backToContacts() {
-            this.currentView = 'contacts';
-        },
+        
 
                 
     }"
@@ -65,7 +61,7 @@
                     <!-- left navigation end -->
 
                     <!-- Left side bar start -->
-                    <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg lg:block" :class="{'hidden lg:block': currentView === 'chat', 'block': currentView === 'contacts'}">
+                    <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg lg:block" >
                         <div class="max-w-full h-full w-full flex flex-col">
                             <div class="flex p-10 justify-between">
                                 <div class="text-2xl font-bold dark:text-white text-gray-900">Chats {{$viewMode}}</div>
@@ -149,7 +145,7 @@
                     <!-- Left side bar end -->
 
                     <!-- right section -->
-                    <section class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex lg:w-4/6" :class="{'hidden lg:block': currentView === 'contacts', 'block': currentView === 'chat'}">
+                    <section class="relative max-h-full h-full bg-white rounded-lg w-full flex-col dark:bg-gray-900 lg:flex lg:w-4/6" >
                         @if($selectedLead)
                         <!-- head selected lead -->
                         <div class="cursor-pointer px-10 bg-slate-100 dark:bg-slate-800">
