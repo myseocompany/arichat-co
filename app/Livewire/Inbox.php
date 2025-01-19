@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On; 
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\Storage;
 
 class Inbox extends Component
 {
@@ -43,9 +44,9 @@ class Inbox extends Component
     public function saveImage()
     {   
         Log::info('Guardando la foto:', [$this->photo]);
-        $fileName = $this->photo->store(path: 'photos');
+        $fileName = $this->photo->store('photos', 'public');
 
-        $this->mediaUrl = $fileName;
+        $this->mediaUrl = Storage::url($fileName);
         $this->sendMessage();
 
         $this->photo = null;
