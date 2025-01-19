@@ -90,7 +90,7 @@ class WAToolboxService {
             // Decidir el tipo de mensaje
             if (isset($data['media_url'])) {
                 $payload['type'] = 'media';
-                $payload['attachments'] = [$data['media_url']];
+                $payload['attachments'] = [config('app.url') . $data['media_url']];
                 
             } else {
                 $payload['type'] = 'text';
