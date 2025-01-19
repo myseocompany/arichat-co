@@ -192,6 +192,21 @@ class Inbox extends Component
         
 
         $waToolboxService = new WAToolboxService($this->defaultMessageSource);
+        if($this->mediaUrl)
+            $messageType = 2;
+        else
+            $messageType = 1;
+
+        $message = Message::create([
+            'lead_id' => $this->selectedLeadId,
+            'user_id' => Auth::id(),
+            'message_source_id' => $this->defaultMessageSource->id,
+            'message_type_id' => $messageType,
+            'content' => $this->newMessageContent,
+            'is_outgoing' => true,
+            'media_url' => $this->mediaUrl ?? null,
+        ]);
+
 
         try {
             // Llamar al servicio con los datos adecuados
