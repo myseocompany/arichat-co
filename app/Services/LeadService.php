@@ -5,7 +5,7 @@ use App\Models\Lead;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class LeadOrderService
+class LeadService
 {
     public function getTeamLeads()
     {

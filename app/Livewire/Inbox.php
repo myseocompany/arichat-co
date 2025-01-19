@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Lead;
 use App\Models\Message;
 use App\Models\MessageSource;
-use App\Services\LeadOrderService;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\WAToolboxService;
@@ -17,9 +17,16 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Storage;
 
+use App\Services\LeadService;
+use App\Services\MessageService;
+
+
 class Inbox extends Component
 {
     use WithFileUploads;
+
+    protected $leadService;
+    protected $messageService;
 
     public $leads;
     public $messages = [];
@@ -27,7 +34,7 @@ class Inbox extends Component
     public $selectedLead;
     public $viewMode = 'team'; // Puede ser 'team' o 'user'
     public $newMessageContent = "";
-    protected $leadOrderService;
+    
     public $mediaUrl;
     public $messageSource;
     public $viewOwnSourcesOnly = true;
@@ -41,20 +48,13 @@ class Inbox extends Component
     public $photo;
  
 
-    public function saveImage()
-    {   
-        Log::info('Guardando la foto:', [$this->photo]);
-        $fileName = $this->photo->store('photos', 'public');
 
-        $this->mediaUrl = Storage::url($fileName);
-        $this->sendMessage();
-
-        $this->photo = null;
-    }
 
     public function __construct()
     {
-        $this->leadOrderService = new LeadOrderService(); // Inyección de dependencia
+        $this->leadService = new LeadService();
+        $this->messageService = new MessageService();
+        
         
     }
 
@@ -116,9 +116,9 @@ class Inbox extends Component
     public function loadLeads()
     {
         if ($this->viewMode === 'team') {
-            $this->leads = $this->leadOrderService->getTeamLeads();
+            $this->leads = $this->leadService->getTeamLeads();
         } elseif ($this->viewMode === 'user') {
-            $this->leads = $this->leadOrderService->getUserLeads();
+            $this->leads = $this->leadService->getUserLeads();
         }
 
         if ($this->leads->first()) {
@@ -175,6 +175,10 @@ class Inbox extends Component
 
         $this->loadLeads();
 
+    }
+    public function saveImage(){
+        $this->messageService->saveImage($this->photo, $this->mediaUrl);
+        $this->sendMessage();
     }
 
     public function selectLead($leadId)
@@ -234,39 +238,7 @@ class Inbox extends Component
             Log::error('Error enviando mensaje: ' . $e->getMessage());
             session()->flash('error', 'Error enviando el mensaje.');
         }
-        /*
-        $message = Message::create([
-            'lead_id' => $this->selectedLeadId,
-            'user_id' => Auth::id(),
-            'message_source_id' => 1,
-            'message_type_id' => 1,
-            'content' => $this->newMessageContent,
-            'is_outgoing' => true,
-        ]);
-
-        if ($this->selectedLead) {
-            $data = [
-                'phone_number' => $this->selectedLead->phone,
-                'message' => $this->newMessageContent,
-            ];
-            $waToolboxService->sendToWhatsApp($data);
-        }
-            
-
-
-
-        // Añadir el mensaje a la lista de mensajes con la hora de creación
-        $this->messages[] = [
-            'content' => $this->newMessageContent,
-            'is_outgoing' => true,
-            'time' => now()->format('H:i a'), // Formato de hora
-        ];
-
-       
-
-        $this->newMessageContent = '';
-        $this->dispatch('scrollbottom');
-         */
+        
     }
 
     public function render()
