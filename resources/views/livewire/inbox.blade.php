@@ -5,11 +5,16 @@
         currentView: 'contacts',
         init() {
             this.conversationElement = document.getElementById('allmessages');
+            if (!this.conversationElement) {
+            console.error('El elemento allmessages no está disponible.');
+                return;
+            }
             this.reload();
             Echo.channel('chat').listen('MessageReceived', () => {
                 this.reload();
             });
         },
+
         scroll() {
             this.conversationElement.scrollTop = this.conversationElement.scrollHeight;
         },
@@ -22,6 +27,8 @@
                 setTimeout(() => {
                     this.conversationElement.scrollTop = this.conversationElement.scrollHeight;
                 }, 100);
+
+        
             });
         },
         selectChat() {
@@ -29,10 +36,23 @@
         },
         backToContacts() {
             this.currentView = 'contacts';
-        }
+        },
+
+                
     }"
     x-init="init()"
     @scrollbottom.window="$nextTick(() => reload())">
+<script>
+    
+    </script>
+    @script
+    <script>
+        $wire.on('imageDialogToggled', () => {
+            console.log('imageDialogToggled');
+            
+        });
+    </script>
+    @endscript
 
     <div class="bg-gray-100 dark:bg-gray-800">
         <div class="flex flex-1 overflow-hidden h-screen max-screen-2xl m-auto">
@@ -162,12 +182,20 @@
                                 @endif
                         
                                 <!-- Contenido del mensaje -->
-                                <div class="py-1 px-2 text-base rounded-lg inline-block max-w-lg {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
-                                    <div>{{ $message['content'] }}</div>
-                                    <div class="text-xs text-gray-200 mt-1">
-                                        {{ $message['time'] ?? '' }} <!-- Mostrar la hora del mensaje -->
-                                    </div>
-                                </div>
+    <!-- Contenido del mensaje -->
+    <div class="py-1 px-2 text-base rounded-lg inline-block max-w-lg {{ $message['is_outgoing'] ? 'bg-indigo-800 text-white rounded-l-lg dark:bg-indigo-900' : 'bg-gray-100 text-gray-900 rounded-r-lg dark:bg-gray-800 dark:text-white' }}">
+        <!-- Verificar si el mensaje tiene una URL de imagen -->
+        @if(isset($message['media_url']) && $message['media_url'])
+            <img src="{{ $message['media_url'] }}" alt="Imagen" class="max-w-full rounded">
+        @endif
+        <!-- Mostrar el contenido del mensaje si es texto -->
+        @if($message['content'])
+            <div>{{ $message['content'] }}</div>
+        @endif
+        <div class="text-xs text-gray-200 mt-1">
+            {{ $message['time'] ?? '' }}
+        </div>
+    </div>
                             </div>
                             @endforeach
                         
@@ -224,6 +252,10 @@
                         <!-- Barra de envío de mensaje -->
                         <div class="flex-none p-4 bg-slate-100 dark:bg-slate-800 fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto lg:left-auto lg:right-auto">
                             <div class="relative flex items-center max-w-2xl mx-auto">
+                                
+                                <button wire:click="$set('showImagePopUp', true)">Mostrar</button> | 
+                                <button wire:click="$set('showImagePopUp', false)">Ocultar</button>
+                                
                                 <!-- Botón de abrir multimedia -->
                                 <button id="toggleButton" class="inline-flex items-center justify-center rounded-full h-12 w-12 text-gray-500 hover:bg-gray-300 focus:outline-none">
                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16">
@@ -246,7 +278,10 @@
                                         name="newMessageContent"
                                         class="w-full h-12 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-4 bg-gray-100 dark:bg-gray-800 rounded-full"
                                         placeholder="Escribe tu mensaje aquí...">
+                                    
                                 </div>
+                                
+                                
 
                                 <!-- Botón para enviar -->
                                 <div class="ml-4">
@@ -259,8 +294,67 @@
                             </div>
                         </div>
                         <!-- Fin de la barra de envío de mensaje --> 
-                    </section>
+                        @if($showImagePopUp)
+                            <form wire:submit="saveImage">
+                                @if ($photo) 
+                                    
 
+                                    <div id="imagePreviewModal" 
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full">
+        <!-- Imagen seleccionada -->
+        <img id="previewImage" src="{{ $photo->temporaryUrl() }}" alt="Vista previa de la imagen" class="w-full h-auto rounded-lg">
+        <!-- Botón para cerrar -->
+        <div x-data="{ newMessageContent: @entangle('newMessageContent'), messages: @entangle('messages') }" class="flex-1 ml-3">
+            <input type="text"
+                x-model="newMessageContent"
+                @keydown.enter="if (newMessageContent.trim() !== '') { 
+                    messages.push({ content: newMessageContent, is_outgoing: true }); 
+                    $wire.sendMessage().then(() => {
+                        newMessageContent = ''; // Limpiar el input después de enviar
+                    });
+                }"
+                id="newMessageContent"
+                name="newMessageContent"
+                class="w-full h-12 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-4 bg-gray-100 dark:bg-gray-800 rounded-full"
+                placeholder="Escribe tu mensaje aquí...">
+            
+        </div>
+        <button id="closeModal" 
+            class="mt-4 px-4 py-2 bg-gray-600 text-white font-semibold rounded hover:bg-red-700 focus:outline-none">
+            Cerrar
+        </button>
+        <button 
+        class="mt-4 px-4 py-2 bg-pink-600 text-white font-semibold rounded hover:bg-red-700 focus:outline-none" type="submit" >    
+            Enviar</button>
+            
+    </div>
+</div>
+
+                                @endif
+                                <label for="photoInput">
+                                    <div id="cameraIcon" class="flex flex-row items-center">
+                                        <!-- Línea separadora entre camara y texto-->
+                                        <div class="h-[45px] w-[1px] bg-gray-300 mx-2"></div>
+                                        <div class="camera-container w-[45px] h-[45px] bg-blue-800 flex items-center justify-center rounded-full mx-3 cursor-pointer">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" class="bi bi-camera-fill" viewBox="0 0 16 16">
+                                                <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                                <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0"/>
+                                            </svg>
+                                        </div>
+                                        
+                                    </div>
+
+                                </label>
+                                <input type="file" wire:model.live="photo"  id="photoInput" name="photoInput" class="hidden" >
+                                
+                                @error('photo') <span class="error">{{ $message }}</span> @enderror 
+                                
+                            
+                                
+                            </form>
+                        @endif
+                    </section>
                     <!-- right section end -->
                 </div>
             </div>
@@ -276,33 +370,39 @@
         const marco = document.getElementById('marco')
 
         // Evento para abrir el input file al hacer clic en el botón de la cámara
-        cameraButton.addEventListener('click', () => {
+        .addEventListener('click', () => {
+            console.log("click en la camara");
             fileInput.click();
         });
 
         fileInput.addEventListener('change', (event) => {
+            
+            console.log("click en el input file");
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const base64Image = e.target.result; // Imagen en formato Base64
-
+                    
                     // Enviar la imagen al servidor usando fetch o Axios
                     fetch('/send-message', {
+                        
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         },
                         body: JSON.stringify({
-                            lead_id: 1, // ID del lead relacionado
-                            message: 'Aquí está mi mensaje',
+                            lead_id: {{$lead->id}}, // ID del lead relacionado
+                            message: 'Media {{$lead->id}}',
                             image: base64Image // Imagen en Base64
                         })
                     })
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error('Error en la respuesta del servidor');
+                            console.log('Error en la respuesta del servidor');
+                            
+                            throw new Error('Error2 en la respuesta del servidor');
                         }
                         return response.json();
                     })

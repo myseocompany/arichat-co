@@ -3,27 +3,58 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Models\User;
 use App\Models\Lead;
 use App\Models\Message;
+use App\Models\MessageSource;
 use App\Services\LeadOrderService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\WAToolboxService;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On; 
+use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
 
 class Inbox extends Component
 {
+    use WithFileUploads;
+
     public $leads;
     public $messages = [];
     public $selectedLeadId = null;
     public $selectedLead;
     public $viewMode = 'team'; // Puede ser 'team' o 'user'
     public $newMessageContent = "";
-   protected $leadOrderService;
+    protected $leadOrderService;
+    public $mediaUrl;
+    public $messageSource;
+    public $viewOwnSourcesOnly = true;
+    public $defaultMessageSource;
+    public $showImagePopUp;
+
+    
+    
+
+    #[Validate('image|max:1024')] // 1MB Max
+    public $photo;
+ 
+
+    public function saveImage()
+    {   
+        Log::info('Guardando la foto:', [$this->photo]);
+        $fileName = $this->photo->store(path: 'photos');
+
+        $this->mediaUrl = $fileName;
+        $this->sendMessage();
+
+        $this->photo = null;
+    }
 
     public function __construct()
     {
         $this->leadOrderService = new LeadOrderService(); // Inyección de dependencia
+        
     }
 
     public function getListeners()
@@ -38,6 +69,10 @@ class Inbox extends Component
     {
         $this->selectLead($leadId);
     }
+
+
+    
+    
 
     public function handleMessageReceived($data)
     {
@@ -94,6 +129,7 @@ class Inbox extends Component
         } else {
             $this->leads = collect();
         }
+        
     }
 
     public function loadMessages()
@@ -104,11 +140,12 @@ class Inbox extends Component
                       ->orWhere('is_outgoing', true);
             })
             ->orderBy('created_at', 'asc')
-            ->get(['content', 'is_outgoing', 'created_at']);
+            ->get(['content', 'media_url', 'is_outgoing', 'created_at']);
 
         $this->messages = $messages->map(function ($message) {
             return [
                 'content' => $message->content,
+                'media_url' => $message->media_url, // Añadir URL de la imagen
                 'is_outgoing' => $message->is_outgoing,
                 'time' => $message->created_at->format('H:i a'), // Formato de hora
             ];
@@ -117,7 +154,26 @@ class Inbox extends Component
 
     public function mount()
     {
+
+        // Cargar el Message Source predeterminado del usuario
+
+
+        $user = User::find(Auth::id());
+
+ 
+        $this->defaultMessageSource = $user->getDefaultMessageSource();
+        
+
+        if (!$this->defaultMessageSource) {
+            Log::warning('No se encontró un MessageSource predeterminado para el usuario: ' . $user->id);
+        }else{
+            Log::info('Se encontró un MessageSource predeterminado para el usuario: ' . $this->defaultMessageSource->settings);
+        }
+
+ 
+
         $this->loadLeads();
+
     }
 
     public function selectLead($leadId)
@@ -129,12 +185,40 @@ class Inbox extends Component
 
     public function sendMessage()
     {
+        Log::info('Enviado mensaje desde inbox '. $this->defaultMessageSource->settings);
         if (trim($this->newMessageContent) === '') {
-            return;
+            return; // Evita enviar si no hay contenido
         }
+        
 
-        $waToolboxService = new WAToolboxService();
+        $waToolboxService = new WAToolboxService($this->defaultMessageSource);
 
+        try {
+            // Llamar al servicio con los datos adecuados
+            $waToolboxService->sendMessageToWhatsApp([
+                'phone_number' => $this->selectedLead->phone,
+                'message' => $this->newMessageContent,
+                'media_url' => $this->mediaUrl ?? null, // Pasar la URL si es un mensaje multimedia
+            ]);
+    
+            // Añadir el mensaje a la interfaz
+            $this->messages[] = [
+                'content' => $this->newMessageContent,
+                'media_url' => $this->mediaUrl ?? null,
+                'is_outgoing' => true,
+                'time' => now()->format('H:i a'),
+            ];
+    
+            // Limpiar los campos después de enviar
+            $this->newMessageContent = '';
+            $this->mediaUrl = null;
+    
+            $this->dispatch('scrollbottom');
+        } catch (\Exception $e) {
+            Log::error('Error enviando mensaje: ' . $e->getMessage());
+            session()->flash('error', 'Error enviando el mensaje.');
+        }
+        /*
         $message = Message::create([
             'lead_id' => $this->selectedLeadId,
             'user_id' => Auth::id(),
@@ -151,6 +235,9 @@ class Inbox extends Component
             ];
             $waToolboxService->sendToWhatsApp($data);
         }
+            
+
+
 
         // Añadir el mensaje a la lista de mensajes con la hora de creación
         $this->messages[] = [
@@ -159,8 +246,11 @@ class Inbox extends Component
             'time' => now()->format('H:i a'), // Formato de hora
         ];
 
+       
+
         $this->newMessageContent = '';
         $this->dispatch('scrollbottom');
+         */
     }
 
     public function render()

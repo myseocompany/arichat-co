@@ -12,4 +12,14 @@ class MessageSource extends Model
         return json_decode($this->settings)->webhook_url;
         
     }
+
+    public function userMessageSources()
+    {
+        return $this->hasMany(UserMessageSource::class, 'message_source_id');
+    }
+    
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
 }

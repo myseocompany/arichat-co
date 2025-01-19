@@ -13,8 +13,7 @@ class MessageSourceSeeder extends Seeder
         DB::table('message_sources')->insert([
             [
                 'type' => 'WhatsApp',
-                'team_id' => 1,  // Asegúrate de que este team_id exista en tu base de datos
-                'user_id' => 1,
+                'team_id' => 3,  // Asegúrate de que este team_id exista en tu base de datos
                 'is_default' => true,
                 'settings' => json_encode([
                     'webhook_url' => 'https://api.watoolbox.com/webhooks/19YC5Q41W',
@@ -28,8 +27,7 @@ class MessageSourceSeeder extends Seeder
         DB::table('message_sources')->insert([
             [
                 'type' => 'WhatsApp ',
-                'team_id' => 1,  // Asegúrate de que este team_id exista en tu base de datos
-                'user_id' => 2,
+                'team_id' => 3,  // Asegúrate de que este team_id exista en tu base de datos
                 'is_default' => false,
                 'settings' => json_encode([
                     'webhook_url' => 'https://api.watoolbox.com/webhooks/NKHQ97FJ7',

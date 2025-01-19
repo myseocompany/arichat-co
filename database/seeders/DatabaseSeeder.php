@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+//use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,14 +16,18 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->withPersonalTeam()->create();
 
 
-        $this->call(TeamSeeder::class);
-        $this->call(UserSeeder::class);
-        $this->call(MessageSourceSeeder::class);
-        
-        $this->call(LeadSeeder::class);
-        $this->call(MessageTypeSeeder::class);
-        $this->call(MessageSeeder::class);
-        //$this->call(UserChannelPreferencesSeeder::class);
+ 
+        $this->call([
+            UserSeeder::class, // Seeder de usuarios
+            TeamSeeder::class, // Seeder de equipos, si tienes uno
+            MessageSourceSeeder::class, // Seeder de Message Sources
+            LeadSeeder::class, // Seeder de la tabla intermedia User_Message_Source
+            MessageTypeSeeder::class, // Seeder de la tabla User_Teams
+            MessageSeeder::class,
+            UserMessageSourceSeeder::class,
+            TeamUserSeeder::class
+
+        ]);
         
         
 

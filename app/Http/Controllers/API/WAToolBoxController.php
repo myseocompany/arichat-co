@@ -9,13 +9,15 @@ use App\Models\User;
 use App\Models\Lead;
 use App\Models\Message;
 use App\Events\MessageReceived;
+
+
 use Illuminate\Support\Facades\Log;
 
 class WAToolBoxController extends Controller
 {
     public function receiveMessage(Request $request)
     {
-        Log::info('Receiving data at WAToolBoxController receiveMessage:', $request->all());
+        Log::info('Receiving data at WAToolBoxController receiveMessage:', [$request->all()]);
 
         $validatedData = $request->validate([
             'id' => 'required|string',
@@ -69,7 +71,7 @@ class WAToolBoxController extends Controller
         $lead = Lead::find(1);
         $message = Message::find(1);
         Log::info('test', ["action"=>"action test"]);
-        $e = event(new DataReceived($lead, $message));
+        $e = event(new MessageReceived($lead, $message));
 
         return $e;
     }
