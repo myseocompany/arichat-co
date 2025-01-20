@@ -16,78 +16,17 @@ class MessageController extends Controller
         $this->waToolboxService = $waToolboxService;
     }
 
-    <?php
-
-    namespace App\Http\Controllers;
-    
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Storage;
-    use App\Models\Message;
-    use App\Models\Lead;
-    
-    class MessageController extends Controller
+    public function sendMessage(Request $request)
     {
-        public function sendMessage(Request $request)
-        {
-            // Validar la solicitud
-            $validated = $request->validate([
-                'lead_id' => 'required|exists:leads,id',
-                'message' => 'nullable|string',
-                'image' => 'nullable|string', // Base64
-            ]);
-    
-            $mediaUrl = null;
-    
-            // Verificar si se envió una imagen en base64
-            if ($request->has('image')) {
-                $base64Image = $request->input('image');
-            
-                // Validar y procesar el Base64
-                if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $matches)) {
-                    $imageType = $matches[1]; // Extraer el tipo (png, jpeg, etc.)
-                    $imageData = preg_replace('/^data:image\/\w+;base64,/', '', $base64Image);
-                    $imageData = base64_decode($imageData);
-            
-                    if ($imageData === false) {
-                        return response()->json(['error' => 'Error al decodificar la imagen'], 400);
-                    }
-            
-                    // Generar un nombre único para la imagen
-                    $imageName = uniqid('message_') . '.' . $imageType;
-            
-                    // Ruta de almacenamiento en `public/storage/messages`
-                    $path = "messages/{$imageName}";
-            
-                    // Guardar la imagen
-                    $saved = Storage::disk('public')->put($path, $imageData);
-            
-                    if ($saved) {
-                        // Generar la URL pública de la imagen
-                        $mediaUrl = Storage::url($path);
-            
-                        // Guardar la URL en la base de datos
-                        Message::create([
-                            'lead_id' => $request->input('lead_id'),
-                            'user_id' => $request->input('user_id'),
-                            'message_source_id' => 1, // Ajustar según tu lógica
-                            'message_type_id' => 1, // Ajustar según tu lógica
-                            'content' => $request->input('message', ''),
-                            'media_url' => $mediaUrl,
-                            'is_outgoing' => true,
-                            'sent_at' => now(),
-                        ]);
-                    } else {
-                        return response()->json(['error' => 'Error al guardar la imagen en el servidor'], 500);
-                    }
-                } else {
-                    return response()->json(['error' => 'Formato de imagen base64 no válido'], 400);
-                }
-            }
-            
-        }
-    }
-    
+        // Recuperar la URL del webhook desde la base de datos
+        $channel = DB::table('channels')->where('type', 'WhatsApp')->first();
+        $response = $this->waToolboxService->sendToWhatsApp([
+            'phone_number' => $request->input('phone_number'),
+            'message' => $request->input('message'),
+        ]);
 
+        return response()->json($response);
+    }
 
     public function receiveMessage(Request $request)
     {
