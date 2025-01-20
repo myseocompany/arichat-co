@@ -5,7 +5,7 @@ use App\Models\Lead;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class LeadOrderService
+class LeadService
 {
     public function getTeamLeads()
     {
@@ -38,4 +38,15 @@ class LeadOrderService
 
         return collect(); // Retorna una colección vacía si no hay usuario autenticado
     }
+
+    public function getAllLeads()
+    {
+        return Lead::all(); // Retorna todos los leads sin filtros
+    }
+
+    public function getAllLeadsForUser($userId)
+    {
+        return Lead::where('user_id', $userId)->get(); // Todos los leads asociados a un usuario
+    }
+
 }

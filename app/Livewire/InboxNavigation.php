@@ -3,6 +3,9 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Models\Lead;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class InboxNavigation extends Component
 {

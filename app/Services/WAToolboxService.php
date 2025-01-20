@@ -9,24 +9,12 @@ use Illuminate\Support\Facades\Http;
 class WAToolboxService {
     public $end_point = "";
     
-    public function __construct()
+    public function __construct($messageSource)
     {
-        // Asegúrate de que haya un usuario autenticado
-        if ($user = Auth::user()) {
-            // Asignar el canal predeterminado del equipo actual, si existe
-            $defaultChannel = $user->getDefaultChannel();
-            if ($defaultChannel) {
-                // Suponiendo que $defaultChannel es una instancia del modelo MessageSource que ya has obtenido de alguna manera
-                $settings = json_decode($defaultChannel->settings);
+        // Inicializar con el webhook del Message Source
+        $settings = json_decode($messageSource->settings);
+        $this->end_point = $settings->webhook_url;
 
-                // Acceder al campo webhook_url del JSON
-                $webhookUrl = $settings->webhook_url;
-                // Establecer el endpoint según algún atributo del canal, ej. 'endpoint'
-                $this->end_point = $webhookUrl ?? '';
-            }
-        }
-
-        // Log para debug si es necesario
         Log::info('WAToolBox endpoint set to: ' . $this->end_point);
     }
     
@@ -85,6 +73,41 @@ class WAToolboxService {
                 'httpCode' => $response->status()
             ]);
             return redirect()->back()->with('error', 'Error al enviar el mensaje: ' . $e->getMessage());
+        }
+    }
+
+    public function sendMessageToWhatsApp($data)
+    {   
+        Log::info('sendMessageToWhatsApp ', $data);
+        
+        try {
+            $payload = [
+                'action' => 'send-message',
+                'phone' => $data['phone_number'],
+                'content' => $data['message'],
+            ];
+
+            // Decidir el tipo de mensaje
+            if (isset($data['media_url'])) {
+                $payload['type'] = 'media';
+                $payload['attachments'] = [config('app.url') . $data['media_url']];
+                
+            } else {
+                $payload['type'] = 'text';
+                
+            }
+            Log::info('sendMessageToWhatsApp payload', $payload);
+
+            $response = Http::asJson()->post($this->end_point, $payload);
+            Log::info('sendMessageToWhatsApp payload', [$response->status()]);
+            if ($response->failed()) {
+                throw new \Exception("Error enviando mensaje: HTTP " . $response->status());
+            }
+
+            return $response->json();
+        } catch (\Exception $e) {
+            Log::error('Error enviando mensaje a WhatsApp: ' . $e->getMessage());
+            throw $e;
         }
     }
 }
