@@ -187,7 +187,7 @@ class Inbox extends Component
 
     }
     public function saveImage(){
-        $this->mediaUrl = $this->messageService->saveImage($this->photol);
+        $this->mediaUrl = $this->messageService->saveImage($this->photo);
         $this->sendMessage();
         $this->photo = null;
         
