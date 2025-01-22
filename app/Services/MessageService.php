@@ -16,7 +16,7 @@ class MessageService
 {
     public $waToolBoxService;
 
-    public function __construct(WAToolboxService $waToolBoxService )
+    public function setWAToolbox(WAToolboxService $waToolBoxService )
     {
         $this->waToolBoxService = $waToolBoxService;
         

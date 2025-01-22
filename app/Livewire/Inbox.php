@@ -76,7 +76,8 @@ class Inbox extends Component
         $user = User::find(Auth::id());
         $this->defaultMessageSource = $user->getDefaultMessageSource();
         $this->waToolboxService = new WAToolboxService($this->defaultMessageSource);
-        $this->messageService = new MessageService($this->waToolboxService);
+        $this->messageService = new MessageService();
+        $this->messageService->setWAToolbox($this->waToolboxService);
         $this->leadService = new LeadService();
 
     }
