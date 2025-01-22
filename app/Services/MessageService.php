@@ -24,6 +24,7 @@ class MessageService
     public function saveImage($photo)
     {   
         Log::info('Guardando la foto:', [$photo]);
+        // hay que crear una carpeta por usuario. Una subcarpeta con una lleve unica. El nombre del archivo original
         $fileName = $photo->store('photos', 'public');
         return Storage::url($fileName);
     }
