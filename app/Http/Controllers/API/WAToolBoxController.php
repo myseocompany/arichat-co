@@ -73,7 +73,7 @@ class WAToolBoxController extends Controller{
             // Usar el servicio MessageService para guardar la imagen
             $imageUrl = $messageService->saveImage(new \Illuminate\Http\UploadedFile(
                 $tempFile,
-                'image.jpg'
+                'image.png'
             ));
 
             Log::info('Imagen almacenada con éxito: ' . $imageUrl);
