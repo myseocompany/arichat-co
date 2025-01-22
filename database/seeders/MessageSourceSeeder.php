@@ -71,6 +71,23 @@ class MessageSourceSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ]
         ]);
+        DB::table('message_sources')->insert([
+            [
+                'type' => 'WhatsApp ',
+                'team_id' => 3,  // Asegúrate de que este team_id exista en tu base de datos
+                'is_default' => true,
+                'settings' => json_encode([
+                    'webhook_url' => 'https://api.watoolbox.com/webhooks/HZKQYNGET',
+                    'phone_number' => '573142749156',
+                    
+                ]),
+                'APIKEY' => '2y67l+^mq/|0#m(OU{|rmTU-FO{tTG9&{4_2UOQcv*89^d?5%',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]
+        ]);
+
+        
         
     }
 }

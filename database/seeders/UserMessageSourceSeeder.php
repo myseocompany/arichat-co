@@ -16,6 +16,8 @@ class UserMessageSourceSeeder extends Seeder
             ['user_id' => 2, 'message_source_id' => 2],
             ['user_id' => 3, 'message_source_id' => 3],
             ['user_id' => 3, 'message_source_id' => 4],
+            ['user_id' => 3, 'message_source_id' => 5],
+            
             
             
         ];
