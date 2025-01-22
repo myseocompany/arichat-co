@@ -194,20 +194,7 @@
                             </div>
                         </div>
                         
-                         <!-- Información de los filtros activos -->
-                         <div class="flex flex-col flex-1">
-                            <div class="flex justify-between items-center">
-                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">
-                                    {{ $selectedLead ? $selectedLead->name : 'Seleccione un lead' }}
-                                </div>
-                                <div class="text-gray-700 dark:text-gray-600 text-xs">
-                                    {{ $selectedLead ? $selectedLead->created_at->format('H:i') : '' }}
-                                </div>
-                            </div>
-                
-                            
-                            
-                        </div>
+
                         <!-- end selected lead -->
                         @endif
 
@@ -246,10 +233,7 @@
                                                     </div>
                             @endforeach
                         
-                            <!-- Audio para reproducción -->
-                            <div class="flex justify-end">
-                                <audio id="audioPlayback" controls class="block"></audio>
-                            </div>
+
                         
                             <!-- Marco con la imagen -->
                             <div class="flex justify-end">
