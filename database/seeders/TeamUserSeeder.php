@@ -12,28 +12,35 @@ class TeamUserSeeder extends Seeder
 {
     public function run()
     {
-        $team = Team::where('name', 'Maquiempanadas')->first();
+        // Obtener la fecha y hora actuales
+        $now = Carbon::now();
 
-        if ($team) {
-            // Define los usuarios que deseas asociar al equipo
-            $users = User::whereIn('email', [
-                'nicolas@myseocompany.co',
-                'soporterapido@myseocompany.co',
-            ])->get();
+        // Insertar los datos en la tabla `team_user`
+        DB::table('team_user')->insert([
+            [
+                'team_id' => 1,
+                'user_id' => 1,
+                'role' => 'owner', // Rol asignado
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'team_id' => 2,
+                'user_id' => 2,
+                'role' => 'owner', // Rol asignado
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'team_id' => 3,
+                'user_id' => 3,
+                'role' => 'owner', // Rol asignado
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+        ]);
 
-            foreach ($users as $user) {
-                // Asocia cada usuario al equipo
-                DB::table('team_user')->insert([
-                    'team_id' => $team->id,
-                    'user_id' => $user->id,
-                    'role' => 'agent',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ]);
-
-                // Establece el equipo actual para los usuarios
-                $user->switchTeam($team);
-            }
-        }
+        // Mensaje de confirmación en consola
+        $this->command->info('Tabla `team_user` sembrada con éxito.');
     }
 }

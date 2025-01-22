@@ -92,6 +92,7 @@ class WAToolBoxController extends Controller{
         'message_type_id' => 1,
         'user_id' => 1, // Ajusta según corresponda el usuario relacionado
         'is_outgoing' => false,
+        'media_url' => $imageUrl,
     ]);
 
     Log::info('Mensaje creado:', [

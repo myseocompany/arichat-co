@@ -64,7 +64,7 @@
                     <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg lg:block" >
                         <div class="max-w-full h-full w-full flex flex-col">
                             <div class="flex p-10 justify-between">
-                                <div class="text-2xl font-bold dark:text-white text-gray-900">Chats {{$viewMode}}</div>
+                                <div class="text-2xl font-bold dark:text-white text-gray-900">Chats </div>
                                 
                                 
                                 
@@ -175,20 +175,36 @@
                         </div>
 
                          <!-- Información de los filtros activos -->
-                        <div class="bg-gray-200 dark:bg-gray-700 text-sm text-gray-800 dark:text-gray-200 px-6 py-3 rounded-md mx-10 mt-2">
-                            <p>
-                                <strong>Filtros:</strong>
-                            </p>
-                            <ul class="list-disc pl-4">
-                                <li>
-                                    <span class="font-semibold">Cargar todos los leads del equipo: </span> 
-                                    {{ $filterAllLeads ? 'Activo' : 'Inactivo' }}
-                                </li>
-                                <li>
-                                    <span class="font-semibold">Cargar mensajes de todas las fuentes:</span> 
-                                    {{ $filterAllSources ? 'Activo' : 'Inactivo' }}
-                                </li>
-                            </ul>
+                         <div class="flex flex-col flex-1">
+                            <div class="flex justify-between items-center">
+                                <div class="text-gray-800 text-base font-semibold dark:text-gray-300">
+                                    {{ $selectedLead ? $selectedLead->name : 'Seleccione un lead' }}
+                                </div>
+                                <div class="text-gray-700 dark:text-gray-600 text-xs">
+                                    {{ $selectedLead ? $selectedLead->created_at->format('H:i') : '' }}
+                                </div>
+                            </div>
+                
+                            <div class="bg-gray-100 dark:bg-gray-800">
+                                <div class="p-4">
+                                    <!-- Mostrar el equipo seleccionado -->
+                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                                        Equipo actual: 
+                                        <span class="text-indigo-700 dark:text-indigo-400">
+                                            {{ Auth::user()->currentTeam ? Auth::user()->currentTeam->name : 'Sin equipo' }}
+                                        </span>
+                                    </h3>
+                            
+                                    <!-- Mostrar el MessageSource actual -->
+                                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                                        Fuente de mensajes: 
+                                        <span class="font-semibold">
+                                            {{ $defaultMessageSource ? $defaultMessageSource->settings : 'Sin fuente definida' }}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            
                         </div>
                         <!-- end selected lead -->
                         @endif
