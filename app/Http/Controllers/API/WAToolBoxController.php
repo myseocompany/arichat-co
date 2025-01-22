@@ -9,14 +9,16 @@ use App\Models\User;
 use App\Models\Lead;
 use App\Models\Message;
 use App\Events\MessageReceived;
+use App\Services\MessageService;
+use App\Models\MessageSource;
 
 
 use Illuminate\Support\Facades\Log;
 
-class WAToolBoxController extends Controller
-{
-    public function receiveMessage(Request $request)
-{
+class WAToolBoxController extends Controller{
+
+
+    public function receiveMessage(Request $request){
     Log::info('Receiving data at WAToolBoxController receiveMessage:', [$request->all()]);
 
     // Validar los datos del request
@@ -33,8 +35,9 @@ class WAToolBoxController extends Controller
     ]);
 
     // Identificar el Message Source
-    $messageSource = \App\Models\MessageSource::where('APIKEY', $validatedData['APIKEY'])->first();
+    $messageSource = MessageSource::where('APIKEY', $validatedData['APIKEY'])->first();
 
+    
     if (!$messageSource) {
         Log::warning('Message source no encontrado para APIKEY: ' . $validatedData['APIKEY']);
         return response()->json(['message' => 'Fuente del mensaje no encontrada'], 404);
@@ -56,6 +59,27 @@ class WAToolBoxController extends Controller
     if (is_null($lead->name)) {
         $lead->name = $validatedData['name2'];
         $lead->save();
+    }
+
+    // Almacenar la imagen si está presente
+    $imageUrl = null;
+    if (!empty($validatedData['image'])) {
+        try {
+            // Decodificar la imagen Base64 y guardarla
+            $imageData = base64_decode($validatedData['image']);
+            $tempFile = tempnam(sys_get_temp_dir(), 'img_'); // Crear un archivo temporal
+            file_put_contents($tempFile, $imageData);
+            $messageService = new MessageService();
+            // Usar el servicio MessageService para guardar la imagen
+            $imageUrl = $messageService->saveImage(new \Illuminate\Http\UploadedFile(
+                $tempFile,
+                'image.jpg'
+            ));
+
+            Log::info('Imagen almacenada con éxito: ' . $imageUrl);
+        } catch (\Exception $e) {
+            Log::error('Error al guardar la imagen: ' . $e->getMessage());
+        }
     }
 
     // Crear el mensaje asociado al Lead
