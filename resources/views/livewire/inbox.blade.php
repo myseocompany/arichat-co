@@ -82,7 +82,6 @@
                                 <!-- switcher end -->
                             </div>
                                     <!-- Filters -->
-<<<<<<< HEAD
                                 <div class="p-4">
                                     <label class="flex items-center mb-4">
                                         <input type="checkbox" wire:click="toggleAllLeads" wire.live:model="filterAllLeads"
@@ -96,41 +95,6 @@
                                         <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar mensajes asignados a mi</span>
                                     </label>
                                 </div>
-=======
-                                    <div class="bg-gray-100 dark:bg-gray-800">
-                                        <div class="p-4">
-                                            <!-- Mostrar el equipo seleccionado -->
-                                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">
-                                                Equipo actual: 
-                                                <span class="text-indigo-700 dark:text-indigo-400">
-                                                    {{ Auth::user()->currentTeam ? Auth::user()->currentTeam->name : 'Sin equipo' }}
-                                                </span>
-                                            </h3>
-                                    
-                                            <!-- Mostrar el MessageSource actual -->
-                                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                                                Fuente de mensajes: 
-                                                <span class="font-semibold">
-                                                    {{ $defaultMessageSource ? $defaultMessageSource->settings : 'Sin fuente definida' }}
-                                                </span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="p-4">
-            <label class="flex items-center mb-4">
-                <input type="checkbox" wire:click="toggleAllLeads" wire.live:model="filterAllLeads"
-                       class="form-checkbox h-6 w-6 text-green-500 rounded-full border-gray-300 focus:ring focus:ring-green-300">
-                
-                <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar todos los leads del equipo</span>
-            </label>
-            <label class="flex items-center mb-4">
-                <input type="checkbox" wire:click="toggleAllSources" wire.live:model="filterAllSources"
-                       class="form-checkbox h-6 w-6 text-green-500 rounded-full border-gray-300 focus:ring focus:ring-green-300">
-                <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar mensajes de todas las fuentes</span>
-            </label>
-        </div>
-        
->>>>>>> 8ac844d23a2c786022acf23fe84178260464ae75
 
                             <!-- user section start -->
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
