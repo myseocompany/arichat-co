@@ -29,7 +29,7 @@ class MessageService
         return Storage::url($fileName);
     }
 
-    public function loadMessages(&$messages, $selectedLeadId, $filterAllSources)
+    public function loadMessages($messages, $selectedLeadId, $filterAllSources)
     {
         // Obtener el modelo del usuario autenticado
         $userId = Auth::id(); // Obtener el ID del usuario autenticado

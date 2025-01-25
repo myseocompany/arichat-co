@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Lead;
+use App\Models\Team;
 use App\Models\Message;
 use App\Models\MessageSource;
 
@@ -34,6 +35,12 @@ class Inbox extends Component
     public $messages = [];
     public $selectedLeadId = null;
     public $selectedLead;
+<<<<<<< HEAD
+    public $selectedTeam;
+    public $selectedTeamId;
+    public $viewMode = 'team'; // Puede ser 'team' o 'user'
+=======
+>>>>>>> 8ac844d23a2c786022acf23fe84178260464ae75
     public $newMessageContent = "";
     
     public $mediaUrl;
@@ -79,6 +86,7 @@ class Inbox extends Component
         $this->messageService = new MessageService();
         $this->messageService->setWAToolbox($this->waToolboxService);
         $this->leadService = new LeadService();
+        
 
     }
 
@@ -135,31 +143,42 @@ class Inbox extends Component
 
     public function loadLeads()
     {
-        // Verificar si se deben cargar todos los leads o solo los asignados
         if ($this->filterAllLeads) {
-            // Cargar todos los leads del equipo o usuario según corresponda
-            $this->leads = $this->leadService->getAllLeads(Auth::id());
+            // Cargar todos los leads del equipo del usuario autenticado
+            $this->leads = $this->leadService->getTeamsLeads(Auth::id());
+    
+            if ($this->leads->isNotEmpty()) {
+                // Obtener el ID del equipo del primer lead si no está ya seleccionado
+                $this->selectedTeamId = $this->selectedTeamId ?? $this->leads->first()->team_id;
+    
+                // Llamar a selectTeam para asignar el equipo seleccionado
+                $this->selectTeam($this->selectedTeamId);
+            } else {
+                // Si no hay leads, limpiar el equipo seleccionado
+                $this->selectedTeam = null;
+                $this->selectedTeamId = null;
+            }
         } else {
-            // Cargar solo los leads asignados al equipo o usuario
+            // Cargar solo los leads asignados al usuario
             $this->leads = $this->leadService->getUserLeads(Auth::id());
+            $this->selectedTeam = null;
+            $this->selectedTeamId = null;
         }
     
         // Verificar si hay leads y seleccionar el primero como predeterminado
-        if ($this->leads->first()) {
-            if ($this->selectedLeadId == null) {
-                $this->selectLead($this->leads->first()->id);
-            } else {
-                $this->selectLead($this->selectedLeadId);
-            }
+        if ($this->leads->isNotEmpty()) {
+            $this->selectedLeadId = $this->selectedLeadId ?? $this->leads->first()->id;
+            $this->selectLead($this->selectedLeadId);
         } else {
-            // Si no hay leads, inicializar como colección vacía
+            // Si no hay leads, limpiar las selecciones
             $this->leads = collect();
+            $this->selectedLeadId = null;
+            $this->selectedLead = null;
         }
     }
     
-    
 
- 
+    
 
     public function mount()
     {
@@ -195,6 +214,12 @@ class Inbox extends Component
         $this->messageService->loadMessages($this->messages, $this->selectedLeadId, $this->filterAllSources);
     
     }
+    public function selectTeam($teamId)
+    {
+        $this->selectedTeamId = $teamId;
+        $this->selectedTeam = Team::find($teamId);
+    }
+    
 
     public function sendMessage()
     {
