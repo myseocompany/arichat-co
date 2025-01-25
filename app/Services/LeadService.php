@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class LeadService
 {
-    public function getTeamLeads()
+    public function getTeamsLeads()
     {
         $user = Auth::user();
 
