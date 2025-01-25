@@ -20,10 +20,7 @@ class TeamSeeder extends Seeder
             ['name' => 'Elemental'],
             ['name' => 'Maquiempanadas'],
             ['name' => 'Xtensor'],
-            ['name' => 'GOI'],
-            ['name' => 'Beautydent'],
             ['name' => 'Vitar'],
-            ['name' => 'CDAV'],
             ['name' => 'XPower'],
         ];
 

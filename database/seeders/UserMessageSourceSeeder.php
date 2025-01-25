@@ -12,8 +12,14 @@ class UserMessageSourceSeeder extends Seeder
     {
         // Definir las asignaciones de usuarios a message_sources
         $assignments = [
-            ['user_id' => 1, 'message_source_id' => 2],
-            ['user_id' => 2, 'message_source_id' => 1],
+            ['user_id' => 1, 'message_source_id' => 1],
+            ['user_id' => 2, 'message_source_id' => 2],
+            ['user_id' => 3, 'message_source_id' => 3],
+            ['user_id' => 3, 'message_source_id' => 4],
+            ['user_id' => 3, 'message_source_id' => 5],
+            
+            
+            
         ];
 
         // Insertar cada asignación en la tabla user_message_source

@@ -35,9 +35,12 @@ class Inbox extends Component
     public $messages = [];
     public $selectedLeadId = null;
     public $selectedLead;
+<<<<<<< HEAD
     public $selectedTeam;
     public $selectedTeamId;
     public $viewMode = 'team'; // Puede ser 'team' o 'user'
+=======
+>>>>>>> 8ac844d23a2c786022acf23fe84178260464ae75
     public $newMessageContent = "";
     
     public $mediaUrl;
@@ -49,6 +52,7 @@ class Inbox extends Component
 
     public $filterAllLeads = false;
     public $filterAllSources = false;
+    public $team; 
 
 
     
@@ -79,7 +83,8 @@ class Inbox extends Component
         $user = User::find(Auth::id());
         $this->defaultMessageSource = $user->getDefaultMessageSource();
         $this->waToolboxService = new WAToolboxService($this->defaultMessageSource);
-        $this->messageService = new MessageService($this->waToolboxService);
+        $this->messageService = new MessageService();
+        $this->messageService->setWAToolbox($this->waToolboxService);
         $this->leadService = new LeadService();
         
 
@@ -134,13 +139,7 @@ class Inbox extends Component
         }
     }
 
-    public function setViewMode($mode)
-    {
-        if (in_array($mode, ['team', 'user'])) {
-            $this->viewMode = $mode;
-            $this->loadLeads();
-        }
-    }
+
 
     public function loadLeads()
     {

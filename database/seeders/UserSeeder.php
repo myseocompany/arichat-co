@@ -29,7 +29,16 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Soporterapido',
             'email' => 'soporterapido@myseocompany.co',
-            'current_team_id' => 1,
+            'current_team_id' => 2,
+            'password' => Hash::make('myseo2025'), // Asegúrate de cambiar 'your_default_password' por una contraseña real segura
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'Admin',
+            'email' => 'admin@myseocompany.co',
+            'current_team_id' => 3,
             'password' => Hash::make('myseo2025'), // Asegúrate de cambiar 'your_default_password' por una contraseña real segura
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

@@ -41,6 +41,8 @@ class LeadService
 
     public function getAllLeads()
     {
+        // debe ajustarse para filtrar todos los teams en los que está activo
+        // o seleccionar el team activo y traer solo esos leads y traer esos leads
         return Lead::all(); // Retorna todos los leads sin filtros
     }
 

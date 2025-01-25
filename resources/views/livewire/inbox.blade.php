@@ -64,7 +64,7 @@
                     <aside class="w-full lg:w-2/6 bg-white dark:bg-gray-900 rounded-lg lg:block" >
                         <div class="max-w-full h-full w-full flex flex-col">
                             <div class="flex p-10 justify-between">
-                                <div class="text-2xl font-bold dark:text-white text-gray-900">Chats {{$viewMode}}</div>
+                                <div class="text-2xl font-bold dark:text-white text-gray-900">Chats </div>
                                 
                                 
                                 
@@ -82,6 +82,7 @@
                                 <!-- switcher end -->
                             </div>
                                     <!-- Filters -->
+<<<<<<< HEAD
                                 <div class="p-4">
                                     <label class="flex items-center mb-4">
                                         <input type="checkbox" wire:click="toggleAllLeads" wire.live:model="filterAllLeads"
@@ -95,6 +96,41 @@
                                         <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar mensajes asignados a mi</span>
                                     </label>
                                 </div>
+=======
+                                    <div class="bg-gray-100 dark:bg-gray-800">
+                                        <div class="p-4">
+                                            <!-- Mostrar el equipo seleccionado -->
+                                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                                                Equipo actual: 
+                                                <span class="text-indigo-700 dark:text-indigo-400">
+                                                    {{ Auth::user()->currentTeam ? Auth::user()->currentTeam->name : 'Sin equipo' }}
+                                                </span>
+                                            </h3>
+                                    
+                                            <!-- Mostrar el MessageSource actual -->
+                                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                                                Fuente de mensajes: 
+                                                <span class="font-semibold">
+                                                    {{ $defaultMessageSource ? $defaultMessageSource->settings : 'Sin fuente definida' }}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="p-4">
+            <label class="flex items-center mb-4">
+                <input type="checkbox" wire:click="toggleAllLeads" wire.live:model="filterAllLeads"
+                       class="form-checkbox h-6 w-6 text-green-500 rounded-full border-gray-300 focus:ring focus:ring-green-300">
+                
+                <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar todos los leads del equipo</span>
+            </label>
+            <label class="flex items-center mb-4">
+                <input type="checkbox" wire:click="toggleAllSources" wire.live:model="filterAllSources"
+                       class="form-checkbox h-6 w-6 text-green-500 rounded-full border-gray-300 focus:ring focus:ring-green-300">
+                <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar mensajes de todas las fuentes</span>
+            </label>
+        </div>
+        
+>>>>>>> 8ac844d23a2c786022acf23fe84178260464ae75
 
                             <!-- user section start -->
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
@@ -173,23 +209,8 @@
                                 </button>
                             </div>
                         </div>
+                        
 
-                         <!-- Información de los filtros activos -->
-                        <div class="bg-gray-200 dark:bg-gray-700 text-sm text-gray-800 dark:text-gray-200 px-6 py-3 rounded-md mx-10 mt-2">
-                            <p>
-                                <strong>Filtros:</strong>
-                            </p>
-                            <ul class="list-disc pl-4">
-                                <li>
-                                    <span class="font-semibold">Cargar todos los leads del equipo: </span> 
-                                    {{ $filterAllLeads ? 'Activo' : 'Inactivo' }}
-                                </li>
-                                <li>
-                                    <span class="font-semibold">Cargar mensajes de todas las fuentes:</span> 
-                                    {{ $filterAllSources ? 'Activo' : 'Inactivo' }}
-                                </li>
-                            </ul>
-                        </div>
                         <!-- end selected lead -->
                         @endif
 
@@ -228,10 +249,7 @@
                                                     </div>
                             @endforeach
                         
-                            <!-- Audio para reproducción -->
-                            <div class="flex justify-end">
-                                <audio id="audioPlayback" controls class="block"></audio>
-                            </div>
+
                         
                             <!-- Marco con la imagen -->
                             <div class="flex justify-end">
@@ -242,29 +260,71 @@
                             </div>
                         </div>
 
-
                         <!-- Fin de todos los mensajes -->
 
                         <!-- barra que se despliega para mandar audios e imagenes -->
                         <div id="mediaContainer" class="media-container flex flex-row items-center justify-between px-6 w-full h-[80px] bg-gray-100">
                             <h2 class="text-blue-800 font-bold font-montserrat text-[25px]">Comparte tus archivos multimedia</h2>
+                            <!-- contenedor de botones multimedia -->
                             <div class="buttons-container flex flex-row items-center gap-3">
-                                <!-- Botón de cámara -->
-                                <div id="cameraButton" class="flex flex-row items-center">
-                                    <!-- Línea separadora entre camara y texto-->
-                                    <div class="h-[45px] w-[1px] bg-gray-300 mx-2"></div>
-                                    <div class="camera-container w-[45px] h-[45px] bg-blue-800 flex items-center justify-center rounded-full mx-3 cursor-pointer">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" class="bi bi-camera-fill" viewBox="0 0 16 16">
-                                            <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                                            <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0"/>
-                                        </svg>
-                                    </div>
-                                    <!-- Línea separadora entre camara y microfono-->
-                                    <div class="h-[45px] w-[1px] bg-gray-300"></div>
-                                </div>
-                                <!-- input file para seleccionar los archivos -->
-                                <input type="file" id="fileInput" accept="image/*" class="hidden">
+                                <!-- modal y codigo que sirve para enviar imagenes -->
+                                @if($showImagePopUp)
+                                    <form wire:submit="saveImage">
+                                        @if ($photo) 
+                                            <div id="imagePreviewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                                <div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-[auto] flex flex-col items-center justify-evenly h-auto gap-[20px]">
+                                                    <!-- Imagen seleccionada -->
+                                                    <img id="previewImage" src="{{ $photo->temporaryUrl() }}" alt="Vista previa de la imagen" class="w-auto max-w-[500px] h-auto max-h-[500px] rounded-lg">
+                                                    <!-- Botón para cerrar -->
+                                                    <div x-data="{ newMessageContent: @entangle('newMessageContent'), messages: @entangle('messages') }" class="flex-1 ml-3">
+                                                        <input type="text"
+                                                            x-model="newMessageContent"
+                                                            @keydown.enter="if (newMessageContent.trim() !== '') { 
+                                                                messages.push({ content: newMessageContent, is_outgoing: true }); 
+                                                                $wire.sendMessage().then(() => {
+                                                                    newMessageContent = ''; // Limpiar el input después de enviar
+                                                                });
+                                                            }"
+                                                            id="newMessageContent"
+                                                            name="newMessageContent"
+                                                            class="w-[500px] h-12 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-4 bg-gray-100 dark:bg-gray-800 rounded-full"
+                                                            placeholder="Escribe tu mensaje aquí...">
+                                                    </div>
+                                                    <!-- contenedor de los botones del modal -->
+                                                    <div class="w-[500px] h-[60px] buttons-container flex flex-row items-center justify-start gap-[10px]">
+                                                        <button id="closeModal" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded hover:bg-red-700 focus:outline-none">
+                                                            Cerrar
+                                                        </button>
+                                                        <button class="px-4 py-2 bg-pink-600 text-white font-semibold rounded hover:bg-red-700 focus:outline-none" type="submit" >
+                                                            Enviar
+                                                        </button>
+                                                    </div>
+                                                    <!-- fin del contenedor de los botones del modal -->
+                                                </div>
+                                            </div>
+                                        @endif
+                                        <label for="photoInput">
+                                            <div id="cameraIcon" class="flex flex-row items-center a">
+                                                <!-- Línea separadora entre camara y texto-->
+                                                <div class="h-[45px] w-[1px] bg-gray-300 mx-2"></div>
+                                                <!-- contenedor de la camara -->
+                                                <div class="camera-container w-[45px] h-[45px] bg-blue-800 flex items-center justify-center rounded-full mx-3 cursor-pointer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" class="bi bi-camera-fill" viewBox="0 0 16 16">
+                                                        <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                                        <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0"/>
+                                                    </svg>
+                                                </div>
+                                                <!-- fin del contenedor de la camara -->
+                                            </div>
 
+                                        </label>
+                                        <input type="file" wire:model.live="photo"  id="photoInput" name="photoInput" class="hidden" >
+
+                                        @error('photo') <span class="error">{{ $message }}</span> @enderror 
+
+                                    </form>
+                                @endif
+                                <!-- fin de modal que envia fotos y permite escribir en imagenes -->
                                 <!-- Botón de micrófono -->
                                 <div id="microphoneButton" class="flex flex-row items-center">
                                     <div class="microphone-container w-[45px] h-[45px] bg-blue-800 flex items-center justify-center rounded-full mx-2 cursor-pointer">
@@ -274,7 +334,9 @@
                                         </svg>
                                     </div>
                                 </div>
-                            </div>  
+                                <!-- fin de boton de microfono -->
+                            </div>
+                            <!-- fin de botones multimedia -->  
                         </div>
                         <!-- fin de la barra para mandar audios e imagenes -->
 
@@ -295,10 +357,7 @@
 
                                 <!-- Input de texto -->
                                 <div x-data="{ newMessageContent: @entangle('newMessageContent'), messages: @entangle('messages') }" class="flex-1 ml-3">
-                                    <input type="text"
-                                        x-model="newMessageContent"
-                                        @keydown.enter="if (newMessageContent.trim() !== '') { 
-                                             
+                                    <input type="text" x-model="newMessageContent" @keydown.enter="if (newMessageContent.trim() !== '') { 
                                             $wire.sendMessage().then(() => {
                                                 newMessageContent = ''; // Limpiar el input después de enviar
                                             });
@@ -307,11 +366,9 @@
                                         name="newMessageContent"
                                         class="w-full h-12 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-4 bg-gray-100 dark:bg-gray-800 rounded-full"
                                         placeholder="Escribe tu mensaje aquí...">
-                                    
                                 </div>
+                                <!-- fin de input de texto para escribir mensaje -->
                                 
-                                
-
                                 <!-- Botón para enviar -->
                                 <div class="ml-4">
                                     <button wire:click="sendMessage" class="inline-flex items-center justify-center rounded-full h-12 w-12 bg-indigo-800 text-white hover:bg-indigo-600 focus:outline-none">
@@ -320,69 +377,10 @@
                                         </svg>
                                     </button>
                                 </div>
+                                <!-- fin de boton para enviar -->
                             </div>
                         </div>
-                        <!-- Fin de la barra de envío de mensaje --> 
-                        @if($showImagePopUp)
-                            <form wire:submit="saveImage">
-                                @if ($photo) 
-                                    
-
-                                    <div id="imagePreviewModal" 
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full">
-        <!-- Imagen seleccionada -->
-        <img id="previewImage" src="{{ $photo->temporaryUrl() }}" alt="Vista previa de la imagen" class="w-full h-auto rounded-lg">
-        <!-- Botón para cerrar -->
-        <div x-data="{ newMessageContent: @entangle('newMessageContent'), messages: @entangle('messages') }" class="flex-1 ml-3">
-            <input type="text"
-                x-model="newMessageContent"
-                @keydown.enter="if (newMessageContent.trim() !== '') { 
-                    messages.push({ content: newMessageContent, is_outgoing: true }); 
-                    $wire.sendMessage().then(() => {
-                        newMessageContent = ''; // Limpiar el input después de enviar
-                    });
-                }"
-                id="newMessageContent"
-                name="newMessageContent"
-                class="w-full h-12 focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-400 pl-4 bg-gray-100 dark:bg-gray-800 rounded-full"
-                placeholder="Escribe tu mensaje aquí...">
-            
-        </div>
-        <button id="closeModal" 
-            class="mt-4 px-4 py-2 bg-gray-600 text-white font-semibold rounded hover:bg-red-700 focus:outline-none">
-            Cerrar
-        </button>
-        <button 
-        class="mt-4 px-4 py-2 bg-pink-600 text-white font-semibold rounded hover:bg-red-700 focus:outline-none" type="submit" >    
-            Enviar</button>
-            
-    </div>
-</div>
-
-                                @endif
-                                <label for="photoInput">
-                                    <div id="cameraIcon" class="flex flex-row items-center">
-                                        <!-- Línea separadora entre camara y texto-->
-                                        <div class="h-[45px] w-[1px] bg-gray-300 mx-2"></div>
-                                        <div class="camera-container w-[45px] h-[45px] bg-blue-800 flex items-center justify-center rounded-full mx-3 cursor-pointer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" class="bi bi-camera-fill" viewBox="0 0 16 16">
-                                                <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                                                <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0"/>
-                                            </svg>
-                                        </div>
-                                        
-                                    </div>
-
-                                </label>
-                                <input type="file" wire:model.live="photo"  id="photoInput" name="photoInput" class="hidden" >
-                                
-                                @error('photo') <span class="error">{{ $message }}</span> @enderror 
-                                
-                            
-                                
-                            </form>
-                        @endif
+                        <!-- fin de barra de envio de mensaje -->
                     </section>
                     <!-- right section end -->
                 </div>
