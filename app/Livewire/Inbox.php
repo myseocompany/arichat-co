@@ -35,12 +35,9 @@ class Inbox extends Component
     public $messages = [];
     public $selectedLeadId = null;
     public $selectedLead;
-<<<<<<< HEAD
     public $selectedTeam;
     public $selectedTeamId;
     public $viewMode = 'team'; // Puede ser 'team' o 'user'
-=======
->>>>>>> 8ac844d23a2c786022acf23fe84178260464ae75
     public $newMessageContent = "";
     
     public $mediaUrl;

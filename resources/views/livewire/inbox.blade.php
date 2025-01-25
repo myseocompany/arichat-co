@@ -82,7 +82,7 @@
                                 <!-- switcher end -->
                             </div>
                                     <!-- Filters -->
-<<<<<<< HEAD
+
                                 <div class="p-4">
                                     <label class="flex items-center mb-4">
                                         <input type="checkbox" wire:click="toggleAllLeads" wire.live:model="filterAllLeads"
@@ -96,7 +96,6 @@
                                         <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar mensajes asignados a mi</span>
                                     </label>
                                 </div>
-=======
                                     <div class="bg-gray-100 dark:bg-gray-800">
                                         <div class="p-4">
                                             <!-- Mostrar el equipo seleccionado -->
@@ -129,8 +128,6 @@
                 <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar mensajes de todas las fuentes</span>
             </label>
         </div>
-        
->>>>>>> 8ac844d23a2c786022acf23fe84178260464ae75
 
                             <!-- user section start -->
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
@@ -263,7 +260,7 @@
                         <!-- Fin de todos los mensajes -->
 
                         <!-- barra que se despliega para mandar audios e imagenes -->
-                        <div id="mediaContainer" class="media-container flex flex-row items-center justify-between px-6 w-full h-[80px] bg-gray-100">
+                        <div id="mediaContainer" class="media-container flex flex-row items-center justify-between px-6 w-full h-[80px] bg-gray-100" style="display: {{ $showImagePopUp ? 'flex' : 'none' }};">
                             <h2 class="text-blue-800 font-bold font-montserrat text-[25px]">Comparte tus archivos multimedia</h2>
                             <!-- contenedor de botones multimedia -->
                             <div class="buttons-container flex flex-row items-center gap-3">
@@ -344,12 +341,10 @@
                         <div class="flex-none p-4 bg-slate-100 dark:bg-slate-800 fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto lg:left-auto lg:right-auto">
                             <div class="relative flex items-center max-w-2xl mx-auto">
                                 
-                                <button wire:click="$set('showImagePopUp', true)">Mostrar</button> | 
-                                <button wire:click="$set('showImagePopUp', false)">Ocultar</button>
-                                
-                                <!-- Botón de abrir multimedia -->
-                                <button id="toggleButton" class="inline-flex items-center justify-center rounded-full h-12 w-12 text-gray-500 hover:bg-gray-300 focus:outline-none">
-                                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16">
+                                <!-- Botón de abrir multimedia (clip) -->
+                                <button wire:click="$toggle('showImagePopUp')" 
+                                        class="inline-flex items-center justify-center rounded-full h-12 w-12 text-gray-500 hover:bg-gray-300 focus:outline-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16">
                                         <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
                                     </svg>
                                 </button>
@@ -388,10 +383,7 @@
         </div>
     </div>
 
-    
-
     <!-- Script para enviar el audio -->
-    
     <script>
         let mediaRecorder;
         let audioChunks = [];
@@ -441,37 +433,7 @@
                 alert("No se pudo acceder al micrófono. Por favor, verifica los permisos.");
             });
     </script>
-
-    <!-- script para mostrar y ocultar el div de contenedor de multimedia -->
-    <script>
-        // Selección del botón y el contenedor
-        const toggleButton = document.getElementById('toggleButton');
-        const mediaContainer = document.getElementById('mediaContainer');
-
-        // Ocultar inicialmente el contenedor
-        mediaContainer.style.opacity = "0"; // Inicia transparente
-        mediaContainer.style.height = "0"; // Altura inicial 0
-        mediaContainer.style.overflow = "hidden"; // Evita mostrar contenido al inicio
-        mediaContainer.style.transition = "opacity 0.3s ease, height 0.3s ease"; // Transición suave
-
-        // Variable para el estado del contenedor
-        let isVisible = false;
-
-        // Añadir evento de clic al botón
-        toggleButton.addEventListener('click', () => {
-            if (isVisible) {
-                // Ocultar el contenedor con transición
-                mediaContainer.style.opacity = "0";
-                mediaContainer.style.height = "0"; // Altura a 0 para ocultar
-            } else {
-                // Mostrar el contenedor con transición
-                mediaContainer.style.opacity = "1";
-                mediaContainer.style.height = "80px"; // Ajusta la altura que necesita
-            }
-            isVisible = !isVisible; // Alternar el estado
-        });
-    </script>
-
+    <!-- fin del script para mandar el audio -->
 
     <!-- Script-->
     <script>
