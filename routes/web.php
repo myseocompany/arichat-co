@@ -11,7 +11,7 @@ use App\Http\Controllers\TeamController;
 use App\Http\Middleware\CheckTeamSelected;
 
 Route::post('/send-message', [MessageController::class, 'sendMessage']);
-//Route::post('/webhook', [MessageController::class, 'receiveMessage']);
+Route::post('/webhook', [MessageController::class, 'receiveMessage']);
 
 Route::get('/', function () {
     return view('landing.landing');

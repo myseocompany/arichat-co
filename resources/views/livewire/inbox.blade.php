@@ -372,64 +372,7 @@
         </div>
     </div>
 
-    <!-- script para imagen -->
-    <script>
-        // Referencias a los elementos
-        const cameraButton = document.getElementById('cameraButton');
-        const fileInput = document.getElementById('fileInput');
-        const image = document.getElementById('imagen');
-        const marco = document.getElementById('marco')
-
-        // Evento para abrir el input file al hacer clic en el botón de la cámara
-        .addEventListener('click', () => {
-            console.log("click en la camara");
-            fileInput.click();
-        });
-
-        fileInput.addEventListener('change', (event) => {
-            
-            console.log("click en el input file");
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const base64Image = e.target.result; // Imagen en formato Base64
-                    
-                    // Enviar la imagen al servidor usando fetch o Axios
-                    fetch('/send-message', {
-                        
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({
-                            lead_id: {{$lead->id}}, // ID del lead relacionado
-                            message: 'Media {{$lead->id}}',
-                            image: base64Image // Imagen en Base64
-                        })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            console.log('Error en la respuesta del servidor');
-                            
-                            throw new Error('Error2 en la respuesta del servidor');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Respuesta del servidor:', data);
-                    })
-                    .catch(error => {
-                        console.error('Error al subir la imagen:', error);
-                    });
-
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-    </script>
+    
 
     <!-- Script para enviar el audio -->
     

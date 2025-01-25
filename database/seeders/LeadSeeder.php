@@ -61,7 +61,7 @@ class LeadSeeder extends Seeder
                 }
         
                 // Insertar los leads en la base de datos
-                DB::table('leads')->insert($leads);
+                //DB::table('leads')->insert($leads);
 
     }
 }
