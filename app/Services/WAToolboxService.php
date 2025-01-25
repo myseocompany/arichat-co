@@ -78,7 +78,7 @@ class WAToolboxService {
 
     public function sendMessageToWhatsApp($data)
     {   
-        Log::info('sendMessageToWhatsApp ', $data);
+        Log::info('sendMessageToWhatsApp data', $data);
         
         try {
             $payload = [
@@ -99,7 +99,7 @@ class WAToolboxService {
             Log::info('sendMessageToWhatsApp payload', $payload);
 
             $response = Http::asJson()->post($this->end_point, $payload);
-            Log::info('sendMessageToWhatsApp payload', [$response->status()]);
+            Log::info('sendMessageToWhatsApp response', [$response->status()]);
             if ($response->failed()) {
                 throw new \Exception("Error enviando mensaje: HTTP " . $response->status());
             }

@@ -82,7 +82,6 @@
                                 <!-- switcher end -->
                             </div>
                                     <!-- Filters -->
-
                                 <div class="p-4">
                                     <label class="flex items-center mb-4">
                                         <input type="checkbox" wire:click="toggleAllLeads" wire.live:model="filterAllLeads"

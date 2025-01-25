@@ -75,7 +75,7 @@ class MessageController extends Controller
 
  
         $this->defaultMessageSource = $user->getDefaultMessageSource();
-        $this->waToolboxService = new WAToolboxService($this->defaultMessageSource);
+        //$this->waToolboxService = new WAToolboxService($this->defaultMessageSource);
 
         Log::info('WAToolnbox MessageControler', [$this->defaultMessageSource->settings]);
         
