@@ -114,19 +114,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="p-4">
-            <label class="flex items-center mb-4">
-                <input type="checkbox" wire:click="toggleAllLeads" wire.live:model="filterAllLeads"
-                       class="form-checkbox h-6 w-6 text-green-500 rounded-full border-gray-300 focus:ring focus:ring-green-300">
-                
-                <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar todos los leads del equipo</span>
-            </label>
-            <label class="flex items-center mb-4">
-                <input type="checkbox" wire:click="toggleAllSources" wire.live:model="filterAllSources"
-                       class="form-checkbox h-6 w-6 text-green-500 rounded-full border-gray-300 focus:ring focus:ring-green-300">
-                <span class="ml-2 text-gray-700 dark:text-gray-300">Cargar mensajes de todas las fuentes</span>
-            </label>
-        </div>
+                                    
 
                             <!-- user section start -->
                             <div class="flex-1 overflow-y-scroll scrollbar-thumb-color dark:scrollbar-thumb-color-dark">
